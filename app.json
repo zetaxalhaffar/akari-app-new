@@ -3,7 +3,10 @@
     "name": "akari-app",
     "slug": "akari-app",
     "version": "1.0.0",
-
+    "extra": {
+      "supportsRTL": true,
+      "forcesRTL": true
+    },
     "scheme": "akari-app",
     "web": {
       "bundler": "metro",
@@ -17,31 +20,26 @@
         {
           "launchMode": "most-recent"
         }
-      ]
+      ],
+      "expo-font",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
-
       "tsconfigPaths": true
     },
-
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-
+    "icon": "./assets/splash_1.png",
     "userInterfaceStyle": "light",
-
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/splash_1.png",
         "backgroundColor": "#ffffff"
       }
     }

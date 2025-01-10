@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --toast-50: #f8f5f2;
+  --toast-100: #eae2db;
+  --toast-200: #d4c2b3;
+  --toast-300: #bda28c;
+  --toast-400: #ae8971;
+  --toast-500: #a47764;
+  --toast-600: #8d5e52;
+  --toast-700: #774b46;
+  --toast-800: #633e3d;
+  --toast-900: #523535;
+  --toast-950: #2d1b1b;
+}

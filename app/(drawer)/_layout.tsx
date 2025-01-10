@@ -29,6 +29,15 @@ const DrawerLayout = () => (
         ),
       }}
     />
+ {/*    <Drawer.Screen
+      name="onboarding"
+      options={{
+        headerTitle: 'Onboarding',
+        drawerLabel: 'Onboarding',
+        headerShown: false,
+        drawerIcon: ({ size, color }) => <Ionicons name="home-outline" size={size} color={color} />,
+      }}
+    /> */}
   </Drawer>
 );
 
