@@ -1,11 +1,14 @@
 {
   "expo": {
     "name": "akari-app",
-    "slug": "akari-app",
+    "slug": "akari-new",
     "version": "1.0.0",
     "extra": {
       "supportsRTL": true,
-      "forcesRTL": true
+      "forcesRTL": true,
+      "eas": {
+        "projectId": "573c5ff5-4ca2-4d6f-a0e8-3920213d7101"
+      }
     },
     "scheme": "akari-app",
     "web": {
@@ -41,7 +44,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/splash_1.png",
         "backgroundColor": "#ffffff"
-      }
-    }
+      },
+      "package": "com.yazan_4alhaffar.akarinew"
+    },
+    "owner": "yazan_4alhaffar"
   }
 }
