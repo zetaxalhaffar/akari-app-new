@@ -3,7 +3,26 @@ import { Dimensions, Text, View, Image } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { Pagination } from 'react-native-reanimated-carousel';
 import images from '../constants/images';
-const defaultDataWith6Colors = ['#B0604D', '#899F9C', '#B3C680', '#5C6265', '#F5D399', '#F1F1F1'];
+
+const onBoardingData = [
+  {
+    title: 'مستقبلك العقاري بأمان تام',
+    subtitle: `استثمر في عقارات المستقبل مع عقاري. منصة آمنة وموثوقة تتيح لك التداول العقاري بكل سهولة، وحماية مدخراتك وبناء مستقبل مالي مستقر`,
+  },
+  {
+    title: 'عالم العقارات في متناول يدك',
+    subtitle: `استكشف عالم العقارات المتنوعة واختر ما يناسبك. منصة عقاري توفر لك كل ما تحتاجه لاتخاذ قرارات استثمارية صائبة، بدءًا من البحث عن العقارات وحتى إتمام الصفقة`,
+  },
+  {
+    title: 'استثمر واربح مع عقاري',
+    subtitle: `حقق أرباحاً مجزية على المدى الطويل من خلال استثماراتك العقارية. عقاري هي منصة الاستثمار الأمثل لنمو ثروتك وتحقيق أهدافك المالية`,
+  },
+  {
+    title: 'شريكك الموثوق في عالم العقارات',
+    subtitle: `عقاري هو شريكك الأمثل في رحلتك للإستثمار العقاري. نقدم لك الدعم والخبرات اللازمة لاتخاذ القرارات الدقيقة و الصحيحة ، ونضمن لك تجربة استثمارية سلسة وممتعة`,
+  },
+];
+
 const ParallaxSlider = () => {
   const { width, height } = Dimensions.get('window');
 
@@ -34,8 +53,8 @@ const ParallaxSlider = () => {
         loop
         onProgressChange={progress}
         style={{ width }}
-        data={defaultDataWith6Colors}
-        renderItem={({ index }) => (
+        data={onBoardingData}
+        renderItem={({ index, item }) => (
           <>
             <View className="relative flex-1 items-center justify-center overflow-hidden">
               <Image
@@ -44,22 +63,22 @@ const ParallaxSlider = () => {
                 className={'z-10 max-w-[150px]'}
               />
             </View>
-            <View className="items-center justify-center pt-8">
-              <Text className="font-pbold text-4xl text-wrap word-wrap pt-12 text-right">
-                مستقبلك العقاري بأمان
+            <View className="items-center justify-center">
+              <Text className="word-wrap text-wrap pt-12 text-right font-pmedium text-3xl">
+                {item.title}
               </Text>
-              <Text className="text-right font-pmedium text-xl">
-                تمكنك من الحصول على المنزل المناسب لك ولأهل بيتك بأسعار مناسبة
+              <Text className="text-md px-4 text-right font-pmedium text-gray-500">
+                {item.subtitle}
               </Text>
             </View>
           </>
         )}
       />
       <View
-        className={`absolute bottom-96 left-0 right-0 h-12 flex-row items-center justify-center`}>
+        className={`absolute bottom-[26rem] left-0 right-0 h-12 flex-row items-center justify-center`}>
         <Pagination.Basic
           progress={progress}
-          data={defaultDataWith6Colors.map((color) => ({ color }))}
+          data={onBoardingData.map((color) => ({ color }))}
           size={20}
           dotStyle={{
             backgroundColor: '#774b46',

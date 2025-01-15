@@ -15,3 +15,23 @@
   --toast-900: #523535;
   --toast-950: #2d1b1b;
 }
+
+.rtl-view {
+  @apply flex flex-row;
+}
+
+.ltr-view {
+  @apply flex flex-row-reverse;
+}
+
+.rtl-text {
+  @apply text-right;
+}
+
+.ltr-text {
+  @apply text-left;
+}
+
+.container-view {
+  @apply p-4;
+}

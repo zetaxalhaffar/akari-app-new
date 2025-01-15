@@ -23,6 +23,9 @@ const AuthMainStack = () => {
             positionOfGradient={'leftToRight'}
             textStyles={'text-white'}
             buttonStyles={'h-[45px]'}
+            handleButtonPress={() => {
+              router.push('/(auth)/signup');
+            }}
           />
           <CustomButton
             title={'الدخول'}

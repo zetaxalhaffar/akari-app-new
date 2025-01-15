@@ -1,11 +1,17 @@
 {
   "expo": {
     "name": "akari-app",
-    "slug": "akari-app",
+    "slug": "akari-new",
     "version": "1.0.0",
     "extra": {
       "supportsRTL": true,
-      "forcesRTL": true
+      "forcesRTL": true,
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d46e25b9-14a6-4e92-982b-b81c47a21381"
+      }
     },
     "scheme": "akari-app",
     "web": {
@@ -22,7 +28,15 @@
         }
       ],
       "expo-font",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-build-properties",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "image": "./assets/splash_1.png"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
@@ -31,9 +45,7 @@
     "orientation": "portrait",
     "icon": "./assets/splash_1.png",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -41,7 +53,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/splash_1.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.versetech.akarinew"
+    },
+    "eas": {
+      "projectId": "ba1a0d5b-7ed5-4a78-9d47-8c664c514673"
     }
   }
 }
