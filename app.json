@@ -2,7 +2,6 @@
   "expo": {
     "name": "akari-app",
     "slug": "akari-new",
-    "slug": "akari-new",
     "version": "1.0.0",
     "extra": {
       "supportsRTL": true,
