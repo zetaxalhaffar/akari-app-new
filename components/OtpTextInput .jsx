@@ -1,5 +1,5 @@
 import { OtpInput } from 'react-native-otp-entry';
-import { View } from 'react-native';
+import { View, I18nManager } from 'react-native';
 
 const CustomOtpTextInput = ({ otp = '', handleOtp }) => {
   return (
@@ -33,6 +33,7 @@ const CustomOtpTextInput = ({ otp = '', handleOtp }) => {
           placeholderTextStyle: {
             color: '#633e3d',
           },
+          containerStyle: {flexDirection: I18nManager.isRTL ? "row-reverse" : 'row'},
         }}
       />
     </View>

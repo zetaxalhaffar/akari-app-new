@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, I18nManager } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '@/components/CustomButton.jsx';
@@ -7,7 +7,9 @@ import { router } from 'expo-router';
 
 const BOTTOM_NAVIGATION_HEIGHT = 78;
 
+
 const AuthMainStack = () => {
+  console.log(I18nManager.isRTL, "isRTL")
   return (
     <SafeAreaView>
       <View className={'relative'}>

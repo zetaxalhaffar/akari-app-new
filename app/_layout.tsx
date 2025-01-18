@@ -77,6 +77,10 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
             <Stack.Screen name="notifications" options={{ headerShown: false }} />
+            <Stack.Screen name="(regions)/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="(shares)/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="(apartments)/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="(contact)/index" options={{ headerShown: false }} />
           </Stack>
         </NotificationsProvider>
       </GestureHandlerRootView>

@@ -10,7 +10,6 @@ export const useNotificationsStore = create((set) => ({
     try {
       set({ notificationLoading: true });
       const response = await axiosInstance.get('/notification/list');
-      console.log('response', response);
       set({ notificationResponse: response });
       return response;
     } catch (error) {

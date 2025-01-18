@@ -1,0 +1,16 @@
+import building_1 from '@/assets/icons/building_1.png';
+import arrowUp from "@/assets/icons/arrow_up.png"
+import arrowDown from "@/assets/icons/arrow_down.png"
+import price from "@/assets/icons/price.png"
+import quantity from "@/assets/icons/quantity.png"
+import date from "@/assets/icons/date.png"
+import view from "@/assets/icons/view.png"
+import direction from "@/assets/icons/direction.png"
+import rounded_close from "@/assets/icons/rounded_close.png"
+import location from "@/assets/icons/location.png"
+import sector from "@/assets/icons/sector.png"
+import section_number from "@/assets/icons/section_number.png"
+import owner from "@/assets/icons/owner.png"
+import whatsapp from "@/assets/icons/whats_app.png"
+import phone from "@/assets/icons/phone.png"
+export default { building_1, arrowUp, arrowDown, price, quantity, date, view, direction, rounded_close, location, sector, section_number, owner, whatsapp, phone };

@@ -53,14 +53,16 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (config) => {
     const token = await getToken();
-    console.log(process.env.EXPO_PUBLIC_DEV_URI, 'process.env.EXPO_PUBLIC_DEV_URI');
-    console.log(token, 'token');
+    //console.log(process.env.EXPO_PUBLIC_DEV_URI, 'process.env.EXPO_PUBLIC_DEV_URI');
+    //console.log(token, 'token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
 
+
+    console.log(config.params, 'config.params');
     // Log the request URI and payload
-    console.log('Request Payload:', config.data);
+    //console.log('Request Payload:', config.data);
 
     // Generate a unique random number (between 100000 and 999999)
     const randId = Math.floor(Math.random() * 900000) + 100000;
@@ -90,11 +92,10 @@ axiosInstance.interceptors.request.use(
 // Response interceptor to handle global errors
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log(response.data);
     return response.data;
   },
   async (error) => {
-    console.log(error);
+    console.log(error, "error");
     const errorResponse = error.response;
     if (errorResponse) {
       // Handle specific status codes globally

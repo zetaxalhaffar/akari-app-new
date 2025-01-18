@@ -6,11 +6,8 @@
     "extra": {
       "supportsRTL": true,
       "forcesRTL": true,
-      "router": {
-        "origin": false
-      },
       "eas": {
-        "projectId": "d46e25b9-14a6-4e92-982b-b81c47a21381"
+        "projectId": "573c5ff5-4ca2-4d6f-a0e8-3920213d7101"
       }
     },
     "scheme": "akari-app",
@@ -36,6 +33,23 @@
           "backgroundColor": "#ffffff",
           "image": "./assets/splash_1.png"
         }
+      ],
+      [
+        "react-native-share",
+        {
+          "ios": [
+            "fb",
+            "instagram",
+            "twitter",
+            "tiktoksharesdk"
+          ],
+          "android": [
+            "com.facebook.katana",
+            "com.instagram.android",
+            "com.twitter.android",
+            "com.zhiliaoapp.musically"
+          ]
+        }
       ]
     ],
     "experiments": {
@@ -45,7 +59,9 @@
     "orientation": "portrait",
     "icon": "./assets/splash_1.png",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -54,10 +70,8 @@
         "foregroundImage": "./assets/splash_1.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.versetech.akarinew"
+      "package": "com.yazan_4alhaffar.akarinew"
     },
-    "eas": {
-      "projectId": "ba1a0d5b-7ed5-4a78-9d47-8c664c514673"
-    }
+    "owner": "yazan_4alhaffar"
   }
 }

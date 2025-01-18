@@ -6,28 +6,8 @@ import Entypo from '@expo/vector-icons/Entypo';
 import { router } from 'expo-router';
 import { useNotificationsStore } from '@/store/notifications.store';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-
-const Header = () => {
-  return (
-    <View
-      className={`flex-row items-center justify-between px-2 py-3 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
-      <TouchableOpacity
-        onPress={() => router.back()}
-        className={`flex-row items-center ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
-        <CustomIcon containerStyles="border-[0]">
-          <Entypo name="chevron-right" size={24} color="#000" />
-        </CustomIcon>
-        <Text
-          className={`font-psemibold text-lg ${I18nManager.isRTL ? 'text-right' : 'text-left'} mt-2`}>
-          الإشعارات
-        </Text>
-      </TouchableOpacity>
-      <View>
-        <Text className="text-right font-psemibold text-base underline">تحديد الجميع كمقروء</Text>
-      </View>
-    </View>
-  );
-};
+import { FlashList } from '@shopify/flash-list';
+import CustomHeadWithBackButton from '../components/CustomHeadWithBackButton';
 
 const NotificationItem = ({ notification }) => {
   return (
@@ -66,12 +46,20 @@ const Notifications = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <Header />
-      <View>
-        {notifications.data &&
-          notifications.data.map((notification) => (
-            <NotificationItem key={notification.id} notification={notification} />
-          ))}
+      <CustomHeadWithBackButton
+        title="الإشعارات"
+        rightText="تحديد الجميع كمقروء"
+        rightTextPress={() => {}}
+        handleButtonPress={() => router.back()}
+      />
+      <View className="flex-1">
+        <FlashList
+          data={notifications.data}
+          renderItem={({ item }) => <NotificationItem notification={item} />}
+          estimatedItemSize={200}
+          refreshing={notificationLoading}
+          onRefresh={getNotificationsList}
+        />
       </View>
     </SafeAreaView>
   );

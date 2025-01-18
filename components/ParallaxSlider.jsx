@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions, Text, View, Image } from 'react-native';
+import { Dimensions, Text, View, Image, I18nManager } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel, { Pagination } from 'react-native-reanimated-carousel';
 import images from '../constants/images';
@@ -24,6 +24,8 @@ const onBoardingData = [
 ];
 
 const ParallaxSlider = () => {
+
+  
   const { width, height } = Dimensions.get('window');
 
   const progress = useSharedValue(0);
@@ -75,7 +77,7 @@ const ParallaxSlider = () => {
         )}
       />
       <View
-        className={`absolute bottom-[26rem] left-0 right-0 h-12 flex-row items-center justify-center`}>
+        className={`absolute bottom-[26rem] left-0 right-0 h-12 flex-row items-center justify-center ${I18nManager.isRTL ? 'scale-[-1]' : ''}`}>
         <Pagination.Basic
           progress={progress}
           data={onBoardingData.map((color) => ({ color }))}

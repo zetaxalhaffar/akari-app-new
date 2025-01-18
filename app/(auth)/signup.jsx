@@ -72,7 +72,7 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="m-3 mb-0">
+      <View className={`m-3 mb-0 ${I18nManager.isRTL ? 'ltr-view' : 'rtl-view'}`}>
         <CustomIcon
           handleOnIconPress={() => {
             router.back();
@@ -81,7 +81,7 @@ const LoginScreen = () => {
           <EvilIcons name="close" size={22} color="#a47764" className="mb-1" />
         </CustomIcon>
       </View>
-      <View className="items-end">
+      <View className={`${I18nManager.isRTL ? 'items-start' : 'items-end'}`}>
         <Image source={images.row_logo} className="h-24 w-24" />
       </View>
       <View>
