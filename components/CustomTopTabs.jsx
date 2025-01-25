@@ -4,7 +4,13 @@ import { TouchableOpacity, View, Text, Image } from 'react-native';
 import images from '~/constants/images';
 import { useUnitsStore } from '../store/units.store';
 
-const CustomTopTabs = ({ topTabItems = [], onTabChange, children, defaultActiveTab = 'shares' }) => {
+const CustomTopTabs = ({
+  topTabItems = [],
+  onTabChange,
+  children,
+  defaultActiveTab = 'shares',
+  itemTitle = 'title',
+}) => {
   const [activeTab, setActiveTab] = useState(defaultActiveTab);
 
   return (
@@ -18,14 +24,12 @@ const CustomTopTabs = ({ topTabItems = [], onTabChange, children, defaultActiveT
               setActiveTab(tab.id);
               onTabChange(tab.id);
             }}
-            className={`p-2 ${activeTab === tab.id ? 'border-b-2 border-toast-500' : ''
-              }`}
-          >
+            className={`p-2 ${activeTab === tab.id ? 'border-b-2 border-toast-500' : ''}`}>
             <Text
-              className={`font-pmedium transition-all duration-300 ${activeTab === tab.id ? 'text-toast-500 text-base' : 'text-gray-500 text-sm'
-                }`}
-            >
-              {tab.title}
+              className={`font-pmedium transition-all duration-300 ${
+                activeTab === tab.id ? 'text-base text-toast-500' : 'text-sm text-gray-500'
+              }`}>
+              {tab[itemTitle]}
             </Text>
           </TouchableOpacity>
         ))}
@@ -34,7 +38,6 @@ const CustomTopTabs = ({ topTabItems = [], onTabChange, children, defaultActiveT
       {children}
     </>
   );
-}
-
+};
 
 export default CustomTopTabs;

@@ -53,4 +53,22 @@ export const useAuthStore = create((set) => ({
       set({ signupLoading: false });
     }
   },
+  // https://arrows-dev.versetech.net/api/user/auth_data
+  authDataSchema: {
+    loading: false,
+    error: null,
+    response: null,
+  },
+  getAuthData: async () => {
+    try {
+      set({ authDataSchema: { loading: true } });
+      const response = await axiosInstance.get('/user/auth_data');
+      set({ authDataSchema: { response } });
+      return response;
+    } catch (error) {
+      return error;
+    } finally {
+      set({ authDataSchema: { loading: false } });
+    }
+  },
 }));

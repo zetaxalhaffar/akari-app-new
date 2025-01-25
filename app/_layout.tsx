@@ -7,7 +7,8 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { I18nManager } from 'react-native';
 import { createNotifications } from 'react-native-notificated';
-
+import { useAuthStore } from '@/store/auth.store';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 const { NotificationsProvider, useNotifications, ...events } = createNotifications({
   isNotch: true,
   defaultStylesSettings: {
@@ -18,6 +19,7 @@ const { NotificationsProvider, useNotifications, ...events } = createNotificatio
       descriptionSize: 10,
       borderType: 'accent',
       defaultIconType: 'monochromatic',
+      multiline: 3,
     },
     successConfig: {
       accentColor: '#a47764',
@@ -52,6 +54,8 @@ export default function RootLayout() {
   const fontsLoaded = useCustomFonts();
   const hasToken = useRef(false);
 
+  const { getAuthData } = useAuthStore();
+
   useEffect(() => {
     const initialize = async () => {
       SplashScreen.hideAsync();
@@ -60,6 +64,9 @@ export default function RootLayout() {
       const token = await getSecureStore('token');
       if (token) {
         hasToken.current = true;
+        const response = await getAuthData();
+        console.log(response, 'response');
+        await setSecureStore('user', JSON.stringify(response));
       }
     };
     initialize();
@@ -72,16 +79,30 @@ export default function RootLayout() {
     <>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <NotificationsProvider>
-          <Stack initialRouteName={hasToken.current ? '(tabs)' : '(auth)'}>
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
-            <Stack.Screen name="notifications" options={{ headerShown: false }} />
-            <Stack.Screen name="(regions)/[id]" options={{ headerShown: false }} />
-            <Stack.Screen name="(shares)/[id]" options={{ headerShown: false }} />
-            <Stack.Screen name="(apartments)/[id]" options={{ headerShown: false }} />
-            <Stack.Screen name="(contact)/index" options={{ headerShown: false }} />
-          </Stack>
+          <BottomSheetModalProvider>
+            <Stack initialRouteName={hasToken.current ? '(tabs)' : '(auth)'}>
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="(tabs)"
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
+              <Stack.Screen name="notifications" options={{ headerShown: false }} />
+              <Stack.Screen name="(regions)/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="(shares)/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="(apartments)/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="(contact)/index" options={{ headerShown: false }} />
+              <Stack.Screen name="(create)/shares" options={{ headerShown: false }} />
+              <Stack.Screen name="(create)/apartments" options={{ headerShown: false }} />
+              <Stack.Screen name="(edit)/share/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="(edit)/apartment/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="(more_screens)/features" options={{ headerShown: false }} />
+              <Stack.Screen name="(more_screens)/support" options={{ headerShown: false }} />
+              <Stack.Screen name="(more_screens)/profile" options={{ headerShown: false }} />
+            </Stack>
+          </BottomSheetModalProvider>
         </NotificationsProvider>
       </GestureHandlerRootView>
     </>

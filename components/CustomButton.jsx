@@ -29,6 +29,7 @@ const CustomButton = ({
           <LinearGradient
             style={{ borderRadius: 6 }}
             colors={colors}
+            disabled={disabled || loading}
             className={`${buttonStyles} flex flex-row items-center justify-center gap-2 rounded-lg p-2 ${disabled ? 'opacity-50' : ''}`}
             start={gradientPositions[positionOfGradient].start}
             end={gradientPositions[positionOfGradient].end}>
@@ -41,12 +42,11 @@ const CustomButton = ({
       )}
       {!hasGradient && (
         <TouchableOpacity
+          disabled={loading || disabled}
           className={`${buttonStyles} flex flex-row items-center justify-center gap-2 rounded-lg p-2`}
           onPress={handleButtonPress}>
           <Text className={`${textStyles} font-pbold text-base`}>{title}</Text>
-          {loading && (
-            <ActivityIndicator animating={loading} className={'mb-1'} color={'#633e3d'} />
-          )}
+          {loading && <ActivityIndicator animating={loading} className={'mb-1'} color={'#FFF'} />}
         </TouchableOpacity>
       )}
     </View>

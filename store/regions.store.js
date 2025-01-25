@@ -10,7 +10,6 @@ export const useRegionsStore = create((set) => ({
     try {
       set({ regionLoading: true });
       const response = await axiosInstance.get('/region/list');
-      console.log(response, "response");
       set({ regionResponse: response });
       return response;
     } catch (error) {

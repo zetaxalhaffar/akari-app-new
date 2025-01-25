@@ -1,8 +1,7 @@
 import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Platform } from 'react-native';
-
-import { TabBarIcon } from '~/components/TabBarIcon';
+import { Platform, View, Text, Image } from 'react-native';
+import icons from '@/constants/icons';
 
 export default function TabLayout() {
   return (
@@ -11,29 +10,115 @@ export default function TabLayout() {
       <Tabs
         screenOptions={{
           headerShown: false,
-          tabBarShowLabel: true,
+          tabBarShowLabel: false,
           tabBarActiveTintColor: '#a47764',
-          tabBarInactiveTintColor: '#774b46',
+          tabBarInactiveTintColor: '#71717a',
+          tabBarStyle: {
+            backgroundColor: '#eae2db',
+            borderTopWidth: 0,
+            height: 60,
+            borderRadius: 16,
+            position: 'sticky',
+            elevation: 10,
+            bottom: 15,
+            left: 15, // Adjusts the tab bar to fit properly
+            right: 15,
+            marginHorizontal: 15, // Removed to prevent shrinking
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
         }}>
         <Tabs.Screen
           name="index"
           options={{
-            title: 'الرئيسية',
-            tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+            tabBarIcon: ({ color, focused }) => (
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 80,
+                  paddingTop: 20,
+                }}>
+                <Image
+                  source={focused ? icons.home_screen_active : icons.home_screen_unactive}
+                  className="h-8 w-8"
+                  tintColor={color}
+                />
+                <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
+                  الرئيسية
+                </Text>
+              </View>
+            ),
           }}
         />
         <Tabs.Screen
-          name="two"
+          name="myorders"
           options={{
-            title: 'المنتجات',
-            tabBarIcon: ({ color }) => <TabBarIcon name="bell" color={color} />,
+            tabBarIcon: ({ color, focused }) => (
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 80,
+                  paddingTop: 20,
+                }}>
+                <Image
+                  source={focused ? icons.order_screen_active : icons.order_screen_unactive}
+                  className="h-8 w-8"
+                  tintColor={color}
+                />
+                <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
+                  طلباتي
+                </Text>
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="sectors"
+          options={{
+            tabBarIcon: ({ color, focused }) => (
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 80,
+                  paddingTop: 20,
+                }}>
+                <Image
+                  source={focused ? icons.sector_screen_active : icons.sector_screen_unactive}
+                  className="h-8 w-8"
+                  tintColor={color}
+                />
+                <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
+                  المقاسم
+                </Text>
+              </View>
+            ),
           }}
         />
         <Tabs.Screen
           name="more"
           options={{
             title: 'المزيد',
-            tabBarIcon: ({ color }) => <TabBarIcon name="menu" color={color} />,
+            tabBarIcon: ({ color, focused }) => (
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 80,
+                  paddingTop: 20,
+                }}>
+                <Image
+                  source={focused ? icons.menu_screen_active : icons.menu_screen_unactive}
+                  className="h-8 w-8"
+                  tintColor={color}
+                />
+                <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
+                  المزيد
+                </Text>
+              </View>
+            ),
           }}
         />
       </Tabs>

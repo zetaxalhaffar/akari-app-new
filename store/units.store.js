@@ -62,7 +62,9 @@ export const useUnitsStore = create((set, get) => ({
     } catch (error) {
       set({ shareDetailsError: error });
     } finally {
-      set({ shareDetailsLoading: false });
+      setTimeout(() => {
+        set({ shareDetailsLoading: false });
+      }, 1000);
     }
   },
   // https://arrows-dev.versetech.net/api/apartment/view/{id}
@@ -78,7 +80,9 @@ export const useUnitsStore = create((set, get) => ({
     } catch (error) {
       set({ apartmentDetailsError: error });
     } finally {
-      set({ apartmentDetailsLoading: false });
+      setTimeout(() => {  
+        set({ apartmentDetailsLoading: false });
+      }, 1000);
     }
   },
   // https://arrows-dev.versetech.net/api/share/create_sell_request/{share_id}
@@ -93,7 +97,7 @@ export const useUnitsStore = create((set, get) => ({
       notify('success', {
         params: {
           title: 'تمت العملية بنجاح',
-          description: response?.message ?? "تم إرسال الرسالة بنجاح",
+          description: response?.message ?? 'تم إرسال الرسالة بنجاح',
         },
       });
       return response;
@@ -116,7 +120,7 @@ export const useUnitsStore = create((set, get) => ({
       notify('success', {
         params: {
           title: 'تمت العملية بنجاح',
-          description: response?.message ?? "تم إرسال الرسالة بنجاح",
+          description: response?.message ?? 'تم إرسال الرسالة بنجاح',
         },
       });
       return response;
@@ -134,12 +138,15 @@ export const useUnitsStore = create((set, get) => ({
   createApartmentSellRequest: async (apartmentId, data) => {
     try {
       set({ createApartmentSellRequestLoading: true });
-      const response = await axiosInstance.post(`/apartment/create_sell_request/${apartmentId}`, data);
+      const response = await axiosInstance.post(
+        `/apartment/create_sell_request/${apartmentId}`,
+        data
+      );
       set({ createApartmentSellRequestResponse: response });
       notify('success', {
         params: {
           title: 'تمت العملية بنجاح',
-          description: response?.message ?? "تم إرسال الرسالة بنجاح",
+          description: response?.message ?? 'تم إرسال الرسالة بنجاح',
         },
       });
       return response;
@@ -157,12 +164,15 @@ export const useUnitsStore = create((set, get) => ({
   createApartmentBuyRequest: async (apartmentId, data) => {
     try {
       set({ createApartmentBuyRequestLoading: true });
-      const response = await axiosInstance.post(`/apartment/create_buy_request/${apartmentId}`, data);
+      const response = await axiosInstance.post(
+        `/apartment/create_buy_request/${apartmentId}`,
+        data
+      );
       set({ createApartmentBuyRequestResponse: response });
       notify('success', {
         params: {
           title: 'تمت العملية بنجاح',
-          description: response?.message ?? "تم إرسال الرسالة بنجاح",
+          description: response?.message ?? 'تم إرسال الرسالة بنجاح',
         },
       });
       return response;
@@ -172,5 +182,138 @@ export const useUnitsStore = create((set, get) => ({
     } finally {
       set({ createApartmentBuyRequestLoading: false });
     }
-  }
+  },
+  //https://arrows-dev.versetech.net/api/share/buy
+  createShareRequestLoading: false,
+  createShareRequestError: null,
+  createShareRequestResponse: [],
+  createShareRequest: async (type, data) => {
+    try {
+      set({ createShareRequestLoading: true });
+      const response = await axiosInstance.post(`/share/${type}`, data);
+      notify('success', {
+        params: {
+          title: 'تمت العملية بنجاح',
+          description: response?.message ?? 'تم إرسال الرسالة بنجاح',
+        },
+      });
+      return response;
+    } catch (error) {
+      notify('error', { params: { title: 'حدث خطأ ما', description: error?.message } });
+      set({ createShareRequestError: error });
+    } finally {
+      set({ createShareRequestLoading: false });
+    }
+  },
+  createApartmentRequestLoading: false,
+  createApartmentRequestError: null,
+  createApartmentRequestResponse: [],
+  createApartmentRequest: async (type, data) => {
+    try {
+      set({ createApartmentRequestLoading: true });
+      const response = await axiosInstance.post(`/apartment/${type}`, data);
+      notify('success', {
+        params: {
+          title: 'تمت العملية بنجاح',
+          description: response?.message ?? 'تم إرسال الرسالة بنجاح',
+        },
+      });
+      return response;
+    } catch (error) {
+      notify('error', { params: { title: 'حدث خطأ ما', description: error?.message } });
+      set({ createApartmentRequestError: error });
+    } finally {
+      set({ createApartmentRequestLoading: false });
+    }
+  },
+  // https://arrows-dev.versetech.net/api/share/delete/{share_id}
+  deleteShareLoading: false,
+  deleteShareError: null,
+  deleteShareResponse: [],
+  deleteShare: async (shareId) => {
+    try {
+      set({ deleteShareLoading: true });
+      const response = await axiosInstance.delete(`/share/delete/${shareId}`);
+      set({ deleteShareResponse: response });
+      notify('success', {
+        params: {
+          title: 'تمت العملية بنجاح',
+          description: response?.message ?? 'تم حذف الطلب بنجاح',
+        },
+      });
+      return response;
+    } catch (error) {
+      notify('error', { params: { title: 'حدث خطأ ما', description: error?.message } });
+      set({ deleteShareError: error });
+    } finally {
+      set({ deleteShareLoading: false });
+    }
+  },
+  // https://arrows-dev.versetech.net/api/apartment/delete/{apartment_id}
+  deleteApartmentLoading: false,
+  deleteApartmentError: null,
+  deleteApartmentResponse: [],
+  deleteApartment: async (apartmentId) => {
+    try {
+      set({ deleteApartmentLoading: true });
+      const response = await axiosInstance.delete(`/apartment/delete/${apartmentId}`);
+      set({ deleteApartmentResponse: response });
+      notify('success', {
+        params: {
+          title: 'تمت العملية بنجاح',
+          description: response?.message ?? 'تم حذف الطلب بنجاح',
+        },
+      });
+      return response;
+    } catch (error) {
+      notify('error', { params: { title: 'حدث خطأ ما', description: error?.message } });
+      set({ deleteApartmentError: error });
+    } finally {
+      set({ deleteApartmentLoading: false });
+    }
+  },
+  // https://arrows-dev.versetech.net/api/share/update/{share_id}
+  updateShareRequestLoading: false,
+  updateShareRequestError: null,
+  updateShareRequestResponse: [],
+  updateShareRequest: async (shareId, data) => {
+    try {
+      set({ updateShareRequestLoading: true });
+      const response = await axiosInstance.post(`/share/update/${shareId}`, data);
+      notify('success', {
+        params: {
+          title: 'تمت العملية بنجاح',
+          description: response?.message ?? 'تم تعديل الطلب بنجاح',
+        },
+      });
+      return response;
+    } catch (error) {
+      notify('error', { params: { title: 'حدث خطأ ما', description: error?.message } });
+      set({ updateShareRequestError: error });
+    } finally {
+      set({ updateShareRequestLoading: false });
+    }
+  },
+  // https://arrows-dev.versetech.net/api/apartment/update/{apartment_id}
+  updateApartmentRequestLoading: false,
+  updateApartmentRequestError: null,
+  updateApartmentRequestResponse: [],
+  updateApartmentRequest: async (apartmentId, data) => {
+    try {
+      set({ updateApartmentRequestLoading: true });
+      const response = await axiosInstance.post(`/apartment/update/${apartmentId}`, data);
+      notify('success', {
+        params: {
+          title: 'تمت العملية بنجاح',
+          description: response?.message ?? 'تم تعديل الطلب بنجاح',
+        },
+      });
+      return response;
+    } catch (error) {
+      notify('error', { params: { title: 'حدث خطأ ما', description: error?.message } });
+      set({ updateApartmentRequestError: error });
+    } finally {
+      set({ updateApartmentRequestLoading: false });
+    }
+  },
 }));

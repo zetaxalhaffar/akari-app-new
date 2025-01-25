@@ -8,11 +8,13 @@ import { useNotificationsStore } from '@/store/notifications.store';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { FlashList } from '@shopify/flash-list';
 import CustomHeadWithBackButton from '../components/CustomHeadWithBackButton';
+import EmptyScreen from '../components/EmptyScreen';
+import images from '../constants/images';
 
 const NotificationItem = ({ notification }) => {
   return (
     <TouchableOpacity
-      className={`flex-row items-start gap-3 px-2 py-3 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
+      className={`flex-row items-start gap-3 px-4 py-3 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
       <MaterialIcons name="notes" size={24} color="black" />
       <View className="flex-1">
         <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
@@ -59,6 +61,9 @@ const Notifications = () => {
           estimatedItemSize={200}
           refreshing={notificationLoading}
           onRefresh={getNotificationsList}
+          ListEmptyComponent={() => (
+            <EmptyScreen title="لا يوجد إشعارات" img={images.empty_notifications} />
+          )}
         />
       </View>
     </SafeAreaView>

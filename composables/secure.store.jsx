@@ -4,6 +4,10 @@ export const getSecureStore = async (name) => {
   return await SecureStore.getItemAsync(name);
 };
 
+export const getSecureStoreNoAsync = (name) => {
+  return JSON.parse(SecureStore.getItem(name));
+};
+
 export const setSecureStore = async (name, value) => {
   return await SecureStore.setItemAsync(name, value);
 };

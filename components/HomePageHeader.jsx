@@ -3,30 +3,32 @@ import Feather from '@expo/vector-icons/Feather';
 import images from '@/constants/images';
 import { router } from 'expo-router';
 
-const HomePageHeader = ({ hasActions = true }) => {
+const HomePageHeader = ({ hasActions = true, customActions = false, children }) => {
   return (
     <View
-      className={`flex-row items-center justify-between px-4 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
+      className={` flex-row items-center justify-between px-4 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
       <View className={`flex-row items-center`}>
         <Image source={images.only_word} className="h-24 w-24" resizeMode="contain" />
       </View>
-      {hasActions && <View className={`items-center gap-2 ${I18nManager.isRTL ? 'ltr-view' : 'rtl-view'}`}>
-        <TouchableOpacity
-          onPress={() =>
-            router.push({
-              pathname: '/notifications',
-            })
-          }
-          className="flex-row items-center gap-2 rounded-full p-2">
-          <Feather name="bell" size={20} color="#a47764" />
-        </TouchableOpacity>
-        <TouchableOpacity className="flex-row items-center gap-2 rounded-full border border-toast-200 bg-toast-100 p-2">
-          <Feather name="user" size={20} color="#a47764" />
-        </TouchableOpacity>
-      </View>}
+      {hasActions && !customActions && (
+        <View className={`items-center gap-2 ${I18nManager.isRTL ? 'ltr-view' : 'rtl-view'}`}>
+          <TouchableOpacity
+            onPress={() =>
+              router.push({
+                pathname: '/notifications',
+              })
+            }
+            className="flex-row items-center gap-2 rounded-full p-2">
+            <Feather name="bell" size={20} color="#a47764" />
+          </TouchableOpacity>
+          <TouchableOpacity className="flex-row items-center gap-2 rounded-full border border-toast-200 bg-toast-100 p-2">
+            <Feather name="user" size={20} color="#a47764" />
+          </TouchableOpacity>
+        </View>
+      )}
+      {hasActions && customActions && children}
     </View>
   );
 };
-
 
 export default HomePageHeader;

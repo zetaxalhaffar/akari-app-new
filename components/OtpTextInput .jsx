@@ -33,7 +33,7 @@ const CustomOtpTextInput = ({ otp = '', handleOtp }) => {
           placeholderTextStyle: {
             color: '#633e3d',
           },
-          containerStyle: {flexDirection: I18nManager.isRTL ? "row-reverse" : 'row'},
+          containerStyle: { flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row' },
         }}
       />
     </View>

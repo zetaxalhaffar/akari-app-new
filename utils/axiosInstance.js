@@ -62,7 +62,7 @@ axiosInstance.interceptors.request.use(
 
     console.log(config.params, 'config.params');
     // Log the request URI and payload
-    //console.log('Request Payload:', config.data);
+    console.log('Request Payload:', config.data);
 
     // Generate a unique random number (between 100000 and 999999)
     const randId = Math.floor(Math.random() * 900000) + 100000;

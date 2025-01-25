@@ -7,6 +7,7 @@ import {
   FlatList,
   Modal,
   I18nManager,
+  ActivityIndicator,
 } from 'react-native';
 import { useFonts } from 'expo-font';
 
@@ -16,6 +17,9 @@ const CustomDropdown = ({
   arrayOfValues = [],
   placeholder = 'قم بإختيار القيمة',
   valueKey = 'id',
+  emptyMessage = 'لا يوجد بيانات',
+  disabled = false,
+  keyName = 'name',
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -28,50 +32,67 @@ const CustomDropdown = ({
   }
 
   return (
-    <View className="h-[48px] w-full justify-center rounded-lg border border-toast-500">
-      <TouchableOpacity className="bg-white p-2" onPress={() => setVisible(true)}>
-        <Text
-          className={`px-2 font-pmedium text-base ${value ? 'text-gray-700' : 'text-gray-400'} ${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'}`}>
-          {(arrayOfValues && arrayOfValues.find((item) => item.id === value)?.name) || placeholder}
-        </Text>
-      </TouchableOpacity>
-      <Modal
-        statusBarTranslucent
-        transparent
-        visible={visible}
-        animationType="fade"
-        onRequestClose={() => setVisible(false)}>
-        <TouchableOpacity style={styles.modalOverlay} onPress={() => setVisible(false)}>
-          <View style={styles.dropdown}>
-            <FlatList
-              ListHeaderComponent={() => (
-                <View className="bg-white pt-2">
-                  <Text
-                    className={`px-2 font-pmedium text-base text-gray-400 ${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'}`}>
-                    {placeholder}
-                  </Text>
-                </View>
-              )}
-              data={arrayOfValues}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.item}
-                  onPress={() => {
-                    setValue(item[valueKey]); // Or item[valueKey]
-                    setVisible(false);
-                  }}>
-                  <Text
-                    className={`font-pmedium text-base text-gray-600 ${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'}`}>
-                    {item.name}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            />
-          </View>
+    <>
+      <Text className="mb-2 font-pmedium text-gray-700">{placeholder}</Text>
+
+      <View
+        className={`h-[48px] w-full justify-center rounded-lg border ${disabled ? 'border-gray-300 opacity-50' : 'border-toast-500'}`}>
+        <TouchableOpacity
+          disabled={disabled}
+          className={`flex justify-between p-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}
+          onPress={() => setVisible(true)}>
+          <Text
+            className={`px-2 font-pmedium text-base ${value ? 'text-gray-700' : 'text-gray-400'} ${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'}`}>
+            {(arrayOfValues && arrayOfValues.find((item) => item.id === value)?.[keyName]) ||
+              `يرجى إختيار ${placeholder}`}
+          </Text>
+          {disabled && <ActivityIndicator color="#a47764" />}
         </TouchableOpacity>
-      </Modal>
-    </View>
+        <Modal
+          statusBarTranslucent
+          transparent
+          visible={visible}
+          animationType="fade"
+          onRequestClose={() => setVisible(false)}>
+          <TouchableOpacity style={styles.modalOverlay} onPress={() => setVisible(false)}>
+            <View style={styles.dropdown}>
+              <FlatList
+                showsVerticalScrollIndicator={true}
+                persistentScrollbar={true}
+                ListHeaderComponent={() => (
+                  <View className="bg-white pt-2">
+                    <Text
+                      className={`px-2 font-pmedium text-base text-gray-400 ${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'}`}>
+                      {placeholder}
+                    </Text>
+                  </View>
+                )}
+                data={arrayOfValues}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.item}
+                    onPress={() => {
+                      setValue(item[valueKey]); // Or item[valueKey]
+                      setVisible(false);
+                    }}>
+                    <Text
+                      className={`font-pmedium text-base text-gray-600 ${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'}`}>
+                      {item[keyName]}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                ListEmptyComponent={() => (
+                  <View className="my-4 flex-1 items-center justify-center">
+                    <Text className="font-pmedium text-base text-gray-900">{emptyMessage}</Text>
+                  </View>
+                )}
+              />
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      </View>
+    </>
   );
 };
 
