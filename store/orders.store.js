@@ -48,4 +48,39 @@ export const useOrdersStore = create((set, get) => ({
       set({ apartmentsOrdersLoading: false });
     }
   },
+  // https://arrows-dev.versetech.net/api/profile/apartment/listAll/buy | sell
+  apartmentsOrdersForCurrentUser: [],
+  apartmentsOrdersForCurrentUserLoading: false,
+  apartmentsOrdersForCurrentUserError: null,
+
+  getApartmentsOrdersForCurrentUser: async (type, params, firstLoad = false) => {
+    try {
+      set({ apartmentsOrdersForCurrentUserLoading: true });
+      const response = await axiosInstance.get(`/profile/apartment/listAll/${type}`, { params });
+      set({ apartmentsOrdersForCurrentUser: response });
+      return response;
+    } catch (error) {
+      set({ apartmentsOrdersForCurrentUserError: error });
+    } finally {
+      set({ apartmentsOrdersForCurrentUserLoading: false });
+    }
+  },
+  // https://arrows-dev.versetech.net/api/profile/share/listAll/buy | sell
+  sharesOrdersForCurrentUser: [],
+  sharesOrdersForCurrentUserLoading: false,
+  sharesOrdersForCurrentUserError: null,
+
+  getSharesOrdersForCurrentUser: async (type, params, firstLoad = false) => {
+    try {
+      set({ sharesOrdersForCurrentUserLoading: true });
+
+      const response = await axiosInstance.get(`/profile/share/listAll/${type}`, { params });
+      set({ sharesOrdersForCurrentUser: response });
+      return response;
+    } catch (error) {
+      set({ sharesOrdersForCurrentUserError: error });
+    } finally {
+      set({ sharesOrdersForCurrentUserLoading: false });
+    }
+  },
 }));

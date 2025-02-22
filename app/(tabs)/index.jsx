@@ -30,7 +30,7 @@ export default function Home() {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1">
       <HomePageHeader />
       <View className="px-4">
         <Text className="font-psemibold text-lg">لا تضيع فرصة الاستثمار</Text>
@@ -61,7 +61,7 @@ export default function Home() {
               </TouchableOpacity>
             ))}
         </View>
-        <View className="my-4 px-4 py-3">
+        <View className="my-4 px-4 py-3  ">
           <Text className="font-psemibold text-lg">إحصائيات عقاري</Text>
           <Text className="font-pregular text-base">
             تعرف على حركة السوق العقاري في دمشق لحظة بلحظة.

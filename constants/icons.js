@@ -36,7 +36,14 @@ import notifications from "@/assets/icons/notifications.png"
 import support from "@/assets/icons/support.png"
 import features from "@/assets/icons/features.png"
 import support_2 from "@/assets/icons/support_2.png"
-
+import logout from "@/assets/icons/logout.png"
+import my_posts_active from "@/assets/icons/myposts_active.png"
+import my_posts_unactive from "@/assets/icons/myposts_unactive.png"
+import privacy from "@/assets/icons/privacy.png"
+import terms from "@/assets/icons/terms.png"
+import mobile from "@/assets/icons/mobile.png"
+import updates from "@/assets/icons/updates.png"
+import bulk_messages from "@/assets/icons/bulk_messages.png"
 export default {
   building_1,
   arrowUp,
@@ -75,5 +82,13 @@ export default {
   notifications,
   support,
   features,
-  support_2
+  support_2,
+  logout,
+  my_posts_active,
+  my_posts_unactive,
+  privacy,
+  terms,
+  mobile,
+  updates,
+  bulk_messages
 };

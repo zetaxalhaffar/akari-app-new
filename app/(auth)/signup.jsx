@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, Image, I18nManager } from 'react-native';
+import { View, Text, Image, I18nManager, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import CustomIcon from '../../components/CustomIcon';
@@ -15,7 +15,7 @@ import { notify } from 'react-native-notificated';
 
 const LoginScreen = () => {
   // handle enum store
-  const { getJobTitles, jobTitlesSchema } = useEnumsStore();
+  const { getJobTitles, jobTitlesSchemaResponse } = useEnumsStore();
   const { signup, signupSchema, signupLoading } = useAuthStore();
 
   const getJobTitlesList = async () => {
@@ -65,112 +65,110 @@ const LoginScreen = () => {
     }
   };
 
-  // Monitor changes to jobTitlesSchema
-  useEffect(() => {
-    console.log(jobTitlesSchema, 'Updated jobTitlesSchema');
-  }, [jobTitlesSchema]);
-
   return (
-    <SafeAreaView className="flex-1">
-      <View className={`m-3 mb-0 ${I18nManager.isRTL ? 'ltr-view' : 'rtl-view'}`}>
-        <CustomIcon
-          handleOnIconPress={() => {
-            router.back();
-          }}
-          containerStyles="border-toast-600 bg-toast-100">
-          <EvilIcons name="close" size={22} color="#a47764" className="mb-1" />
-        </CustomIcon>
-      </View>
-      <View className={`${I18nManager.isRTL ? 'items-start' : 'items-end'}`}>
-        <Image source={images.row_logo} className="h-24 w-24" />
-      </View>
-      <View>
-        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 px-4`}>
-          <Text
-            className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} py-2 font-pbold text-2xl`}>
-            إنشاء حساب جديد
-          </Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView className="flex-1">
+        <View className={`m-3 mb-0 ${I18nManager.isRTL ? 'ltr-view' : 'rtl-view'}`}>
+          <CustomIcon
+            handleOnIconPress={() => {
+              router.back();
+            }}
+            containerStyles="border-toast-600 bg-toast-100">
+            <EvilIcons name="close" size={22} color="#a47764" className="mb-1" />
+          </CustomIcon>
         </View>
-        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view !py-0`}>
-          <Text
-            className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-base text-gray-500`}>
-            يرجى إدخال التفاصيل التالية لإنشاء حسابك
-          </Text>
+        <View className={`${I18nManager.isRTL ? 'items-start' : 'items-end'}`}>
+          <Image source={images.row_logo} className="h-24 w-24" />
         </View>
-      </View>
-      <View style={{ flexGrow: 1 }} className={`container-view mt-12 !py-0`}>
         <View>
-          <PhoneInput
-            phoneInputStyles={{
-              flagContainer: {
-                backgroundColor: 'transparent',
-              },
-              container: {
-                borderColor: '#a47764',
-                borderWidth: 1,
-              },
-            }}
-            value={form.phone}
-            onChangePhoneNumber={handleInputValue}
-            selectedCountry={selectedCountry}
-            onChangeSelectedCountry={handleSelectedCountry}
-            language={'ar'}
-            defaultCountry={'SY'}
-            style={{
-              fontFamily: 'Cairo-Medium',
-              minWidth: 160,
-              marginHorizontal: 6,
-            }}
-            excludedCountries={['IL', 'AI']}
-            popularCountries={['SY']}
-          />
+          <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 px-4`}>
+            <Text
+              className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} py-2 font-pbold text-2xl`}>
+              إنشاء حساب جديد
+            </Text>
+          </View>
+          <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view !py-0`}>
+            <Text
+              className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-base text-gray-500`}>
+              يرجى إدخال التفاصيل التالية لإنشاء حسابك
+            </Text>
+          </View>
         </View>
-        <View className="my-4">
-          <Input
-            placeholder="الاسم"
-            value={form.name}
-            onChangeText={(value) => setForm({ ...form, name: value })}
-          />
+        <View style={{ flexGrow: 1 }} className={`container-view mt-12 !py-0`}>
+          <View>
+            <PhoneInput
+              phoneInputStyles={{
+                flagContainer: {
+                  backgroundColor: 'transparent',
+                },
+                container: {
+                  borderColor: '#a47764',
+                  borderWidth: 1,
+                  backgroundColor: 'transparent',
+                },
+              }}
+              value={form.phone}
+              onChangePhoneNumber={handleInputValue}
+              selectedCountry={selectedCountry}
+              onChangeSelectedCountry={handleSelectedCountry}
+              language={'ar'}
+              defaultCountry={'SY'}
+              style={{
+                fontFamily: 'Cairo-Medium',
+                minWidth: 160,
+                marginHorizontal: 6,
+              }}
+              excludedCountries={['IL', 'AI']}
+              popularCountries={['SY']}
+            />
+          </View>
+          <View className="my-4">
+            <Input
+              placeholder="الاسم"
+              value={form.name}
+              onChangeText={(value) => setForm({ ...form, name: value })}
+            />
+          </View>
+          <View className="mb-4">
+            <CustomSelecteBox
+              value={form.job_title}
+              setValue={(value) => setForm({ ...form, job_title: value })}
+              arrayOfValues={jobTitlesSchemaResponse}
+              valueKey="id"
+              placeholder="المسمى الوظيفي"
+            />
+          </View>
         </View>
-        <View className="mb-4">
-          <CustomSelecteBox
-            value={form.job_title}
-            setValue={(value) => setForm({ ...form, job_title: value })}
-            arrayOfValues={jobTitlesSchema.response}
-            valueKey="id"
-            placeholder="المسمى الوظيفي"
-          />
-        </View>
-      </View>
 
-      <View className="justify-end self-stretch">
-        <View className="mx-4">
-          <CustomButton
-            hasGradient={true}
-            colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-            title={'إبدأ الان'}
-            containerStyles={'flex-grow'}
-            positionOfGradient={'leftToRight'}
-            textStyles={'text-white'}
-            buttonStyles={'h-[45px]'}
-            handleButtonPress={handleSignup}
-            loading={signupLoading}
-          />
-          {/* disabled={!form.phone.length} */}
+        <View className="justify-end self-stretch">
+          <View className="mx-4">
+            <CustomButton
+              hasGradient={true}
+              colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
+              title={'إبدأ الان'}
+              containerStyles={'flex-grow'}
+              positionOfGradient={'leftToRight'}
+              textStyles={'text-white'}
+              buttonStyles={'!h-[25px] !py-1'}
+              handleButtonPress={handleSignup}
+              loading={signupLoading}
+            />
+            {/* disabled={!form.phone.length} */}
+          </View>
+          <View className="my-4">
+            <Text className="text-center font-psemibold text-base text-gray-500">
+              هل لديك حساب؟{' '}
+              <Link
+                href={{ pathname: '(auth)/login' }}
+                replace
+                className="text-primary text-toast-800 underline">
+                تسجيل الدخول
+              </Link>
+            </Text>
+          </View>
         </View>
-        <View className="my-4">
-          <Text className="text-center font-psemibold text-base text-gray-500">
-            هل لديك حساب؟{' '}
-            <Link
-              href={{ pathname: '(auth)/login' }}
-              replace
-              className="text-primary text-toast-800 underline">
-              تسجيل الدخول
-            </Link>
-          </Text>
-        </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

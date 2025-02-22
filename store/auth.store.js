@@ -71,4 +71,20 @@ export const useAuthStore = create((set) => ({
       set({ authDataSchema: { loading: false } });
     }
   },
+  //https://arrows-dev.versetech.net/api/user/user_profile/{user_id}
+  userProfileSchemaLoading: false,
+  userProfileSchemaError: null,
+  userProfileSchemaResponse: null,
+  getUserProfile: async (user_id) => {
+    try {
+      set({ userProfileSchemaLoading: true });
+      const response = await axiosInstance.get(`/user/user_profile/${user_id}`);
+      set({ userProfileSchemaResponse: response });
+      return response;
+    } catch (error) {
+      return error;
+    } finally {
+      set({ userProfileSchemaLoading: false });
+    }
+  },
 }));

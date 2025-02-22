@@ -6,7 +6,8 @@ import city_1 from '../assets/images/city_1.jpg';
 import no_photo from '../assets/images/no_photo.jpg';
 import empty_status from '../assets/images/empty_status.png';
 import empty_notifications from '../assets/images/empty_notifications.png';
-
+import connection_lost from '../assets/images/connection_lost.png';
+import no_data from '../assets/images/no_data.png';
 export default {
   only_word,
   top,
@@ -15,6 +16,7 @@ export default {
   city_1,
   no_photo,
   empty_status,
-  empty_notifications
+  empty_notifications,
+  connection_lost,
+  no_data,
 };
-

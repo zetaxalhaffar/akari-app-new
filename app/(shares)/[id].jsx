@@ -18,7 +18,7 @@ import { AntDesign } from '@expo/vector-icons';
 import CustomImageSlider from '@/components/CustomImageSlider';
 import CustomButton from '@/components/CustomButton';
 import icons from '@/constants/icons';
-import { getSecureStore, getSecureStoreNoAsync } from '@/composables/secure.store';
+import { getSecureStoreNoAsync } from '@/composables/secure.store';
 import CustomBottomSheet from '@/components/CustomBottomSheet';
 import DeleteItem from '@/components/DeleteItem';
 

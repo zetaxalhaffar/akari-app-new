@@ -2,7 +2,15 @@ import { View, Text, I18nManager, TouchableOpacity } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
 import CustomIcon from './CustomIcon';
 
-const CustomHeadWithBackButton = ({ title, rightText, rightTextPress, handleButtonPress, rightIcon, rightIconPress }) => {
+const CustomHeadWithBackButton = ({
+  rightTextStyles,
+  title,
+  rightText,
+  rightTextPress,
+  handleButtonPress,
+  rightIcon,
+  rightIconPress,
+}) => {
   return (
     <View
       className={`flex-row items-center justify-between px-2 py-3 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
@@ -21,18 +29,16 @@ const CustomHeadWithBackButton = ({ title, rightText, rightTextPress, handleButt
         <View>
           <Text
             onPress={rightTextPress}
-            className="text-right font-psemibold text-base underline">
+            className={`text-right font-psemibold text-base underline ${rightTextStyles}`}>
             {rightText}
           </Text>
         </View>
       )}
-      {
-        rightIcon && (
-          <CustomIcon handleOnIconPress={rightIconPress} containerStyles="border-[0]">
-            {rightIcon}
-          </CustomIcon>
-        )
-      }
+      {rightIcon && (
+        <CustomIcon handleOnIconPress={rightIconPress} containerStyles="border-[0]">
+          {rightIcon}
+        </CustomIcon>
+      )}
     </View>
   );
 };

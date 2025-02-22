@@ -3,9 +3,16 @@ import { router } from 'expo-router';
 import { I18nManager, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import icons from '@/constants/icons';
-import { getSecureStoreNoAsync } from '@/composables/secure.store';
+import { getSecureStoreNoAsync, deleteSecureStore } from '@/composables/secure.store';
 import CustomIcon from '../../components/CustomIcon';
 import { Entypo } from '@expo/vector-icons';
+import CustomBottomSheet from '../../components/CustomBottomSheet';
+import LogoutItem from '@/components/LogoutItem';
+import { useRef, useState } from 'react';
+import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
+import { useAuthStore } from '@/store/auth.store';
+import * as SecureStore from 'expo-secure-store';
+import { useEffect } from 'react';
 
 const MoreSettingsItem = ({ icon, title, handleItemPress }) => {
   return (
@@ -30,12 +37,28 @@ const MoreSettingsItem = ({ icon, title, handleItemPress }) => {
 };
 
 const MoreScreen = () => {
-  const user = getSecureStoreNoAsync('user');
+  const bottomSheetModalRef = useRef(null);
+  const { getAuthData } = useAuthStore();
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const initialize = async () => {
+      const response = await getAuthData();
+      setUser(response);
+    };
+    initialize();
+  }, []);
+  const handleLogout = async () => {
+    await deleteSecureStore('user');
+    await deleteSecureStore('token');
+    router.push('/(auth)');
+    bottomSheetModalRef.current.dismiss();
+  };
   return (
     <>
       <SafeAreaView className="flex-1 ">
         <HomePageHeader hasActions={false} />
-        <View
+        <TouchableOpacity
+          onPress={() => router.push('/(more_screens)/profile')}
           className={`px-4 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mx-4 items-center justify-between gap-4`}>
           <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-4`}>
             <View className="flex h-12 w-12 items-center justify-center rounded-full bg-toast-100">
@@ -56,11 +79,25 @@ const MoreScreen = () => {
               <Entypo name="chevron-left" size={24} color="#71717a" />
             </CustomIcon>
           </View>
-        </View>
+        </TouchableOpacity>
         <View className="my-6" style={{ width: '100%', height: 2, backgroundColor: '#e4e4e7' }} />
         <View className="flex-1">
           <ScrollView>
             <View className="flex-1">
+              {user && user?.privilege == 'admin' && (
+                <MoreSettingsItem
+                  handleItemPress={() => router.push('/(admin)/users_list')}
+                  icon={icons.user}
+                  title="المستخدمين"
+                />
+              )}
+              {user && user?.privilege == 'admin' && (
+                <MoreSettingsItem
+                  handleItemPress={() => router.push('/(admin)/bulk_messages')}
+                  icon={icons.bulk_messages}
+                  title="رسائل جماعية"
+                />
+              )}
               <MoreSettingsItem
                 handleItemPress={() => router.push('/notifications')}
                 icon={icons.notifications}
@@ -76,10 +113,39 @@ const MoreScreen = () => {
                 icon={icons.support}
                 title="الدعم"
               />
+              <MoreSettingsItem
+                handleItemPress={() => router.push('/(more_screens)/privacy')}
+                icon={icons.terms}
+                title="سياسية الخصوصية"
+              />
+              <MoreSettingsItem
+                handleItemPress={() => router.push('/(more_screens)/terms')}
+                icon={icons.privacy}
+                title="الأحكام والشروط"
+              />
+              <MoreSettingsItem
+                handleItemPress={() => bottomSheetModalRef.current.present()}
+                icon={icons.logout}
+                title="تسجيل الخروج"
+              />
             </View>
           </ScrollView>
         </View>
       </SafeAreaView>
+
+      <CustomBottomModalSheet
+        backdropBehave="close"
+        enablePanDownToClose={true}
+        snapPoints={['35%']}
+        bottomSheetModalRef={bottomSheetModalRef}>
+        <View className="h-full items-center justify-center">
+          <LogoutItem
+            onDeleteConfirm={handleLogout}
+            confirmLoading={false}
+            bottomSheetModalRef={bottomSheetModalRef}
+          />
+        </View>
+      </CustomBottomModalSheet>
     </>
   );
 };

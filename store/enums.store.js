@@ -2,20 +2,19 @@ import { create } from 'zustand';
 import axiosInstance from '../utils/axiosInstance';
 
 export const useEnumsStore = create((set) => ({
-  jobTitlesSchema: {
-    loading: false,
-    error: null,
-    response: null,
-  },
+  jobTitlesSchemaLoading: false,
+  jobTitlesSchemaError: null,
+  jobTitlesSchemaResponse: null,
   getJobTitles: async (state) => {
     try {
-      set({ jobTitlesSchema: { loading: true } });
+      set({ jobTitlesSchemaLoading: true });
       const response = await axiosInstance.get('/job_titles');
-      set({ jobTitlesSchema: { response } });
+      set({ jobTitlesSchemaResponse: response });
+      return response;
     } catch (error) {
-      set({ jobTitlesSchema: { error } });
+      set({ jobTitlesSchemaError: error });
     } finally {
-      set({ jobTitlesSchema: { loading: false } });
+      set({ jobTitlesSchemaLoading: false });
     }
   },
   regionsSchema: {
@@ -23,12 +22,14 @@ export const useEnumsStore = create((set) => ({
     error: null,
     response: null,
   },
+  regions: [],
   //https://arrows-dev.versetech.net/api/region/list
   getRegions: async (state) => {
     try {
       set({ regionsSchema: { loading: true } });
       const response = await axiosInstance.get('/region/list');
       set({ regionsSchema: { response } });
+      set({ regions: response });
       return response;
     } catch (error) {
       set({ regionsSchema: { error } });

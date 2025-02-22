@@ -1,12 +1,15 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, Linking } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeadWithBackButton from '../../components/CustomHeadWithBackButton';
 import icons from '../../constants/icons';
 import { router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
+import { getSecureStoreNoAsync } from '@/composables/secure.store';
 
 const support = () => {
+  const user = getSecureStoreNoAsync('user');
+
   return (
     <SafeAreaView className="flex-1">
       <CustomHeadWithBackButton title="المساعدة والدعم" handleButtonPress={() => router.back()} />
@@ -24,7 +27,9 @@ const support = () => {
             positionOfGradient={'leftToRight'}
             textStyles={'text-black text-green-500'}
             buttonStyles={'h-[45px] border border-green-500'}
-            handleButtonPress={() => {}}
+            handleButtonPress={() => {
+              Linking.openURL(`https://wa.me/${user?.support_phone}`);
+            }}
           />
         </View>
       </View>

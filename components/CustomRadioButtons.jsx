@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, I18nManager } from 'react-native';
 import RadioGroup from 'react-native-radio-buttons-group';
 
 const CustomRadioButtons = ({
@@ -6,6 +6,7 @@ const CustomRadioButtons = ({
   handleChangeRadioButton,
   selectedId,
   layout = 'row',
+  disabled = false,
 }) => {
   return (
     <View>

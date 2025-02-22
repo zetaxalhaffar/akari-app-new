@@ -20,6 +20,8 @@ const CustomDropdown = ({
   emptyMessage = 'لا يوجد بيانات',
   disabled = false,
   keyName = 'name',
+  hideLoading = false,
+  label
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -33,8 +35,8 @@ const CustomDropdown = ({
 
   return (
     <>
-      <Text className="mb-2 font-pmedium text-gray-700">{placeholder}</Text>
-
+      {placeholder && <Text className="mb-2 font-pmedium text-gray-700">{placeholder}</Text>}
+      {label && <Text className="mb-2 font-pmedium text-gray-700">{label}</Text>}
       <View
         className={`h-[48px] w-full justify-center rounded-lg border ${disabled ? 'border-gray-300 opacity-50' : 'border-toast-500'}`}>
         <TouchableOpacity
@@ -46,7 +48,7 @@ const CustomDropdown = ({
             {(arrayOfValues && arrayOfValues.find((item) => item.id === value)?.[keyName]) ||
               `يرجى إختيار ${placeholder}`}
           </Text>
-          {disabled && <ActivityIndicator color="#a47764" />}
+          {disabled && !hideLoading && <ActivityIndicator color="#a47764" />}
         </TouchableOpacity>
         <Modal
           statusBarTranslucent

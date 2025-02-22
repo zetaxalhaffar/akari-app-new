@@ -41,7 +41,7 @@ export default function TabLayout() {
                 }}>
                 <Image
                   source={focused ? icons.home_screen_active : icons.home_screen_unactive}
-                  className="h-8 w-8"
+                  className="h-6 w-6"
                   tintColor={color}
                 />
                 <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
@@ -63,8 +63,31 @@ export default function TabLayout() {
                   paddingTop: 20,
                 }}>
                 <Image
+                  source={focused ? icons.my_posts_active : icons.my_posts_unactive}
+                  className="h-6 w-6"
+                  tintColor={color}
+                />
+                <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
+                  المواعيد
+                </Text>
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="myposts"
+          options={{
+            tabBarIcon: ({ color, focused }) => (
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 80,
+                  paddingTop: 20,
+                }}>
+                <Image
                   source={focused ? icons.order_screen_active : icons.order_screen_unactive}
-                  className="h-8 w-8"
+                  className="h-6 w-6"
                   tintColor={color}
                 />
                 <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
@@ -87,7 +110,7 @@ export default function TabLayout() {
                 }}>
                 <Image
                   source={focused ? icons.sector_screen_active : icons.sector_screen_unactive}
-                  className="h-8 w-8"
+                  className="h-6 w-6"
                   tintColor={color}
                 />
                 <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
@@ -111,7 +134,7 @@ export default function TabLayout() {
                 }}>
                 <Image
                   source={focused ? icons.menu_screen_active : icons.menu_screen_unactive}
-                  className="h-8 w-8"
+                  className="h-6 w-6"
                   tintColor={color}
                 />
                 <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>

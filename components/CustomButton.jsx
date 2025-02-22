@@ -25,7 +25,7 @@ const CustomButton = ({
   return (
     <View className={`${containerStyles} rounded-lg`}>
       {hasGradient && (
-        <TouchableOpacity onPress={handleButtonPress} disabled={disabled}>
+        <TouchableOpacity className={buttonStyles} onPress={handleButtonPress} disabled={disabled}>
           <LinearGradient
             style={{ borderRadius: 6 }}
             colors={colors}

@@ -54,7 +54,7 @@ axiosInstance.interceptors.request.use(
   async (config) => {
     const token = await getToken();
     //console.log(process.env.EXPO_PUBLIC_DEV_URI, 'process.env.EXPO_PUBLIC_DEV_URI');
-    //console.log(token, 'token');
+    console.log(token, 'token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }

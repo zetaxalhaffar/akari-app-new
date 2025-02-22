@@ -1,8 +1,20 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableWithoutFeedback, Button } from 'react-native';
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 
 const CustomBottomSheet = ({ trigger, children, snapPoints = ['25%', '50%', '70%'] }) => {
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        pressBehavior={'none'}
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={1}
+      />
+    ),
+    []
+  );
+
   // ref
   const bottomSheetModalRef = useRef(null);
 
@@ -29,9 +41,11 @@ const CustomBottomSheet = ({ trigger, children, snapPoints = ['25%', '50%', '70%
         React.cloneElement(trigger, {
           handleButtonPress: handlePresentModalPress,
           onClose: handleDismissModalPress,
+          onPress: handlePresentModalPress,
+          handleItemPress: handlePresentModalPress,
         })
       ) : (
-        <Button onPress={handlePresentModalPress} title="Present Modal" color="black" />
+        <View></View>
       )}
       <BottomSheetModal
         backgroundStyle={{ backgroundColor: '#EEE' }}
@@ -40,10 +54,12 @@ const CustomBottomSheet = ({ trigger, children, snapPoints = ['25%', '50%', '70%
         enableDynamicSizing={snapPoints.length}
         stackBehavior="push"
         ref={bottomSheetModalRef}
+        backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}>
         <BottomSheetView>
           {React.cloneElement(children, {
             onClose: handleDismissModalPress,
+            bottomSheetModalRef,
           })}
         </BottomSheetView>
       </BottomSheetModal>

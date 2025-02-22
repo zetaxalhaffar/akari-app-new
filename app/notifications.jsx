@@ -1,8 +1,6 @@
 import { View, Text, TouchableOpacity, I18nManager } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomIcon from '@/components/CustomIcon';
-import Entypo from '@expo/vector-icons/Entypo';
 import { router } from 'expo-router';
 import { useNotificationsStore } from '@/store/notifications.store';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -35,11 +33,22 @@ const NotificationItem = ({ notification }) => {
 };
 
 const Notifications = () => {
-  const { getNotifications, notificationLoading, notificationResponse } = useNotificationsStore();
+  const {
+    getNotifications,
+    notificationLoading,
+    notificationResponse,
+    deleteAllNotifications,
+    deleteAllNotificationsLoading,
+  } = useNotificationsStore();
   const [notifications, setNotifications] = useState({});
   const getNotificationsList = async () => {
     const response = await getNotifications();
     setNotifications(response);
+  };
+
+  const handleDeleteAllNotifications = async () => {
+    const response = await deleteAllNotifications();
+    console.log(response);
   };
 
   useEffect(() => {
@@ -47,11 +56,11 @@ const Notifications = () => {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1">
       <CustomHeadWithBackButton
         title="الإشعارات"
-        rightText="تحديد الجميع كمقروء"
-        rightTextPress={() => {}}
+        rightText="حذف الاشعارات"
+        rightTextPress={notifications.data.length > 0 ? handleDeleteAllNotifications : null}
         handleButtonPress={() => router.back()}
       />
       <View className="flex-1">

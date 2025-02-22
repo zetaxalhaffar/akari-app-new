@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "288952294758",
+    "project_id": "akarinew-548b5",
+    "storage_bucket": "akarinew-548b5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288952294758:android:0c51722ae089d63e3dfca7",
+        "android_client_info": {
+          "package_name": "com.yazan_4alhaffar.akarinew"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3fFJS--WR8hokoAZbt1JpeAR5A2eV6ns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,10 +3,13 @@ import { Text, TextInput, type TextInputProps } from 'react-native';
 import { cn } from '~/lib/utils';
 
 const Input = React.forwardRef<React.ElementRef<typeof TextInput>, TextInputProps>(
-  ({ className, placeholderClassName, ...props }, ref) => {
+  ({ className, placeholderClassName, showPlaceholder = true, ...props }, ref) => {
     return (
       <>
-        <Text className="mb-2 font-pmedium text-gray-700">{props.placeholder}</Text>
+        {props.label && <Text className="mb-2 font-pmedium text-gray-700">{props.label}</Text>}
+        {props.placeholder && showPlaceholder && (
+          <Text className="mb-2 font-pmedium text-gray-700">{props.placeholder}</Text>
+        )}
         <TextInput
           ref={ref}
           className={cn(
@@ -18,6 +21,9 @@ const Input = React.forwardRef<React.ElementRef<typeof TextInput>, TextInputProp
           {...props}
           placeholder={`يرجى إدخال ${props.placeholder}`}
           keyboardType={props.type}
+          readOnly={props.editable}
+          editable={props.editable}
+          numberOfLines={props.numberOfLines}
         />
       </>
     );

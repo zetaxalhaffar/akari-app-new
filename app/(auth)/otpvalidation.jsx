@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, I18nManager, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  I18nManager,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomIcon from '../../components/CustomIcon';
 import { Link, router, useGlobalSearchParams } from 'expo-router';
@@ -8,8 +15,12 @@ import { useAuthStore } from '../../store/auth.store';
 import Entypo from '@expo/vector-icons/Entypo';
 import CustomOtpTextInput from '../../components/OtpTextInput ';
 import { notify } from 'react-native-notificated';
-
 import * as SecureStore from 'expo-secure-store';
+
+/* ======================= handle notifications ======================= */
+import messaging from '@react-native-firebase/messaging';
+
+/* ======================= handle notifications ======================= */
 
 const OtpValidationScreen = () => {
   const { phone, country_code, parent } = useGlobalSearchParams();
@@ -19,6 +30,35 @@ const OtpValidationScreen = () => {
     country_code,
   });
 
+  /* ======================= handle notifications ======================= */
+
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+  };
+
+  const [firebaseToken, setFirebaseToken] = useState('');
+
+  useEffect(() => {
+    if (requestUserPermission()) {
+      messaging()
+        .getToken()
+        .then((token) => {
+          console.log(token, 'fc token');
+          setFirebaseToken(token);
+        });
+    } else {
+      console.log('no permission', authStatus);
+    }
+  }, []);
+
+  /* ======================= handle notifications ======================= */
   const { loginWithOtp, loginWithOtploading, requestOtp, requestOtpLoading } = useAuthStore();
   const [counter, setCounter] = useState(60);
   const timer = useRef(null);
@@ -73,7 +113,8 @@ const OtpValidationScreen = () => {
   };
 
   const handleLogin = async () => {
-    const isDone = await loginWithOtp({ ...form.current });
+    console.log('handleLogin ========================= 1======================', firebaseToken);
+    const isDone = await loginWithOtp({ ...form.current, firebase: firebaseToken ?? '' });
     if (isDone.success) {
       notify('success', {
         params: {
@@ -96,88 +137,96 @@ const OtpValidationScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <TouchableOpacity className={`m-3 mb-3 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center`}>
-        <CustomIcon
-          handleOnIconPress={() => {
-            parent === 'signup'
-              ? router.replace({ pathname: '(auth)/signup' })
-              : router.replace({ pathname: '(auth)/login' });
-          }}
-          containerStyles="border-[0]">
-          <Entypo name="chevron-right" size={24} color="#000" />
-        </CustomIcon>
-        <Text
-          className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} mt-2 font-psemibold text-lg`}>
-          {parent === 'signup' ? 'إنشاء حساب' : 'تسجيل الدخول'}
-        </Text>
-      </TouchableOpacity>
-      <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view mt-4 !pb-0`}>
-        <Text className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-xl`}>
-          تأكيد رقم التليفون
-        </Text>
-      </View>
-      <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view !py-0`}>
-        <Text
-          className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-base text-gray-500`}>
-          أدخل رمز OTP المكون من 6 أرقام المرسل إلى رقمك
-        </Text>
-      </View>
-      <View style={{ flexGrow: 1 }}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView className="flex-1">
+        <TouchableOpacity
+          className={`m-3 mb-3 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center`}>
+          <CustomIcon
+            handleOnIconPress={() => {
+              parent === 'signup'
+                ? router.replace({ pathname: '(auth)/signup' })
+                : router.replace({ pathname: '(auth)/login' });
+            }}
+            containerStyles="border-[0]">
+            <Entypo name="chevron-right" size={24} color="#000" />
+          </CustomIcon>
+          <Text
+            className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} mt-2 font-psemibold text-lg`}>
+            {parent === 'signup' ? 'إنشاء حساب' : 'تسجيل الدخول'}
+          </Text>
+        </TouchableOpacity>
         <View
-          className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view mt-12 !py-0`}>
-          <CustomOtpTextInput otp={form.current.otp_number} handleOtp={handleOtp} />
-        </View>
-        <View className="mt-12">
-          <View className="items-center justify-center">
-            <Text className="text-center font-psemibold text-base text-gray-500">
-              لم يصلك الرمز؟{' '}
-            </Text>
-            <TouchableOpacity
-              disabled={counter > 0}
-              onPress={handleResendOtp}
-              className={`mt-2 items-center justify-center gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
-              <Text
-                className={`text-primary font-pmedium text-lg underline ${counter > 0 ? 'text-gray-400' : 'text-toast-800'}`}>
-                إعادة الإرسال
-              </Text>
-              {counter > 0 && (
-                <Text className="text-primary font-psemibold text-lg text-toast-800">
-                  {counter}
-                </Text>
-              )}
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-      <View className="justify-end self-stretch">
-        <View className="mx-4">
-          <CustomButton
-            hasGradient={true}
-            colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-            title={parent === 'signup' ? 'إنشاء حساب' : 'تسجيل الدخول'}
-            containerStyles={'flex-grow'}
-            positionOfGradient={'leftToRight'}
-            textStyles={'text-white'}
-            buttonStyles={'h-[45px]'}
-            handleButtonPress={handleLogin}
-            disabled={!form.current.phone.length}
-            loading={loginWithOtploading}
-          />
-        </View>
-        <View className="my-4">
-          <Text className="text-center font-psemibold text-base text-gray-500">
-            جديد في عقاري؟{' '}
-            <Link
-              href={{ pathname: '(auth)/signup' }}
-              replace
-              className="text-primary text-toast-800 underline">
-              إنشاء حساب
-            </Link>
+          className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view mt-4 !pb-0`}>
+          <Text className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-xl`}>
+            تأكيد رقم التليفون
           </Text>
         </View>
-      </View>
-    </SafeAreaView>
+        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view !py-0`}>
+          <Text
+            className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-base text-gray-500`}>
+            أدخل رمز OTP المكون من 6 أرقام المرسل إلى
+          </Text>
+        </View>
+        <Text
+          className={`${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'} px-4 font-psemibold text-base text-gray-500`}>
+          {phone}
+        </Text>
+        <View style={{ flexGrow: 1 }}>
+          <View
+            className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view mt-12 !py-0`}>
+            <CustomOtpTextInput otp={form.current.otp_number} handleOtp={handleOtp} />
+          </View>
+          <View className="mt-12">
+            <View className="items-center justify-center">
+              <Text className="text-center font-psemibold text-base text-gray-500">
+                لم يصلك الرمز؟{' '}
+              </Text>
+              <TouchableOpacity
+                disabled={counter > 0}
+                onPress={handleResendOtp}
+                className={`mt-2 items-center justify-center gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
+                <Text
+                  className={`text-primary font-pmedium text-lg underline ${counter > 0 ? 'text-gray-400' : 'text-toast-800'}`}>
+                  إعادة الإرسال
+                </Text>
+                {counter > 0 && (
+                  <Text className="text-primary font-psemibold text-lg text-toast-800">
+                    {counter}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <View className="justify-end self-stretch">
+          <View className="mx-4">
+            <CustomButton
+              hasGradient={true}
+              colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
+              title={parent === 'signup' ? 'إنشاء حساب' : 'تسجيل الدخول'}
+              containerStyles={'flex-grow'}
+              positionOfGradient={'leftToRight'}
+              textStyles={'text-white'}
+              buttonStyles={'h-[45px]'}
+              handleButtonPress={handleLogin}
+              disabled={!form.current.phone.length}
+              loading={loginWithOtploading}
+            />
+          </View>
+          <View className="my-4">
+            <Text className="text-center font-psemibold text-base text-gray-500">
+              جديد في عقاري؟{' '}
+              <Link
+                href={{ pathname: '(auth)/signup' }}
+                replace
+                className="text-primary text-toast-800 underline">
+                إنشاء حساب
+              </Link>
+            </Text>
+          </View>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
