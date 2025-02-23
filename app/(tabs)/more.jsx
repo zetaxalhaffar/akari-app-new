@@ -36,6 +36,28 @@ const MoreSettingsItem = ({ icon, title, handleItemPress }) => {
   );
 };
 
+const LogoutInnerItem = ({ icon, title, handleItemPress }) => {
+  return (
+    <TouchableOpacity
+      onPress={handleItemPress}
+      className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mx-4 mb-10 mt-2 items-center justify-between gap-4 rounded-lg bg-red-800 p-4`}>
+      <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-4`}>
+        <View className="flex h-12 w-12 items-center justify-center rounded-full ">
+          <Image source={icon} className="h-6 w-6" resizeMode="contain" tintColor="#ffffff" />
+        </View>
+        <View>
+          <Text className="font-psemibold text-lg text-white">{title}</Text>
+        </View>
+      </View>
+      <View>
+        <CustomIcon containerStyles="border-[0]">
+          <Entypo name="chevron-left" size={24} color="#ffffff" />
+        </CustomIcon>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 const MoreScreen = () => {
   const bottomSheetModalRef = useRef(null);
   const { getAuthData } = useAuthStore();
@@ -123,7 +145,7 @@ const MoreScreen = () => {
                 icon={icons.privacy}
                 title="الأحكام والشروط"
               />
-              <MoreSettingsItem
+              <LogoutInnerItem
                 handleItemPress={() => bottomSheetModalRef.current.present()}
                 icon={icons.logout}
                 title="تسجيل الخروج"
@@ -143,6 +165,7 @@ const MoreScreen = () => {
             onDeleteConfirm={handleLogout}
             confirmLoading={false}
             bottomSheetModalRef={bottomSheetModalRef}
+            onClose={() => bottomSheetModalRef.current.dismiss()}
           />
         </View>
       </CustomBottomModalSheet>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, I18nManager } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomePageHeader from '@/components/HomePageHeader';
 import { router, useGlobalSearchParams } from 'expo-router';
@@ -7,10 +7,9 @@ import CustomTopTabs from '../../components/CustomTopTabs';
 import { useUnitsStore } from '../../store/units.store';
 import CustomButton from '@/components/CustomButton';
 import { FlashList } from '@shopify/flash-list';
-import CustomLinear from '../../components/CustomLinear';
-import icons from '~/constants/icons';
 import UnitShareCard from '../../components/UnitCardShare';
 import UnitApartmentCard from '../../components/UnitCardApartment';
+import EmptyScreen from '@/components/EmptyScreen';
 
 // Top Tab Items
 const topTabItems = [
@@ -23,10 +22,6 @@ const topTabItems = [
     title: 'العقارات',
   },
 ];
-
-
-
-
 
 // Region With Id
 const RegionWithId = () => {
@@ -105,6 +100,7 @@ const RegionWithId = () => {
     <SafeAreaView className="flex-1 bg-white">
       <HomePageHeader hasActions={true} customActions={true}>
         <CustomButton
+          containerStyles={'mt-3'}
           hasGradient={true}
           colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
           title={tabId == 'shares' ? 'إضافة سهم تنظيمي' : 'إضافة عقار'}
@@ -132,6 +128,7 @@ const RegionWithId = () => {
               }
               onEndReached={handleEndReached}
               onEndReachedThreshold={0.5}
+              ListEmptyComponent={() => <EmptyScreen title="لا يوجد عروض للبيع أو للشراء" />}
             />
           </View>
         </CustomTopTabs>

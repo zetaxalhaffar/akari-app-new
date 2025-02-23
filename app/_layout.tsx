@@ -1,7 +1,7 @@
 import '../global.css';
 import { Redirect, Stack } from 'expo-router';
-import { GestureHandlerRootView, TextInput } from 'react-native-gesture-handler';
-import { getSecureStore, setSecureStore } from '@/composables/secure.store';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { getSecureStore } from '@/composables/secure.store';
 import { useEffect, useRef, useState } from 'react';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -191,6 +191,12 @@ export default function RootLayout() {
 
     return () => unsubscribe();
   }, []);
+  
+
+
+  // Disable RTL support
+  I18nManager.allowRTL(true);
+  I18nManager.forceRTL(true);
 
   if (!fontsLoaded) {
     // Render a splash/loading screen while the state is being resolved
@@ -248,6 +254,7 @@ export default function RootLayout() {
               <Stack.Screen name="(more_screens)/terms" options={{ headerShown: false }} />
               <Stack.Screen name="(admin)/users_list" options={{ headerShown: false }} />
               <Stack.Screen name="(admin)/bulk_messages" options={{ headerShown: false }} />
+              <Stack.Screen name="SearchResults" options={{ headerShown: false }} />
             </Stack>
           </BottomSheetModalProvider>
         </NotificationsProvider>

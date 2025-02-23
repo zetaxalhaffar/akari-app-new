@@ -149,7 +149,7 @@ const LoginScreen = () => {
               containerStyles={'flex-grow'}
               positionOfGradient={'leftToRight'}
               textStyles={'text-white'}
-              buttonStyles={'!h-[25px] !py-1'}
+              buttonStyles={'!h-[45px]'}
               handleButtonPress={handleSignup}
               loading={signupLoading}
             />

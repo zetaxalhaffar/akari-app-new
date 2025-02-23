@@ -60,7 +60,9 @@ const Notifications = () => {
       <CustomHeadWithBackButton
         title="الإشعارات"
         rightText="حذف الاشعارات"
-        rightTextPress={notifications.data.length > 0 ? handleDeleteAllNotifications : null}
+        rightTextPress={
+          notifications.data && notifications.data.length > 0 ? handleDeleteAllNotifications : null
+        }
         handleButtonPress={() => router.back()}
       />
       <View className="flex-1">

@@ -1,7 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./app/**/*.{js,ts,tsx,jsx}', './components/**/*.{js,ts,tsx,jsx}', './screens/**/*.{js,ts,tsx,jsx}', ],
-
+  content: [
+    './app/**/*.{js,ts,tsx,jsx}',
+    './components/**/*.{js,ts,tsx,jsx}',
+    './screens/**/*.{js,ts,tsx,jsx}',
+  ],
+  safelist: [
+    'rtl-view',
+    'ltr-view',
+    'text-xs',
+    'text-sm',
+    'text-base',
+    'text-lg',
+    'text-xl',
+    'text-2xl',
+    'text-3xl',
+    'text-4xl',
+  ],
   presets: [require('nativewind/preset')],
   theme: {
     extend: {

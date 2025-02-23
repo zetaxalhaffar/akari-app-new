@@ -1,4 +1,4 @@
-import { Text, View, Image, TouchableOpacity, I18nManager, ScrollView } from 'react-native';
+import { Text, View, Image, TouchableOpacity, I18nManager, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomePageHeader from '@/components/HomePageHeader';
 import images from '~/constants/images';
@@ -29,6 +29,8 @@ export default function Home() {
     getRegionsList();
   }, []);
 
+  console.log(I18nManager.isRTL, '=============== isRTL');
+
   return (
     <SafeAreaView className="flex-1">
       <HomePageHeader />
@@ -36,7 +38,7 @@ export default function Home() {
         <Text className="font-psemibold text-lg">لا تضيع فرصة الاستثمار</Text>
         <Text className="font-pregular text-base">كل الوحدات متاحة, اختر الوحدة التي تناسبك</Text>
       </View>
-      <ScrollView>
+      <ScrollView refreshControl={<RefreshControl refreshing={false} onRefresh={getRegionsList} />}>
         <View className="mt-6 flex-row gap-3 px-3">
           {regionResponse &&
             regionResponse?.map((item) => (
@@ -68,12 +70,11 @@ export default function Home() {
           </Text>
           <View className="mt-4">
             <ScrollView
-              horizontal
-              contentContainerStyle={{ gap: 16 }}
+              contentContainerStyle={{ gap: 16, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}
               showsHorizontalScrollIndicator={false}>
               {statisticsSchemaResponse?.share_statistics?.map((item, index) => (
                 <LinearGradient
-                  style={{ borderRadius: 6, width: 140 }}
+                  style={{ borderRadius: 6, width: '47%' }}
                   colors={colors}
                   className={`h-[130px] items-center justify-center rounded-lg p-2`}
                   start={gradientPositions[positionOfGradient2].start}
@@ -96,7 +97,7 @@ export default function Home() {
               ))}
               {statisticsSchemaResponse?.apartment_statistics?.map((item, index) => (
                 <LinearGradient
-                  style={{ borderRadius: 6, width: 140 }}
+                  style={{ borderRadius: 6, width: '47%' }}
                   colors={colors}
                   className={`h-[130px] items-center justify-center rounded-lg p-2`}
                   start={gradientPositions[positionOfGradient].start}

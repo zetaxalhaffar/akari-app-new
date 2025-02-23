@@ -316,4 +316,21 @@ export const useUnitsStore = create((set, get) => ({
       set({ updateApartmentRequestLoading: false });
     }
   },
+  // https://arrows-dev.versetech.net/api/apartment/search || https://arrows-dev.versetech.net/api/share/search
+  searchForUnitsLoading: false,
+  searchForUnitsError: null,
+  searchForUnitsResponse: [],
+  searchForUnits: async (data) => {
+    try {
+      set({ searchForUnitsLoading: true });
+      const response = await axiosInstance.get(`/${data.currentType}/search`, { params: data });
+      set({ searchForUnitsResponse: response });
+      return response;
+    } catch (error) {
+      set({ searchForUnitsError: error });
+      notify('error', { params: { title: 'حدث خطأ ما', description: error?.message } });
+    } finally {
+      set({ searchForUnitsLoading: false });
+    }
+  },
 }));

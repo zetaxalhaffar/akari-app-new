@@ -1,3 +1,4 @@
+// app/SearchScreen.jsx
 import { View, Text, ScrollView, I18nManager } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,76 +11,43 @@ import { useEnumsStore } from '../store/enums.store';
 import CustomButton from '@/components/CustomButton.jsx';
 
 const price_operator = [
-  {
-    name: 'مساوي',
-    id: '=',
-  },
-  {
-    name: 'أكبر',
-    id: '>',
-  },
-  {
-    name: 'أصغر',
-    id: '<',
-  },
-  {
-    name: 'أكبر أو مساوي',
-    id: '>=',
-  },
-  {
-    name: 'أصغر أو مساوي',
-    id: '<=',
-  },
+  { name: 'مساوي', id: '=' },
+  { name: 'أكبر', id: '>' },
+  { name: 'أصغر', id: '<' },
+  { name: 'أكبر أو مساوي', id: '>=' },
+  { name: 'أصغر أو مساوي', id: '<=' },
 ];
 
 const SearchScreen = () => {
   const { getRegions, regions, getSectorsBasedOnRegion, sectorsBasedOnRegionSchema } =
     useEnumsStore();
 
-  const unitTypeRadioButtons = useMemo(
-    () => [
-      {
-        id: 'all',
-        label: 'الكل',
-        value: 'all',
-        size: 20,
-        color: '#a47764',
-        disabled: form?.id?.length > 0,
-      },
-      {
-        id: 'share',
-        label: 'أسهم تنظيمية',
-        value: 'share',
-        size: 20,
-        color: '#a47764',
-      },
-      {
-        id: 'apartment',
-        label: 'عقارات',
-        value: 'apartment',
-        size: 20,
-        color: '#a47764',
-      },
-    ],
-    [form?.id]
-  );
-  const [currentType, setCurrentType] = useState('all');
   const [form, setForm] = useState({
     id: '',
     region_id: '',
+    sector_id: '',
     price_operator: '=',
     price: '',
   });
+  const [currentType, setCurrentType] = useState('share');
   const [sectoreType, setSectoreType] = useState('');
   const [sectorsTypes, setSectorsTypes] = useState([]);
   const [mainSectors, setMainSectors] = useState([]);
   const [sectors, setSectors] = useState([]);
+
+  const unitTypeRadioButtons = useMemo(
+    () => [
+      { id: 'share', label: 'أسهم تنظيمية', value: 'share', size: 20, color: '#a47764' },
+      { id: 'apartment', label: 'عقارات', value: 'apartment', size: 20, color: '#a47764' },
+    ],
+    [form?.id]
+  );
+
   const handleChangeRegion = async (value) => {
     setForm({ ...form, region_id: value });
     const sectorsResponse = await getSectorsBasedOnRegion(value);
     setMainSectors(sectorsResponse);
     const sectorsTypesSelection = [];
-
     for (let sector in sectorsResponse) {
       if (sectorsResponse[sector] !== true) {
         sectorsTypesSelection.push({
@@ -101,9 +69,11 @@ const SearchScreen = () => {
   };
 
   const handleSearch = async () => {
-    console.log('=====================================');
-    console.log('form', form);
-    console.log('=====================================');
+    // Navigate to the Search Results screen and pass the search parameters
+    router.push({
+      pathname: '/SearchResults',
+      params: { ...form, sectoreType, currentType },
+    });
   };
 
   useEffect(() => {
@@ -121,7 +91,6 @@ const SearchScreen = () => {
         <ScrollView>
           <View>
             <Text className="mb-2 font-pmedium text-gray-700">نوع الوحدة</Text>
-
             <CustomRadioButtons
               radioButtons={unitTypeRadioButtons}
               handleChangeRadioButton={(value) => setCurrentType(value)}
@@ -176,12 +145,13 @@ const SearchScreen = () => {
           <View>
             <Text className="font-pmedium text-gray-700">السعر</Text>
             <View
-              className={`my-4 justify-between gap-4 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
+              className={`my-4 justify-between gap-4 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}
+            >
               <View className="flex-1">
                 <CustomSelecteBox
                   value={form.price_operator}
                   setValue={(value) => setForm({ ...form, price_operator: value })}
-                  arrayOfValues={price_operator ?? []}
+                  arrayOfValues={price_operator}
                   valueKey="id"
                   placeholder=""
                   disabled={form.id.length > 0}

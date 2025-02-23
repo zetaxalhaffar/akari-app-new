@@ -55,10 +55,10 @@ const UnitApartmentCard = ({ item }) => {
       <Image source={{ uri: item.sector.cover.img }} className="h-full w-full" />
       <View className="absolute inset-0 bottom-0 w-full rounded-lg bg-toast-900/90 p-4 backdrop-blur-sm">
         <Text className="font-psemibold text-xl text-white">
-          {item.sector.sector_name.name} - {item.sector.sector_name.code}
+          {item.sector.sector_name?.name} - {item.sector.sector_name?.code}
         </Text>
         <Text className="mb-1 font-pregular text-base text-white">
-          {item.region.name} - {item.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'}
+          {item.region?.name} - {item.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'}
         </Text>
         <View className="flex-row flex-wrap items-center gap-1">
           <View className="flex-row items-center gap-1">

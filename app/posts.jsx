@@ -105,7 +105,7 @@ const MyOrders = () => {
           colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
           title={'إضافة طلب'}
           positionOfGradient={'leftToRight'}
-          textStyles={'text-white text-sm'}
+          textStyles={'text-white text-sm pt-1'}
           handleButtonPress={handleButtonPress}
         />
       </View>
