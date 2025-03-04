@@ -88,4 +88,79 @@ export const useAdminStore = create((set, get) => ({
       set({ sendBulkMessageLoading: false });
     }
   },
+  // https://arrows-dev.versetech.net/api/admin/{apartment | share}/approve/{apartment_id}
+  approveUnitLoading: false,
+  approveUnitError: null,
+  approveUnitResponse: null,
+  approveUnit: async (type, id) => {
+    try {
+      set({ approveUnitLoading: true });
+      const response = await axiosInstance.get(`/admin/${type}/approve/${id}`);
+      set({ approveUnitResponse: response });
+      notify('success', {
+        params: {
+          title: 'تمت العملية بنجاح',
+          description: response?.message ?? 'تم الموافقة على الطلب بنجاح',
+        },
+      });
+      return response;
+    } catch (error) {
+      notify('error', { params: { title: 'حدث خطأ ما', description: error?.message } });
+
+      console.log(error);
+      set({ approveUnitError: error });
+    } finally {
+      set({ approveUnitLoading: false });
+    }
+  },
+  // https://arrows-dev.versetech.net/api/admin/close_apartment/{apartment}
+  closeUnitLoading: false,
+  closeUnitError: null,
+  closeUnitResponse: null,
+  closeUnit: async (type, id) => {
+    try {
+      set({ closeUnitLoading: true });
+      const response = await axiosInstance.post(`/admin/close_${type}/${id}`);
+      notify('success', {
+        params: {
+          title: 'تمت العملية بنجاح',
+          description: response?.message ?? 'تم إتمام الصفقة بنجاح',
+        },
+      });
+      set({ closeUnitResponse: response });
+      return response;
+    } catch (error) {
+      notify('error', { params: { title: 'حدث خطأ ما', description: error?.message } });
+
+      console.log(error);
+      set({ closeUnitError: error });
+    } finally {
+      set({ closeUnitLoading: false });
+    }
+  },
+  // https://arrows-dev.versetech.net/api/{apartment | share}/delete/{apartment_id}
+  deleteUnitLoading: false,
+  deleteUnitError: null,
+  deleteUnitResponse: null,
+  deleteUnit: async (type, id) => {
+    try {
+      set({ deleteUnitLoading: true });
+      const response = await axiosInstance.delete(`/${type}/delete/${id}`);
+      notify('success', {
+        params: {
+          title: 'تمت العملية بنجاح',
+          description: response?.message ?? 'تم حذف الطلب بنجاح',
+        },
+      });
+      set({ deleteUnitResponse: response });
+      return response;
+    } catch (error) {
+      console.log(error);
+      notify('error', { params: { title: 'حدث خطأ ما', description: error?.message } });
+
+      set({ deleteUnitError: error });
+    } finally {
+      set({ deleteUnitLoading: false });
+    }
+  },
 }));

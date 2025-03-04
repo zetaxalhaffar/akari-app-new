@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomePageHeader from '@/components/HomePageHeader';
 import { router, useGlobalSearchParams } from 'expo-router';
@@ -10,6 +10,7 @@ import { FlashList } from '@shopify/flash-list';
 import UnitShareCard from '../../components/UnitCardShare';
 import UnitApartmentCard from '../../components/UnitCardApartment';
 import EmptyScreen from '@/components/EmptyScreen';
+import { ActivityIndicator } from 'react-native-web';
 
 // Top Tab Items
 const topTabItems = [
@@ -37,6 +38,7 @@ const RegionWithId = () => {
     sharesLoading,
     sharesRecords,
     apartmentsRecords,
+    apartmentsLoading,
   } = useUnitsStore();
 
   // Get Shares Based On Region
@@ -128,7 +130,13 @@ const RegionWithId = () => {
               }
               onEndReached={handleEndReached}
               onEndReachedThreshold={0.5}
-              ListEmptyComponent={() => <EmptyScreen title="لا يوجد عروض للبيع أو للشراء" />}
+              ListEmptyComponent={() =>
+                sharesLoading || apartmentsLoading ? (
+                  <Text />
+                ) : (
+                  <EmptyScreen title="لا يوجد عروض للبيع أو للشراء" />
+                )
+              }
             />
           </View>
         </CustomTopTabs>

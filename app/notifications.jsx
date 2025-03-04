@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, I18nManager } from 'react-native';
+import { View, Text, TouchableOpacity, I18nManager, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -39,16 +39,20 @@ const Notifications = () => {
     notificationResponse,
     deleteAllNotifications,
     deleteAllNotificationsLoading,
+    setNotificationCount,
   } = useNotificationsStore();
   const [notifications, setNotifications] = useState({});
   const getNotificationsList = async () => {
     const response = await getNotifications();
     setNotifications(response);
+    setNotificationCount(0);
+
   };
 
   const handleDeleteAllNotifications = async () => {
     const response = await deleteAllNotifications();
     console.log(response);
+    getNotificationsList();
   };
 
   useEffect(() => {
@@ -64,6 +68,7 @@ const Notifications = () => {
           notifications.data && notifications.data.length > 0 ? handleDeleteAllNotifications : null
         }
         handleButtonPress={() => router.back()}
+        rightTextLoading={deleteAllNotificationsLoading}
       />
       <View className="flex-1">
         <FlashList
@@ -72,9 +77,13 @@ const Notifications = () => {
           estimatedItemSize={200}
           refreshing={notificationLoading}
           onRefresh={getNotificationsList}
-          ListEmptyComponent={() => (
-            <EmptyScreen title="لا يوجد إشعارات" img={images.empty_notifications} />
-          )}
+          ListEmptyComponent={() =>
+            notificationLoading ? (
+              <Text />
+            ) : (
+              <EmptyScreen title="لا يوجد إشعارات" img={images.empty_notifications} />
+            )
+          }
         />
       </View>
     </SafeAreaView>

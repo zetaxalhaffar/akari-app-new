@@ -158,6 +158,7 @@ export default function RootLayout() {
     });
 
     const unscubscribe = messaging().onMessage(async (remoteMessage) => {
+      console.log('onMessage ========================= 1======================', remoteMessage);
       const data = remoteMessage.data;
       console.log('onMessage ========================= 1======================', data);
       notify('success', {

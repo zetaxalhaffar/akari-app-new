@@ -85,8 +85,7 @@ const CreateShareScreen = () => {
     const response = await createShareRequest(currentType, form);
     console.log(response, 'response');
     if (response?.success) {
-      router.replace('/(tabs)');
-      router.dismissAll();
+      router.replace(`/(shares)/${response.id}`);
     }
   };
 

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image, I18nManager } from 'react-native';
 import CustomLinear from './CustomLinear';
 import icons from '@/constants/icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { getSecureStoreNoAsync } from '@/composables/secure.store';
 
 const gradientPositions = {
   topToBottom: { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } },
@@ -10,6 +11,9 @@ const gradientPositions = {
   leftToRight: { start: { x: 0, y: 0 }, end: { x: 1, y: 0 } },
   rightToLeft: { start: { x: 1, y: 0 }, end: { x: 0, y: 0 } },
 };
+
+const user = getSecureStoreNoAsync('user');
+
 const UnitApartmentCard = ({ item }) => {
   const handleApartmentPress = () => {
     router.push(`/(apartments)/${item.id}`);
@@ -17,8 +21,8 @@ const UnitApartmentCard = ({ item }) => {
 
   return (
     <TouchableOpacity
-      onPress={handleApartmentPress}
-      activeOpacity={0.8}
+      onPress={item.closed != 1 ? handleApartmentPress : null}
+      activeOpacity={item.closed != 1 ? 0.8 : 1}
       className="relative my-3 h-[350px] w-full overflow-hidden rounded-lg border border-toast-900/50">
       {item.closed == 1 && (
         <LinearGradient
@@ -51,6 +55,19 @@ const UnitApartmentCard = ({ item }) => {
           textStyles="text-white !text-xs mt-1"
           buttonStyles="rounded-lg py-1 px-8"
         />
+        {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
+          <View className="mt-2">
+            {item.approve == 0 && (
+              <CustomLinear
+                title={item.approve == 1 ? 'متاح' : 'قيد المراجعة'}
+                colors={['#e3a001', '#b87005', '#95560b', '#7a460d', '#7a460d']}
+                positionOfGradient="leftToRight"
+                textStyles="text-white !text-xs mt-1"
+                buttonStyles="rounded-lg py-1 px-8"
+              />
+            )}
+          </View>
+        )}
       </View>
       <Image source={{ uri: item.sector.cover.img }} className="h-full w-full" />
       <View className="absolute inset-0 bottom-0 w-full rounded-lg bg-toast-900/90 p-4 backdrop-blur-sm">
@@ -103,17 +120,6 @@ const UnitApartmentCard = ({ item }) => {
           </View>
         </View>
         <View className="mt-1 flex-row flex-wrap items-center gap-1">
-          <View className="flex-row items-center gap-1">
-            <Image
-              source={icons.unit_status}
-              className={'h-6 w-6'}
-              tintColor={'#FFF'}
-              resizeMode="contain"
-            />
-            <Text className="font-pmedium text-sm text-white">
-              حالة الطلب : {item.approve == 1 ? 'متاح' : 'قيد المراجعة'}
-            </Text>
-          </View>
           <View className="flex-row items-center gap-1">
             <Image
               source={icons.user}

@@ -85,7 +85,7 @@ const SearchScreen = () => {
       <CustomHeadWithBackButton
         title="البحث عن وحدة"
         handleButtonPress={() => router.back()}
-        rightText={'بحث متقدم'}
+        rightText={''}
       />
       <View className="flex-1 px-4">
         <ScrollView>

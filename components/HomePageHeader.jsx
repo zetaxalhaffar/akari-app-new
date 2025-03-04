@@ -2,12 +2,15 @@ import { View, Text, Image, I18nManager, TouchableOpacity } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import images from '@/constants/images';
 import { router } from 'expo-router';
+import { useNotificationsStore } from '@/store/notifications.store';
 
 const HomePageHeader = ({ hasActions = true, customActions = false, children }) => {
   const handleLogoPress = () => {
     router.dismissAll();
     router.push('(tabs)');
   };
+
+  const { notificationCount } = useNotificationsStore();
 
   return (
     <View
@@ -28,7 +31,10 @@ const HomePageHeader = ({ hasActions = true, customActions = false, children }) 
                 pathname: '/notifications',
               })
             }
-            className="flex-row items-center rounded-full p-2">
+            className="relative flex-row items-center rounded-full p-2">
+            {notificationCount > 0 && (
+              <View className={'tpo-0 absolute left-0 top-0 h-2 w-2 rounded-full bg-red-600'}></View>
+            )}
             <Feather name="bell" size={20} color="#a47764" />
           </TouchableOpacity>
           <TouchableOpacity

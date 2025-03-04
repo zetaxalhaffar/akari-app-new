@@ -12,6 +12,7 @@ import EmptyScreen from '@/components/EmptyScreen';
 import CustomButton from '@/components/CustomButton';
 import UnitShareCard from '../components/UnitCardShare';
 import UnitApartmentCard from '../components/UnitCardApartment';
+import { ActivityIndicator } from 'react-native-web';
 
 // Top Tab Items
 const topTabItems = [
@@ -135,7 +136,13 @@ const MyOrders = () => {
               }
               onEndReached={handleEndReached}
               onEndReachedThreshold={0.5}
-              ListEmptyComponent={<EmptyScreen />}
+              ListEmptyComponent={() =>
+                sharesOrdersForCurrentUserLoading || apartmentsOrdersForCurrentUserLoading ? (
+                  <Text />
+                ) : (
+                  <EmptyScreen title="لا يوجد طلبات" />
+                )
+              }
             />
           </View>
         </CustomTopTabs>

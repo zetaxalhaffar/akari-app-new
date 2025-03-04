@@ -132,10 +132,7 @@ const CreateApartmentScreen = () => {
     const response = await createApartmentRequest(currentType, form);
     console.log(response, 'response');
     if (response?.success) {
-      if (response?.success) {
-        router.replace('/(tabs)');
-        router.dismissAll();
-      }
+      router.replace(`/(apartments)/${response.id}`);
     }
   };
 

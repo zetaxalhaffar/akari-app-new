@@ -40,10 +40,12 @@ import logout from "@/assets/icons/logout.png"
 import my_posts_active from "@/assets/icons/myposts_active.png"
 import my_posts_unactive from "@/assets/icons/myposts_unactive.png"
 import privacy from "@/assets/icons/privacy.png"
-import terms from "@/assets/icons/terms.png"
-import mobile from "@/assets/icons/mobile.png"
-import updates from "@/assets/icons/updates.png"
-import bulk_messages from "@/assets/icons/bulk_messages.png"
+import terms from '@/assets/icons/terms.png';
+import mobile from '@/assets/icons/mobile.png';
+import updates from '@/assets/icons/updates.png';
+import bulk_messages from '@/assets/icons/bulk_messages.png';
+import admin_approve from '@/assets/icons/admin_approve.png';
+
 export default {
   building_1,
   arrowUp,
@@ -90,5 +92,6 @@ export default {
   terms,
   mobile,
   updates,
-  bulk_messages
+  bulk_messages,
+  admin_approve,
 };

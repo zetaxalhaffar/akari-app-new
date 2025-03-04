@@ -148,8 +148,7 @@ const EditApartmentScreen = () => {
     const response = await createApartmentRequest(currentType, form);
     console.log(response, 'response');
     if (response?.success) {
-      router.replace(`/apartment/${id}`);
-      router.dismissAll();
+      router.replace(`/(apartments)/${id}`);
     }
   };
 

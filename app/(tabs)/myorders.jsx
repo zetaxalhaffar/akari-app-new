@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, I18nManager, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeadWithBackButton from '@/components/CustomHeadWithBackButton';
 import { router } from 'expo-router';
@@ -12,6 +12,7 @@ import EmptyScreen from '../../components/EmptyScreen';
 import CustomButton from '@/components/CustomButton';
 import UnitShareCard from '../../components/UnitCardShare';
 import UnitApartmentCard from '../../components/UnitCardApartment';
+import DropdownMenu, { MenuOption } from '../../components/DropdownMenu'; // Adjust the import path based on your project structure
 
 // Top Tab Items
 const topTabItems = [
@@ -24,8 +25,6 @@ const topTabItems = [
     title: 'طلبات العقارات',
   },
 ];
-
-
 
 const MyOrders = () => {
   // Get Shares Based On Region
@@ -71,12 +70,28 @@ const MyOrders = () => {
     getApartmentsOrdersData(true);
   }, [tabId]);
 
+  const [visible, setVisible] = useState(false);
+
   return (
     <SafeAreaView className="flex-1">
       <CustomHeadWithBackButton title="المواعيد" handleButtonPress={() => router.back()} />
+
       <View className="flex-1">
         <CustomTopTabs topTabItems={topTabItems} onTabChange={handleTabChange}>
-          <View className="flex-1 px-4 pt-4">
+          <View className="relative flex-1 px-4 pt-4">
+            <DropdownMenu
+              visible={visible}
+              handleOpen={() => setVisible(true)}
+              handleClose={() => setVisible(false)}
+              trigger={
+                <View>
+                  <Text>Actions</Text>
+                </View>
+              }>
+              <View>
+                <Text>test</Text>
+              </View>
+            </DropdownMenu>
             <FlashList
               data={tabId == 'shares' ? sharesOrders : apartmentsOrders}
               estimatedItemSize={350}
@@ -97,7 +112,13 @@ const MyOrders = () => {
               }
               onEndReached={() => {}}
               onEndReachedThreshold={0.5}
-              ListEmptyComponent={<EmptyScreen />}
+              ListEmptyComponent={() =>
+                sharesOrdersLoading || apartmentsOrdersLoading ? (
+                  <Text />
+                ) : (
+                  <EmptyScreen title="لا يوجد طلبات" />
+                )
+              }
             />
           </View>
         </CustomTopTabs>

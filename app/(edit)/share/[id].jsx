@@ -113,8 +113,7 @@ const EditShare = () => {
   const handleUpdateShareRequest = async () => {
     const response = await updateShareRequest(id, form);
     if (response?.success) {
-      router.replace(`/share/${id}`);
-      router.dismissAll();
+      router.replace(`/(shares)/${id}`);
     }
   };
 

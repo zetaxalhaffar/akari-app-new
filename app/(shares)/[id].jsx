@@ -21,6 +21,10 @@ import icons from '@/constants/icons';
 import { getSecureStoreNoAsync } from '@/composables/secure.store';
 import CustomBottomSheet from '@/components/CustomBottomSheet';
 import DeleteItem from '@/components/DeleteItem';
+import { useAdminStore } from '../../store/admin.store';
+
+import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
+import AdminActionItem from '../../components/AdminActionItem';
 
 const UnitDetails = ({ item }) => {
   return (
@@ -105,6 +109,17 @@ const SharesDetails = () => {
     deleteShareLoading,
   } = useUnitsStore();
 
+  /*================== admin actions ==================*/
+
+  const {
+    approveUnitLoading,
+    approveUnit,
+    closeUnitLoading,
+    closeUnit,
+    deleteUnitLoading,
+    deleteUnit,
+  } = useAdminStore();
+
   const handleShare = async (item) => {
     console.log(item);
     try {
@@ -143,101 +158,251 @@ const SharesDetails = () => {
     }
   };
 
+  const bottomSheetModalRef = useRef(null);
+  const closeUnitBottomSheetModalRef = useRef(null);
+  const deleteUnitBottomSheetModalRef = useRef(null);
+  const handleApproveUnit = async () => {
+    bottomSheetModalRef.current.present();
+  };
+
+  const handleCloseUnit = async () => {
+    closeUnitBottomSheetModalRef.current.present();
+  };
+
+  const handleApproveUnitConfirm = async () => {
+    const response = await approveUnit('share', id);
+    if (response?.success) {
+      getShareDetailsHandler();
+      bottomSheetModalRef.current.dismiss();
+    }
+  };
+
+  const handleCloseUnitConfirm = async () => {
+    const response = await closeUnit('share', id);
+    if (response?.success) {
+      getShareDetailsHandler();
+      closeUnitBottomSheetModalRef.current.dismiss();
+    }
+  };
+
+  const handleDeleteUnit = async () => {
+    deleteUnitBottomSheetModalRef.current.present();
+  };
+
+  const handleDeleteUnitConfirm = async () => {
+    const response = await deleteUnit('share', id);
+    if (response?.success) {
+      router.replace('/(tabs)');
+      router.dismissAll();
+    }
+  };
+
   useEffect(() => {
     getShareDetailsHandler();
   }, [id]);
 
   return (
-    <SafeAreaView className="flex-1">
-      {shareDetailsLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="100" color="#a47764" />
-        </View>
-      ) : (
-        <>
-          <CustomHeadWithBackButton
-            title="تفاصيل الوحدة"
-            rightIcon={<AntDesign name="sharealt" size={24} color="black" />}
-            rightIconPress={() => handleShare(shareDetailsResponse)}
-            handleButtonPress={() => router.back()}
+    <>
+      <CustomBottomModalSheet
+        backdropBehave="close"
+        enablePanDownToClose={true}
+        bottomSheetModalRef={bottomSheetModalRef}
+        handleSheetChanges={() => {}}
+        snapPoints={['30%']}
+        handleDismissModalPress={() => {}}>
+        <View className="h-full items-center justify-center">
+          <AdminActionItem
+            title="الموافقة على الطلب"
+            description="هل أنت متاكد من الموافقة على الطلب؟"
+            icon={icons.admin_approve}
+            color="#3cab3d"
+            confirm_color="bg-[#3cab3d]"
+            onDeleteConfirm={handleApproveUnitConfirm}
+            onClose={() => bottomSheetModalRef.current.dismiss()}
+            confirmLoading={approveUnitLoading}
           />
-          <View>
-            <View className="px-4">
-              <Text className="font-psemibold text-xl">
-                {shareDetailsResponse?.sector?.code?.name} -{' '}
-                {shareDetailsResponse?.sector?.code?.view_code}
-              </Text>
-              <Text className="font-pregular text-sm text-zinc-600">
-                {shareDetailsResponse?.region?.name} -{' '}
-                {shareDetailsResponse?.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'}
-              </Text>
+        </View>
+      </CustomBottomModalSheet>
+      <CustomBottomModalSheet
+        backdropBehave="close"
+        enablePanDownToClose={true}
+        bottomSheetModalRef={closeUnitBottomSheetModalRef}
+        handleSheetChanges={() => {}}
+        snapPoints={['30%']}
+        handleDismissModalPress={() => {}}>
+        <View className="h-full items-center justify-center">
+          {shareDetailsResponse?.closed == 0 ? (
+            <AdminActionItem
+              title="إتمام الصفقة"
+              description="هل أنت متاكد من إتمام الصفقة؟"
+              icon={icons.admin_approve}
+              color="#314158"
+              confirm_color="bg-[#314158]"
+              onDeleteConfirm={handleCloseUnitConfirm}
+              onClose={() => closeUnitBottomSheetModalRef.current.dismiss()}
+              confirmLoading={closeUnitLoading}
+            />
+          ) : (
+            <View className="items-center justify-center">
+              <Text className="font-psemibold text-lg text-black">الصفقة مغلقة بالفعل</Text>
             </View>
+          )}
+        </View>
+      </CustomBottomModalSheet>
+      <CustomBottomModalSheet
+        backdropBehave="close"
+        enablePanDownToClose={true}
+        bottomSheetModalRef={deleteUnitBottomSheetModalRef}
+        handleSheetChanges={() => {}}
+        snapPoints={['30%']}
+        handleDismissModalPress={() => {}}>
+        <View className="h-full items-center justify-center">
+          <AdminActionItem
+            title="حذف الطلب"
+            description="هل أنت متاكد من حذف الطلب؟"
+            icon={icons.delete_icon}
+            color="#82181A"
+            confirm_color="bg-[#82181A]"
+            onDeleteConfirm={handleDeleteUnitConfirm}
+            onClose={() => deleteUnitBottomSheetModalRef.current.dismiss()}
+            confirmLoading={deleteUnitLoading}
+          />
+        </View>
+      </CustomBottomModalSheet>
+      <SafeAreaView className="flex-1">
+        {shareDetailsLoading ? (
+          <View className="flex-1 items-center justify-center">
+            <ActivityIndicator size="100" color="#a47764" />
           </View>
-          <ScrollView>
-            <View className="flex-1">
-              {shareDetailsResponse && (
-                <CustomImageSlider
-                  images={shareDetailsResponse?.photos}
-                  height={300}
-                  newImages={shareDetailsResponse}
-                />
-              )}
-              <View style={{ marginTop: 20 }}>
-                <UnitDetails item={shareDetailsResponse} />
+        ) : (
+          <>
+            <CustomHeadWithBackButton
+              title="تفاصيل الوحدة"
+              rightIcon={<AntDesign name="sharealt" size={24} color="black" />}
+              rightIconPress={() => handleShare(shareDetailsResponse)}
+              handleButtonPress={() => router.back()}
+            />
+            <View>
+              <View className="px-4">
+                <Text className="font-psemibold text-xl">
+                  {shareDetailsResponse?.sector?.code?.name} -{' '}
+                  {shareDetailsResponse?.sector?.code?.view_code}
+                </Text>
+                <Text className="font-pregular text-sm text-zinc-600">
+                  {shareDetailsResponse?.region?.name} -{' '}
+                  {shareDetailsResponse?.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'}
+                </Text>
               </View>
             </View>
-          </ScrollView>
-          <View className="p-4">
-            {user?.user_id == shareDetailsResponse?.user?.id ? (
-              <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
-                <CustomBottomSheet
-                  snapPoints={['25%']}
-                  trigger={
+            <ScrollView>
+              <View className="flex-1">
+                {shareDetailsResponse && (
+                  <CustomImageSlider
+                    images={shareDetailsResponse?.photos}
+                    height={300}
+                    newImages={shareDetailsResponse}
+                  />
+                )}
+                <View style={{ marginTop: 20 }}>
+                  <UnitDetails item={shareDetailsResponse} />
+                </View>
+              </View>
+            </ScrollView>
+            <View className="p-4">
+              {user?.user_id == shareDetailsResponse?.user?.id ? (
+                <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
+                  <CustomBottomSheet
+                    snapPoints={['25%']}
+                    trigger={
+                      <CustomButton
+                        hasGradient={true}
+                        colors={['#82181A', '#82181A', '#82181A', '#9F0712', '#C10007']}
+                        title={'حذف الطلب'}
+                        containerStyles={'flex-grow'}
+                        positionOfGradient={'leftToRight'}
+                        textStyles={'text-white'}
+                        buttonStyles={'h-[45px]'}
+                      />
+                    }>
+                    <DeleteItem
+                      onDeleteConfirm={handleDeleteConfirm}
+                      confirmLoading={deleteShareLoading}
+                    />
+                  </CustomBottomSheet>
+                  <CustomButton
+                    hasGradient={true}
+                    colors={['#314158', '#62748E', '#90A1B9', '#90A1B9', '#90A1B9']}
+                    title={'تعديل الطلب'}
+                    containerStyles={'flex-grow'}
+                    positionOfGradient={'leftToRight'}
+                    textStyles={'text-white'}
+                    buttonStyles={'h-[45px]'}
+                    handleButtonPress={() => router.push(`/(edit)/share/${id}`)}
+                  />
+                </View>
+              ) : (
+                <>
+                  {user?.privilege !== 'admin' && (
                     <CustomButton
                       hasGradient={true}
-                      colors={['#82181A', '#82181A', '#82181A', '#9F0712', '#C10007']}
-                      title={'حذف الطلب'}
+                      colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
+                      title={'تواصل مع فريق عقاري'}
                       containerStyles={'flex-grow'}
                       positionOfGradient={'leftToRight'}
                       textStyles={'text-white'}
                       buttonStyles={'h-[45px]'}
+                      handleButtonPress={() => router.push('/(contact)')}
                     />
-                  }>
-                  <DeleteItem
-                    onDeleteConfirm={handleDeleteConfirm}
-                    confirmLoading={deleteShareLoading}
-                  />
-                </CustomBottomSheet>
-                <CustomButton
-                  hasGradient={true}
-                  colors={['#314158', '#62748E', '#90A1B9', '#90A1B9', '#90A1B9']}
-                  title={'تعديل الطلب'}
-                  containerStyles={'flex-grow'}
-                  positionOfGradient={'leftToRight'}
-                  textStyles={'text-white'}
-                  buttonStyles={'h-[45px]'}
-                  handleButtonPress={() => router.push(`/(edit)/share/${id}`)}
-                />
-              </View>
-            ) : (
-              <CustomButton
-                hasGradient={true}
-                colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-                title={'تواصل مع فريق عقاري'}
-                containerStyles={'flex-grow'}
-                positionOfGradient={'leftToRight'}
-                textStyles={'text-white'}
-                buttonStyles={'h-[45px]'}
-                handleButtonPress={() => router.push('/(contact)')}
-              />
-            )}
-          </View>
-        </>
-      )}
-    </SafeAreaView>
+                  )}
+
+                  {user?.privilege == 'admin' && (
+                    <>
+                      {shareDetailsResponse?.approve == 0 && (
+                        <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
+                          <CustomButton
+                            hasGradient={true}
+                            colors={['#3cab3d', '#2d8c2e', '#266f27', '#2d8c2e', '#3cab3d']}
+                            title={'الموافقة على الطلب'}
+                            containerStyles={'flex-grow'}
+                            positionOfGradient={'leftToRight'}
+                            textStyles={'text-white'}
+                            buttonStyles={'h-[45px]'}
+                            handleButtonPress={handleApproveUnit}
+                          />
+                        </View>
+                      )}
+                      <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4`}>
+                        <CustomButton
+                          hasGradient={true}
+                          colors={['#314158', '#62748E', '#90A1B9', '#90A1B9', '#90A1B9']}
+                          title={'إتمام الصفقة'}
+                          containerStyles={'flex-grow'}
+                          positionOfGradient={'leftToRight'}
+                          textStyles={'text-white'}
+                          buttonStyles={'h-[45px]'}
+                          handleButtonPress={handleCloseUnit}
+                        />
+                        <CustomButton
+                          hasGradient={true}
+                          colors={['#82181A', '#82181A', '#82181A', '#9F0712', '#C10007']}
+                          title={'حذف الطلب'}
+                          containerStyles={'flex-grow'}
+                          positionOfGradient={'leftToRight'}
+                          textStyles={'text-white'}
+                          buttonStyles={'h-[45px]'}
+                          handleButtonPress={handleDeleteUnit}
+                        />
+                      </View>
+                    </>
+                  )}
+                </>
+              )}
+            </View>
+          </>
+        )}
+      </SafeAreaView>
+    </>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default SharesDetails;

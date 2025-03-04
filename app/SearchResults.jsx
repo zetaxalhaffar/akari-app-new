@@ -52,7 +52,7 @@ const SearchResultsScreen = () => {
           }
           onEndReached={handleEndReached}
           onEndReachedThreshold={0.5}
-          ListEmptyComponent={<EmptyScreen />}
+          ListEmptyComponent={() => (searchForUnitsLoading ? <Text /> : <EmptyScreen />)}
         />
       </View>
     </SafeAreaView>

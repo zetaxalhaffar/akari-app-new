@@ -17,6 +17,6 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "nativewind-env.d.ts",
+    "nativewind-env.d.ts", "components/MenuTrigger.jsx", "components/MenuOption.jsx", "components/DropdownMenu.jsx",
   ]
 }
