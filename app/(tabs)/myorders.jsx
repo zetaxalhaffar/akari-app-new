@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, I18nManager, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeadWithBackButton from '@/components/CustomHeadWithBackButton';
 import { router } from 'expo-router';
@@ -13,6 +13,9 @@ import CustomButton from '@/components/CustomButton';
 import UnitShareCard from '../../components/UnitCardShare';
 import UnitApartmentCard from '../../components/UnitCardApartment';
 import DropdownMenu, { MenuOption } from '../../components/DropdownMenu'; // Adjust the import path based on your project structure
+import { getSecureStoreNoAsync } from '@/composables/secure.store';
+import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
+import images from '../../constants/images';
 
 // Top Tab Items
 const topTabItems = [
@@ -25,6 +28,92 @@ const topTabItems = [
     title: 'طلبات العقارات',
   },
 ];
+
+const OrderListItem = ({ parentId, type, item, onOrderDeleted }) => {
+  const user = getSecureStoreNoAsync('user');
+
+  const { deleteOrder, deleteOrderLoading } = useOrdersStore();
+
+  const bottomSheetModalRef = useRef(null);
+
+  const handleUnitPress = () => {
+    router.push(`/(${type})/${item.id}`);
+  };
+
+  const onClose = () => {
+    bottomSheetModalRef.current.dismiss();
+  };
+
+  const onDeleteConfirm = async () => {
+    const isDone = await deleteOrder(parentId);
+    console.log('isDone', isDone);
+    if (isDone.success) {
+      bottomSheetModalRef.current.dismiss();
+      onOrderDeleted();
+    }
+  };
+  return (
+    <View className="mt-6 gap-8 px-4">
+      <CustomBottomModalSheet
+        backdropBehave="close"
+        enablePanDownToClose={true}
+        snapPoints={['20%']}
+        bottomSheetModalRef={bottomSheetModalRef}
+        handleSheetChanges={() => {}}
+        handleDismissModalPress={() => {}}>
+        <View className="h-full items-center justify-center">
+          <Text className="mt-4 font-psemibold text-xl">هل أنت متأكد من إلغاء الطلب؟</Text>
+          <View
+            className={`m-4 flex items-center justify-center gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
+            <CustomButton
+              hasGradient={false}
+              title={'الغاء'}
+              containerStyles={'flex-grow'}
+              positionOfGradient={'leftToRight'}
+              textStyles={'text-black'}
+              buttonStyles={'h-[45px]'}
+              handleButtonPress={onClose}
+            />
+            <CustomButton
+              hasGradient={false}
+              title={'تأكيد'}
+              containerStyles={'flex-grow'}
+              positionOfGradient={'leftToRight'}
+              textStyles={'text-white'}
+              buttonStyles={'h-[45px] bg-red-800'}
+              handleButtonPress={onDeleteConfirm}
+              loading={deleteOrderLoading}
+            />
+          </View>
+        </View>
+      </CustomBottomModalSheet>
+      <TouchableOpacity
+        activeOpacity={item.closed != 1 ? 0.8 : 1}
+        onPress={item.closed != 1 ? handleUnitPress : null}
+        className={`flex items-center gap-6 ${I18nManager.isRTL ? 'rtl-view ' : 'ltr-view'}`}>
+        <View className="rounded-lg bg-gray-200">
+          <Image source={{ uri: item.sector.cover.img }} className="size-20 rounded-lg" />
+        </View>
+        <View className="flex-1">
+          <Text className="font-psemibold text-lg">
+            {item.region.name} - {item.transaction_type == 'sell' ? 'بيع' : 'شراء'}
+          </Text>
+          <Text className="mt-1 font-psemibold text-sm text-zinc-600">
+            {item.sector.sector_name.name} - {item.sector.sector_name.code}
+          </Text>
+          <Text className="font-pmedium text-sm">السعر : {item.price}</Text>
+          <Text className="font-pmedium text-sm">{item.owner_name}</Text>
+        </View>
+        <TouchableOpacity onPress={() => bottomSheetModalRef.current.present()}>
+          <View className="flex size-12 items-center justify-center rounded-full bg-red-700 p-2 px-4">
+            <Image source={icons.delete_icon} className="size-6 text-white" tintColor={'white'} />
+          </View>
+        </TouchableOpacity>
+      </TouchableOpacity>
+      <View className="h-[1px] bg-gray-200" />
+    </View>
+  );
+};
 
 const MyOrders = () => {
   // Get Shares Based On Region
@@ -79,7 +168,7 @@ const MyOrders = () => {
       <View className="flex-1">
         <CustomTopTabs topTabItems={topTabItems} onTabChange={handleTabChange}>
           <View className="relative flex-1 px-4 pt-4">
-            <DropdownMenu
+            {/* <DropdownMenu
               visible={visible}
               handleOpen={() => setVisible(true)}
               handleClose={() => setVisible(false)}
@@ -91,25 +180,20 @@ const MyOrders = () => {
               <View>
                 <Text>test</Text>
               </View>
-            </DropdownMenu>
+            </DropdownMenu> */}
             <FlashList
               data={tabId == 'shares' ? sharesOrders : apartmentsOrders}
               estimatedItemSize={350}
               refreshing={sharesOrdersLoading || apartmentsOrdersLoading}
               onRefresh={handleRefresh}
-              renderItem={({ item }) =>
-                tabId == 'shares' ? (
-                  sharesOrders.length > 0 ? (
-                    <UnitShareCard item={item.orderable} />
-                  ) : (
-                    <Text>لا يوجد طلبات</Text>
-                  )
-                ) : apartmentsOrders.length > 0 ? (
-                  <UnitApartmentCard item={item.orderable} />
-                ) : (
-                  <Text>لا يوجد طلبات</Text>
-                )
-              }
+              renderItem={({ item }) => (
+                <OrderListItem
+                  parentId={item.id}
+                  type={tabId}
+                  item={item.orderable}
+                  onOrderDeleted={handleRefresh}
+                />
+              )}
               onEndReached={() => {}}
               onEndReachedThreshold={0.5}
               ListEmptyComponent={() =>

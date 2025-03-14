@@ -1,18 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, I18nManager, TouchableOpacity, Image } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomHeadWithBackButton from '@/components/CustomHeadWithBackButton';
-import { router, useGlobalSearchParams } from 'expo-router';
-import CustomTopTabs from '@/components/CustomTopTabs';
 import { FlashList } from '@shopify/flash-list';
-import { useOrdersStore } from '@/store/orders.store';
-import CustomLinear from '@/components/CustomLinear';
-import icons from '@/constants/icons';
-import EmptyScreen from '@/components/EmptyScreen';
-import CustomButton from '@/components/CustomButton';
-import UnitShareCard from '../components/UnitCardShare';
+import { router, useGlobalSearchParams } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import UnitApartmentCard from '../components/UnitCardApartment';
-import { ActivityIndicator } from 'react-native-web';
+import UnitShareCard from '../components/UnitCardShare';
+
+import CustomButton from '@/components/CustomButton';
+import CustomHeadWithBackButton from '@/components/CustomHeadWithBackButton';
+import CustomTopTabs from '@/components/CustomTopTabs';
+import EmptyScreen from '@/components/EmptyScreen';
+import { useOrdersStore } from '@/store/orders.store';
 
 // Top Tab Items
 const topTabItems = [
@@ -25,7 +24,6 @@ const topTabItems = [
     title: 'طلبات البيع',
   },
 ];
-
 
 const MyOrders = () => {
   const { tab } = useGlobalSearchParams();
@@ -102,17 +100,17 @@ const MyOrders = () => {
           handleButtonPress={() => router.back()}
         />
         <CustomButton
-          hasGradient={true}
+          hasGradient
           colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-          title={'إضافة طلب'}
-          positionOfGradient={'leftToRight'}
-          textStyles={'text-white text-sm pt-1'}
+          title="إضافة طلب"
+          positionOfGradient="leftToRight"
+          textStyles="text-white text-sm pt-1"
           handleButtonPress={handleButtonPress}
         />
       </View>
       <View className="flex-1">
         <CustomTopTabs
-          defaultActiveTab={'sell'}
+          defaultActiveTab="buy"
           topTabItems={topTabItems}
           onTabChange={handleTabChange}>
           <View className="flex-1 px-4 pt-4">

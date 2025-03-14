@@ -1,11 +1,11 @@
 import '../global.css';
-import { Redirect, Stack } from 'expo-router';
+import { Redirect, router, Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { getSecureStore } from '@/composables/secure.store';
 import { useEffect, useRef, useState } from 'react';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { I18nManager, Image, Text, View } from 'react-native';
+import { I18nManager, Image, Linking, Text, View } from 'react-native';
 import { createNotifications, notify } from 'react-native-notificated';
 import { useAuthStore } from '@/store/auth.store';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -39,6 +39,12 @@ const { NotificationsProvider, useNotifications, ...events } = createNotificatio
 });
 
 SplashScreen.preventAutoHideAsync();
+
+// Set the animation options. This is optional.
+SplashScreen.setOptions({
+  duration: 1000,
+  fade: true,
+});
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -124,17 +130,15 @@ export default function RootLayout() {
       const data = remoteMessage.data;
 
       if (data?.notification_type === 'share') {
-        // router.push(`/show/share/${data?.content}?type=share`);
+        router.push(`/(shares)/${data?.content}`);
         console.log('no notification type ========================= 1======================');
       } else if (data?.notification_type === 'apartment') {
+        router.push(`/(apartments)/${data?.content}`);
         console.log('no notification type ========================= 2======================');
-        // router.push(`/show/apartment/${data?.content}?type=apartment`);
       } else if (data?.notification_type === 'url') {
-        console.log('no notification type ========================= 3======================');
-        // await Linking.openURL(data?.content);
+        await Linking.openURL(data?.content as string);
       } else {
-        console.log('no notification type ========================= 4======================');
-        // router.push('/notifications');
+        router.push('/notifications');
       }
     });
 
@@ -143,17 +147,15 @@ export default function RootLayout() {
       console.log('Message handled in the background!', remoteMessage);
       const { data } = remoteMessage;
       if (data?.notification_type === 'share') {
-        // router.push(`/show/share/${data?.content}?type=share`);
+        router.push(`/(shares)/${data?.content}`);
         console.log('no notification type ========================= 5======================');
       } else if (data?.notification_type === 'apartment') {
-        // router.push(`/show/apartment/${data?.content}?type=apartment`);
+        router.push(`/(apartments)/${data?.content}`);
         console.log('no notification type ========================= 6======================');
       } else if (data?.notification_type === 'url') {
-        console.log('no notification type ========================= 7======================');
-        // await Linking.openURL(data?.content);
+        await Linking.openURL(data?.content as string);
       } else {
-        console.log('no notification type ========================= 8======================');
-        // router.push('/notifications');
+        router.push('/notifications');
       }
     });
 

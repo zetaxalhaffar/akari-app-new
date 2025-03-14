@@ -83,4 +83,18 @@ export const useOrdersStore = create((set, get) => ({
       set({ sharesOrdersForCurrentUserLoading: false });
     }
   },
+  //https://arrows-dev.versetech.net/api/order/{order_id} || delete
+  deleteOrderLoading: false,
+  deleteOrderError: null,
+  deleteOrder: async (orderId) => {
+    try {
+      set({ deleteOrderLoading: true });
+      const response = await axiosInstance.delete(`/order/${orderId}`);
+      return response;
+    } catch (error) {
+      set({ deleteOrderError: error });
+    } finally {
+      set({ deleteOrderLoading: false });
+    }
+  },
 }));

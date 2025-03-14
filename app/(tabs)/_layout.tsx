@@ -26,6 +26,10 @@ export default function TabLayout() {
             marginHorizontal: 15, // Removed to prevent shrinking
             justifyContent: 'center',
             alignItems: 'center',
+            shadowRadius: 10,
+            shadowColor: '#eae2db',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.1,
           },
         }}>
         <Tabs.Screen
@@ -44,7 +48,7 @@ export default function TabLayout() {
                   className="h-6 w-6"
                   tintColor={color}
                 />
-                <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
+                <Text className="font-psemibold" style={{ color, fontSize: 10, marginTop: 2 }}>
                   الرئيسية
                 </Text>
               </View>
@@ -67,7 +71,7 @@ export default function TabLayout() {
                   className="h-6 w-6"
                   tintColor={color}
                 />
-                <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
+                <Text className="font-psemibold" style={{ color, fontSize: 10, marginTop: 2 }}>
                   المواعيد
                 </Text>
               </View>
@@ -90,7 +94,7 @@ export default function TabLayout() {
                   className="h-6 w-6"
                   tintColor={color}
                 />
-                <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
+                <Text className="font-psemibold" style={{ color, fontSize: 10, marginTop: 2 }}>
                   طلباتي
                 </Text>
               </View>
@@ -113,7 +117,7 @@ export default function TabLayout() {
                   className="h-6 w-6"
                   tintColor={color}
                 />
-                <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
+                <Text className="font-psemibold" style={{ color, fontSize: 10, marginTop: 2 }}>
                   المقاسم
                 </Text>
               </View>
@@ -137,7 +141,7 @@ export default function TabLayout() {
                   className="h-6 w-6"
                   tintColor={color}
                 />
-                <Text className={`mt-1 font-psemibold text-xs`} style={{ color }}>
+                <Text className="font-psemibold" style={{ color, fontSize: 10, marginTop: 2 }}>
                   المزيد
                 </Text>
               </View>

@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "akari-app",
-    "slug": "akari-new",
+    "name": "عقاري",
+    "slug": "akari",
     "version": "1.0.0",
     "extra": {
       "supportsRTL": true,
       "forcesRTL": true,
       "eas": {
-        "projectId": "573c5ff5-4ca2-4d6f-a0e8-3920213d7101"
+        "projectId": "ccf64856-0208-488c-9990-10e09e41d3d2"
       }
     },
     "scheme": "akari-app",
@@ -31,7 +31,8 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#ffffff",
-          "image": "./assets/splash_1.png"
+          "image": "./assets/splash_6.jpg",
+          "resizeMode": "native"
         }
       ],
       [
@@ -63,7 +64,7 @@
         "foregroundImage": "./assets/akari_icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.yazan_4alhaffar.akarinew",
+      "package": "akari.versetech.net",
       "googleServicesFile": "./google-services.json"
     },
     "owner": "yazan_4alhaffar"

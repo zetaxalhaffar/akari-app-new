@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, I18nManager } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeadWithBackButton from '@/components/CustomHeadWithBackButton';
@@ -10,7 +10,9 @@ const FeaturesScreen = () => {
     <SafeAreaView className="flex-1">
       <CustomHeadWithBackButton title="المزايا" handleButtonPress={() => router.back()} />
       <View className="mt-6 gap-8 px-4">
-        <TouchableOpacity onPress={() => {}} className="flex-row items-center gap-6">
+        <TouchableOpacity
+          onPress={() => {}}
+          className={`items-center gap-6 ${I18nManager.isRTL ? 'rtl-view ' : 'ltr-view'}`}>
           <View className="flex-row items-center rounded-lg bg-[#5B5FE9]/20 p-2">
             <Image tintColor={'#5B5FE9'} source={icons.mobile} className="h-8 w-8" />
           </View>
@@ -22,7 +24,9 @@ const FeaturesScreen = () => {
           </View>
         </TouchableOpacity>
         <View className="h-[1px] bg-gray-200" />
-        <TouchableOpacity onPress={() => {}} className="flex-row items-center gap-6">
+        <TouchableOpacity
+          onPress={() => {}}
+          className={`items-center gap-6 ${I18nManager.isRTL ? 'rtl-view ' : 'ltr-view'}`}>
           <View className="flex-row items-center gap-2 rounded-lg bg-[#539BFF]/20 p-2">
             <Image tintColor={'#539BFF'} source={icons.building_1} className="h-8 w-8" />
           </View>
@@ -34,7 +38,9 @@ const FeaturesScreen = () => {
           </View>
         </TouchableOpacity>
         <View className="h-[1px] bg-gray-200" />
-        <TouchableOpacity onPress={() => {}} className="flex-row items-center gap-6">
+        <TouchableOpacity
+          onPress={() => {}}
+          className={`items-center gap-6 ${I18nManager.isRTL ? 'rtl-view ' : 'ltr-view'}`}>
           <View className="flex-row items-center gap-2 rounded-lg bg-[#05b187]/20 p-2">
             <Image tintColor={'#05b187'} source={icons.updates} className="h-8 w-8" />
           </View>
@@ -46,7 +52,9 @@ const FeaturesScreen = () => {
           </View>
         </TouchableOpacity>
         <View className="h-[1px] bg-gray-200" />
-        <TouchableOpacity onPress={() => {}} className="flex-row items-center gap-6">
+        <TouchableOpacity
+          onPress={() => {}}
+          className={`items-center gap-6 ${I18nManager.isRTL ? 'rtl-view ' : 'ltr-view'}`}>
           <View className="flex-row items-center gap-2 rounded-lg bg-[#FFAB91]/20 p-2">
             <Image tintColor={'#FFAB91'} source={icons.support_2} className="h-8 w-8" />
           </View>
