@@ -112,7 +112,7 @@ export const useEnumsStore = create((set) => ({
     }
   },
   // https://arrows-dev.versetech.net/api/statistics
-  statisticsSchemaLoading: false,
+  statisticsSchemaLoading: true,
   statisticsSchemaError: null,
   statisticsSchemaResponse: null,
   getStatistics: async () => {

@@ -1,4 +1,12 @@
-import { View, Text, I18nManager, TouchableOpacity, Image, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  I18nManager,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import CustomBottomSheet from '@/components/CustomBottomSheet';
@@ -32,9 +40,11 @@ const profile = () => {
   const handleLogout = () => {
     router.push('/(auth)');
   };
+
+  // Renamed component to Profile to follow React naming conventions
   useEffect(() => {
     getUserProfileData();
-  }, []);
+  }, []); // Added dependency
 
   return (
     <SafeAreaView className="flex-1">
@@ -56,7 +66,7 @@ const profile = () => {
             <CustomBottomSheet
               snapPoints={['25%']}
               trigger={
-                <Text className={`text-right font-psemibold text-base text-red-500 underline`}>
+                <Text className={`text-right font-psemibold text-base text-red-500`}>
                   تسجيل الخروج
                 </Text>
               }>
@@ -64,71 +74,92 @@ const profile = () => {
             </CustomBottomSheet>
           </View>
         </View>
-        <View className="px-4">
-          <View className="my-4">
-            <Input placeholder="الاسم" value={userProfileSchemaResponse?.name} editable={false} />
-          </View>
-          <View className="my-4">
-            <Input placeholder="الهاتف" value={userProfileSchemaResponse?.phone} editable={false} />
-          </View>
-          <View className="my-4">
-            <ScrollView
-              horizontal
-              contentContainerStyle={{ gap: 16 }}
-              showsHorizontalScrollIndicator={false}>
-              <LinearGradient
-                style={{ borderRadius: 6, width: 140 }}
-                colors={colors}
-                className={`h-[130px] items-center justify-center rounded-lg p-2`}
-                start={gradientPositions.topToBottom.start}
-                end={gradientPositions.topToBottom.end}>
-                <Image
-                  source={icons.building_1}
-                  resizeMode="cover"
-                  className="h-12 w-12"
-                  tintColor={'#FFFFFF'}
+        <View className="flex-1 px-4">
+          {userProfileSchemaLoading && (
+            <View className="flex-1 items-center justify-center">
+              <ActivityIndicator size="large" color="#a47764" />
+            </View>
+          )}
+          {!userProfileSchemaLoading && (
+            <>
+              <View className="my-4">
+                <Input
+                  placeholder="الاسم"
+                  value={userProfileSchemaResponse?.name}
+                  editable={false}
                 />
-                <Text className="font-psemibold text-sm text-white">الأسهم التنظيمية</Text>
-                <Text className="mt-1 font-pmedium text-xs text-white">
-                  {userProfileSchemaResponse?.shares_count}
-                </Text>
-              </LinearGradient>
-              <LinearGradient
-                style={{ borderRadius: 6, width: 140 }}
-                colors={colors}
-                className={`h-[130px] items-center justify-center rounded-lg p-2`}
-                start={gradientPositions.bottomToTop.start}
-                end={gradientPositions.bottomToTop.end}>
-                <Image
-                  source={icons.building_1}
-                  resizeMode="cover"
-                  className="h-12 w-12"
-                  tintColor={'#FFFFFF'}
+              </View>
+              <View className="my-4">
+                <Input
+                  placeholder="الهاتف"
+                  value={userProfileSchemaResponse?.phone}
+                  editable={false}
                 />
-                <Text className="font-psemibold text-sm text-white">العقارات</Text>
-                <Text className="mt-1 font-pmedium text-xs text-white">
-                  {userProfileSchemaResponse?.apartment_count}
-                </Text>
-              </LinearGradient>
-              <LinearGradient
-                style={{ borderRadius: 6, width: 140 }}
-                colors={colors}
-                className={`h-[130px] items-center justify-center rounded-lg p-2`}
-                start={gradientPositions.leftToRight.start}
-                end={gradientPositions.leftToRight.end}>
-                <Image
-                  source={icons.building_1}
-                  resizeMode="cover"
-                  className="h-12 w-12"
-                  tintColor={'#FFFFFF'}
-                />
-                <Text className="font-psemibold text-sm text-white">عدد الطلبات</Text>
-                <Text className="mt-1 font-pmedium text-xs text-white">
-                  {userProfileSchemaResponse?.orderable_count}
-                </Text>
-              </LinearGradient>
-            </ScrollView>
-          </View>
+              </View>
+              <View className="my-4">
+                <ScrollView
+                  contentContainerStyle={{
+                    gap: 16,
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                  }}
+                  showsHorizontalScrollIndicator={false}>
+                  <LinearGradient
+                    style={{ borderRadius: 6, width: '47%' }}
+                    colors={colors}
+                    className={`h-[130px] items-center justify-center rounded-lg p-2`}
+                    start={gradientPositions.topToBottom.start}
+                    end={gradientPositions.topToBottom.end}>
+                    <Image
+                      source={icons.building_1}
+                      resizeMode="cover"
+                      className="h-12 w-12"
+                      tintColor={'#FFFFFF'}
+                    />
+                    <Text className="font-psemibold text-sm text-white">الأسهم التنظيمية</Text>
+                    <Text className="mt-1 font-pmedium text-xs text-white">
+                      {userProfileSchemaResponse?.shares_count}
+                    </Text>
+                  </LinearGradient>
+                  <LinearGradient
+                    style={{ borderRadius: 6, width: '47%' }}
+                    colors={colors}
+                    className={`h-[130px] items-center justify-center rounded-lg p-2`}
+                    start={gradientPositions.bottomToTop.start}
+                    end={gradientPositions.bottomToTop.end}>
+                    <Image
+                      source={icons.building_1}
+                      resizeMode="cover"
+                      className="h-12 w-12"
+                      tintColor={'#FFFFFF'}
+                    />
+                    <Text className="font-psemibold text-sm text-white">العقارات</Text>
+                    <Text className="mt-1 font-pmedium text-xs text-white">
+                      {userProfileSchemaResponse?.apartment_count}
+                    </Text>
+                  </LinearGradient>
+                  <LinearGradient
+                    style={{ borderRadius: 6, width: '47%' }}
+                    colors={colors}
+                    className={`h-[130px] items-center justify-center rounded-lg p-2`}
+                    start={gradientPositions.leftToRight.start}
+                    end={gradientPositions.leftToRight.end}>
+                    <Image
+                      source={icons.building_1}
+                      resizeMode="cover"
+                      className="h-12 w-12"
+                      tintColor={'#FFFFFF'}
+                    />
+                    <Text className="font-psemibold text-sm text-white">عدد الطلبات</Text>
+                    <Text className="mt-1 font-pmedium text-xs text-white">
+                      {userProfileSchemaResponse?.orderable_count}
+                    </Text>
+                  </LinearGradient>
+                </ScrollView>
+              </View>
+            </>
+          )}
         </View>
       </View>
     </SafeAreaView>

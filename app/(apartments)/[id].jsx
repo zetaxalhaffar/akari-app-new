@@ -33,12 +33,12 @@ const UnitDetails = ({ item }) => {
         <Text className="font-pregular text-sm text-zinc-600">
           {item?.transaction_type === 'buy' ? (
             <Text className={'font-pregular text-base text-zinc-500'}>
-              نرغب بشراء اسهم عقارية في {item?.sector?.code?.view_code} بكمية {item?.equity} حصة
+              نرغب بشراء عقار في {item?.sector?.code?.view_code} بكمية {item?.equity} حصة
               سهمية بسعر {item?.price} في منطقة {item?.region?.name}
             </Text>
           ) : (
             <Text className={'font-pregular text-base text-zinc-500'}>
-              نرغب ببيع اسهم عقارية في {item?.sector?.code?.view_code} بكمية {item?.equity} حصة
+              نرغب ببيع عقار في {item?.sector?.code?.view_code} بكمية {item?.equity} حصة
               سهمية بسعر {item?.price} في منطقة {item?.region?.name}
             </Text>
           )}

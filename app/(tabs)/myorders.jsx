@@ -6,16 +6,11 @@ import { router } from 'expo-router';
 import CustomTopTabs from '../../components/CustomTopTabs';
 import { FlashList } from '@shopify/flash-list';
 import { useOrdersStore } from '../../store/orders.store';
-import CustomLinear from '../../components/CustomLinear';
 import icons from '@/constants/icons';
 import EmptyScreen from '../../components/EmptyScreen';
 import CustomButton from '@/components/CustomButton';
-import UnitShareCard from '../../components/UnitCardShare';
-import UnitApartmentCard from '../../components/UnitCardApartment';
-import DropdownMenu, { MenuOption } from '../../components/DropdownMenu'; // Adjust the import path based on your project structure
-import { getSecureStoreNoAsync } from '@/composables/secure.store';
 import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
-import images from '../../constants/images';
+import { getSecureStoreNoAsync } from '@/composables/secure.store';
 
 // Top Tab Items
 const topTabItems = [

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "عقاري",
+    "name": "عقاري تيست",
     "slug": "akari",
     "version": "1.0.0",
     "extra": {
@@ -16,6 +16,11 @@
       "output": "static",
       "favicon": "./assets/favicon.png"
     },
+    "splash": {
+      "backgroundColor": "#ffffff",
+      "image": "./assets/splash_1.png",
+      "resizeMode": "contain"
+      },
     "plugins": [
       "expo-router",
       [
@@ -27,14 +32,6 @@
       "expo-font",
       "expo-secure-store",
       "expo-build-properties",
-      [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#ffffff",
-          "image": "./assets/splash_6.jpg",
-          "resizeMode": "native"
-        }
-      ],
       [
         "react-native-share",
         {
@@ -53,7 +50,6 @@
       "tsconfigPaths": true
     },
     "orientation": "portrait",
-    "icon": "./assets/splash_6.jpg",
     "userInterfaceStyle": "light",
     "assetBundlePatterns": ["**/*"],
     "ios": {

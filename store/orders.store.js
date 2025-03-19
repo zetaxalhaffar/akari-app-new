@@ -90,6 +90,7 @@ export const useOrdersStore = create((set, get) => ({
     try {
       set({ deleteOrderLoading: true });
       const response = await axiosInstance.delete(`/order/${orderId}`);
+      console.log('response', response);
       return response;
     } catch (error) {
       set({ deleteOrderError: error });

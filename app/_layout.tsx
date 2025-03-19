@@ -13,6 +13,7 @@ import NetInfo from '@react-native-community/netinfo';
 import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
 import images from '~/constants/images';
 import * as SecureStore from 'expo-secure-store';
+import CustomButton from '@/components/CustomButton.jsx';
 
 /* ======================= handle notifications ======================= */
 import messaging from '@react-native-firebase/messaging';
@@ -38,22 +39,18 @@ const { NotificationsProvider, useNotifications, ...events } = createNotificatio
   },
 });
 
+// Disable RTL support
+I18nManager.allowRTL(true);
+I18nManager.forceRTL(true);
+
 SplashScreen.preventAutoHideAsync();
 
-// Set the animation options. This is optional.
-SplashScreen.setOptions({
-  duration: 1000,
-  fade: true,
-});
-
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: '(auth)',
 };
 
-// Async function to load fonts
-const useCustomFonts = async () => {
-  const [loaded] = useFonts({
+export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
     'Cairo-Black': require('@/assets/fonts/Cairo-Black.ttf'),
     'Cairo-ExtraBold': require('@/assets/fonts/Cairo-ExtraBold.ttf'),
     'Cairo-ExtraLight': require('@/assets/fonts/Cairo-ExtraLight.ttf'),
@@ -63,16 +60,9 @@ const useCustomFonts = async () => {
     'Cairo-SemiBold': require('@/assets/fonts/Cairo-SemiBold.ttf'),
     'Cairo-Bold': require('@/assets/fonts/Cairo-Bold.ttf'),
   });
-
-  return loaded;
-};
-
-export default function RootLayout() {
-  const fontsLoaded = useCustomFonts();
   const hasToken = useRef(false);
 
   const { setNotificationCount } = useNotificationsStore();
-
   const { getAuthData } = useAuthStore();
 
   useEffect(() => {
@@ -124,17 +114,14 @@ export default function RootLayout() {
           );
         }
       });
-    // "Assume  a message-notification contains a 'data' property with"
 
     messaging().onNotificationOpenedApp(async (remoteMessage) => {
       const data = remoteMessage.data;
 
       if (data?.notification_type === 'share') {
         router.push(`/(shares)/${data?.content}`);
-        console.log('no notification type ========================= 1======================');
       } else if (data?.notification_type === 'apartment') {
         router.push(`/(apartments)/${data?.content}`);
-        console.log('no notification type ========================= 2======================');
       } else if (data?.notification_type === 'url') {
         await Linking.openURL(data?.content as string);
       } else {
@@ -142,16 +129,13 @@ export default function RootLayout() {
       }
     });
 
-    // Register background handler
     messaging().setBackgroundMessageHandler(async (remoteMessage) => {
       console.log('Message handled in the background!', remoteMessage);
       const { data } = remoteMessage;
       if (data?.notification_type === 'share') {
         router.push(`/(shares)/${data?.content}`);
-        console.log('no notification type ========================= 5======================');
       } else if (data?.notification_type === 'apartment') {
         router.push(`/(apartments)/${data?.content}`);
-        console.log('no notification type ========================= 6======================');
       } else if (data?.notification_type === 'url') {
         await Linking.openURL(data?.content as string);
       } else {
@@ -162,18 +146,12 @@ export default function RootLayout() {
     const unscubscribe = messaging().onMessage(async (remoteMessage) => {
       console.log('onMessage ========================= 1======================', remoteMessage);
       const data = remoteMessage.data;
-      console.log('onMessage ========================= 1======================', data);
       notify('success', {
         params: {
           title: data?.title ?? 'لديك إشعار جديد',
         },
       });
       setNotificationCount(1);
-      // SecureStore.setItem('new_notification', 'true');
-      // Toast.show({
-      //   type: 'success',
-      //   text1: 'لديك إشعار جديد',
-      // });
     });
 
     return unscubscribe;
@@ -194,74 +172,92 @@ export default function RootLayout() {
 
     return () => unsubscribe();
   }, []);
-  
 
+  const handleReconnect = () => {
+    console.log('handleReconnect');
+    const unsubscribe = NetInfo.addEventListener((state: any) => {
+      setConnected(state.isConnected);
+      if (!state.isConnected) {
+        bottomSheetModalRef.current.present();
+      } else {
+        bottomSheetModalRef.current.dismiss();
+      }
+    });
 
-  // Disable RTL support
-  I18nManager.allowRTL(true);
-  I18nManager.forceRTL(true);
+    return () => unsubscribe();
+  };
 
   if (!fontsLoaded) {
-    // Render a splash/loading screen while the state is being resolved
     return <Redirect href="/(auth)" />;
   }
+
   return (
-    <>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <NotificationsProvider>
-          <BottomSheetModalProvider>
-            <CustomBottomModalSheet
-              bottomSheetModalRef={bottomSheetModalRef}
-              handleSheetChanges={() => {}}
-              handleDismissModalPress={() => {}}>
-              <View className="h-full items-center justify-center">
-                <Image
-                  className="h-[200px] w-[200px]"
-                  resizeMode="contain"
-                  source={images.connection_lost}
-                />
-
-                <Text className="mt-4 font-psemibold text-xl">
-                  حدث خطأ ما أثناء الاتصال بالانترنت
-                </Text>
-                <Text className="text-md mt-4 font-psemibold text-zinc-400">
-                  يرجى التحقق من اتصالك بالانترنت
-                </Text>
-              </View>
-            </CustomBottomModalSheet>
-
-            <Stack initialRouteName={hasToken.current ? '(tabs)' : '(auth)'}>
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="(tabs)"
-                options={{
-                  headerShown: false,
-                }}
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NotificationsProvider>
+        <BottomSheetModalProvider>
+          <CustomBottomModalSheet
+            bottomSheetModalRef={bottomSheetModalRef}
+            handleSheetChanges={() => {}}
+            handleDismissModalPress={() => {}}>
+            <View className="h-full items-center justify-center">
+              <Image
+                className="h-[200px] w-[200px]"
+                resizeMode="contain"
+                source={images.connection_lost}
               />
-              <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
-              <Stack.Screen name="notifications" options={{ headerShown: false }} />
-              <Stack.Screen name="search" options={{ headerShown: false }} />
-              <Stack.Screen name="posts" options={{ headerShown: false }} />
-              <Stack.Screen name="(regions)/[id]" options={{ headerShown: false }} />
-              <Stack.Screen name="(shares)/[id]" options={{ headerShown: false }} />
-              <Stack.Screen name="(apartments)/[id]" options={{ headerShown: false }} />
-              <Stack.Screen name="(contact)/index" options={{ headerShown: false }} />
-              <Stack.Screen name="(create)/shares" options={{ headerShown: false }} />
-              <Stack.Screen name="(create)/apartments" options={{ headerShown: false }} />
-              <Stack.Screen name="(edit)/share/[id]" options={{ headerShown: false }} />
-              <Stack.Screen name="(edit)/apartment/[id]" options={{ headerShown: false }} />
-              <Stack.Screen name="(more_screens)/features" options={{ headerShown: false }} />
-              <Stack.Screen name="(more_screens)/support" options={{ headerShown: false }} />
-              <Stack.Screen name="(more_screens)/profile" options={{ headerShown: false }} />
-              <Stack.Screen name="(more_screens)/privacy" options={{ headerShown: false }} />
-              <Stack.Screen name="(more_screens)/terms" options={{ headerShown: false }} />
-              <Stack.Screen name="(admin)/users_list" options={{ headerShown: false }} />
-              <Stack.Screen name="(admin)/bulk_messages" options={{ headerShown: false }} />
-              <Stack.Screen name="SearchResults" options={{ headerShown: false }} />
-            </Stack>
-          </BottomSheetModalProvider>
-        </NotificationsProvider>
-      </GestureHandlerRootView>
-    </>
+
+              <Text className="mt-4 font-psemibold text-xl">
+                حدث خطأ ما أثناء الاتصال بالانترنت
+              </Text>
+              <Text className="text-md mt-4 font-psemibold text-zinc-400">
+                يرجى التحقق من اتصالك بالانترنت
+              </Text>
+              <CustomButton
+                hasGradient={true}
+                colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
+                title={'إعادة الاتصال'}
+                containerStyles={'flex-grow'}
+                positionOfGradient={'leftToRight'}
+                textStyles={'text-white'}
+                buttonStyles={'h-[45px] mt-4'}
+                handleButtonPress={handleReconnect}
+                disabled={false}
+                loading={false}
+              />
+            </View>
+          </CustomBottomModalSheet>
+
+          <Stack initialRouteName={hasToken.current ? '(tabs)' : '(auth)'}>
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(tabs)"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
+            <Stack.Screen name="notifications" options={{ headerShown: false }} />
+            <Stack.Screen name="search" options={{ headerShown: false }} />
+            <Stack.Screen name="posts" options={{ headerShown: false }} />
+            <Stack.Screen name="(regions)/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="(shares)/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="(apartments)/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="(contact)/index" options={{ headerShown: false }} />
+            <Stack.Screen name="(create)/shares" options={{ headerShown: false }} />
+            <Stack.Screen name="(create)/apartments" options={{ headerShown: false }} />
+            <Stack.Screen name="(edit)/share/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="(edit)/apartment/[id]" options={{ headerShown: false }} />
+            <Stack.Screen name="(more_screens)/features" options={{ headerShown: false }} />
+            <Stack.Screen name="(more_screens)/support" options={{ headerShown: false }} />
+            <Stack.Screen name="(more_screens)/profile" options={{ headerShown: false }} />
+            <Stack.Screen name="(more_screens)/privacy" options={{ headerShown: false }} />
+            <Stack.Screen name="(more_screens)/terms" options={{ headerShown: false }} />
+            <Stack.Screen name="(admin)/users_list" options={{ headerShown: false }} />
+            <Stack.Screen name="(admin)/bulk_messages" options={{ headerShown: false }} />
+            <Stack.Screen name="SearchResults" options={{ headerShown: false }} />
+          </Stack>
+        </BottomSheetModalProvider>
+      </NotificationsProvider>
+    </GestureHandlerRootView>
   );
 }

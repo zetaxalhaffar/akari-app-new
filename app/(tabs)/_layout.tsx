@@ -26,13 +26,14 @@ export default function TabLayout() {
             marginHorizontal: 15, // Removed to prevent shrinking
             justifyContent: 'center',
             alignItems: 'center',
-            shadowRadius: 10,
-            shadowColor: '#eae2db',
+            shadowRadius: 6,
+            shadowColor: '#000',
             shadowOffset: { width: 0, height: 10 },
             shadowOpacity: 0.1,
           },
         }}>
         <Tabs.Screen
+          key="index"
           name="index"
           options={{
             tabBarIcon: ({ color, focused }) => (
@@ -56,6 +57,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
+          key="myorders"
           name="myorders"
           options={{
             tabBarIcon: ({ color, focused }) => (
@@ -79,6 +81,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
+          key="myposts"
           name="myposts"
           options={{
             tabBarIcon: ({ color, focused }) => (
@@ -125,6 +128,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
+          key="more"
           name="more"
           options={{
             title: 'المزيد',
