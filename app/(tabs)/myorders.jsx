@@ -87,7 +87,7 @@ const OrderListItem = ({ parentId, type, item, onOrderDeleted }) => {
         onPress={item.closed != 1 ? handleUnitPress : null}
         className={`flex items-center gap-6 ${I18nManager.isRTL ? 'rtl-view ' : 'ltr-view'}`}>
         <View className="rounded-lg bg-gray-200">
-          <Image source={{ uri: item.sector.cover.img }} className="size-20 rounded-lg" />
+          <Image source={{ uri: item?.sector?.cover?.img }} className="size-20 rounded-lg" />
         </View>
         <View className="flex-1">
           <Text className="font-psemibold text-lg">

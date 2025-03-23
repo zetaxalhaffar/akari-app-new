@@ -45,6 +45,7 @@ import mobile from '@/assets/icons/mobile.png';
 import updates from '@/assets/icons/updates.png';
 import bulk_messages from '@/assets/icons/bulk_messages.png';
 import admin_approve from '@/assets/icons/admin_approve.png';
+import gold from '@/assets/icons/gold.png';
 
 export default {
   building_1,
@@ -94,4 +95,5 @@ export default {
   updates,
   bulk_messages,
   admin_approve,
+  gold,
 };

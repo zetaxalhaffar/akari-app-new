@@ -19,6 +19,7 @@ import { useEnumsStore } from '../../store/enums.store';
 import icons from '@/constants/icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { notify } from 'react-native-notificated';
+import { useVersionsStore } from '@/store/versions.store';
 const gradientPositions = {
   topToBottom: { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } },
   bottomToTop: { start: { x: 0, y: 1 }, end: { x: 0, y: 0 } },
@@ -31,7 +32,7 @@ export default function Home() {
   const positionOfGradient2 = 'bottomToTop';
   const { regionResponse, getRegions } = useRegionsStore();
   const { statisticsSchemaResponse, getStatistics, statisticsSchemaLoading } = useEnumsStore();
-
+  const { showAlert } = useVersionsStore();
   const getRegionsList = async () => {
     await getRegions();
     await getStatistics();

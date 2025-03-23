@@ -120,6 +120,11 @@ const MoreScreen = () => {
                 />
               )}
               <MoreSettingsItem
+                handleItemPress={() => router.push('/(more_screens)/premium')}
+                icon={icons.gold}
+                title="الحساب الذهبي"
+              />
+              <MoreSettingsItem
                 handleItemPress={() => router.push('/notifications')}
                 icon={icons.notifications}
                 title="الإشعارات"
