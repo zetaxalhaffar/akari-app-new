@@ -130,7 +130,7 @@ const UnitDetails = ({ item }) => {
             <Text className="font-pmedium text-base text-zinc-600">عدد الغرف</Text>
             <Text
               className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-              {item?.rooms_count}
+              {item?.rooms_count || 'غير موجود'}
             </Text>
           </View>
           <View className="flex-1 rounded-lg">
@@ -138,7 +138,7 @@ const UnitDetails = ({ item }) => {
             <Text className="font-pmedium text-base text-zinc-600">عدد الصالونات</Text>
             <Text
               className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-              {item?.salons_count}
+              {item?.salons_count || 'غير موجود'}
             </Text>
           </View>
         </View>
@@ -148,7 +148,7 @@ const UnitDetails = ({ item }) => {
             <Text className="font-pmedium text-base text-zinc-600">عدد البلكونات</Text>
             <Text
               className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-              {item?.balcony_count}
+              {item?.balcony_count || 'غير موجود'}
             </Text>
           </View>
           <View className="flex-1 rounded-lg">
@@ -156,7 +156,7 @@ const UnitDetails = ({ item }) => {
             <Text className="font-pmedium text-base text-zinc-600">تراس</Text>
             <Text
               className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-              {item?.is_taras}
+              {item?.is_taras == 1 ? 'موجود' : 'غير موجود'}
             </Text>
           </View>
         </View>

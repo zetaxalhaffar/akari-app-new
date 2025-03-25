@@ -80,9 +80,16 @@ const UnitShareCard = ({ item }) => {
         </View>
         <Image source={{ uri: item?.sector?.cover?.img }} className="h-full w-full" />
         <View className="absolute inset-0 bottom-0 w-full rounded-lg bg-toast-900/90 p-4 backdrop-blur-sm">
-          <Text className="font-psemibold text-xl text-white">
-            {item?.sector?.sector_name?.name} - {item?.sector?.sector_name?.code}
-          </Text>
+          <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} gap-4 justify-between`}>
+            <Text className="font-psemibold text-xl text-white">
+              {item?.sector?.sector_name?.name} - {item?.sector?.sector_name?.code}
+            </Text>
+            {item?.user?.authenticated == '1' ? (
+              <Image source={icons.gold} className="h-8 w-8" tintColor="#eae2db" />
+            ) : (
+              <View />
+            )}
+          </View>
           <Text className="mb-1 font-pregular text-base text-white">
             {item.region.name} - {item.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'}
           </Text>

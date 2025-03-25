@@ -12,6 +12,7 @@ export const useUnitsStore = create((set, get) => ({
     try {
       set({ sharesLoading: true });
       const response = await axiosInstance.get(`/share/list/${regionId}`, { params });
+      console.log('response', response);
       const currentSharesRecords = get().sharesRecords; // Access current state
       set({ sharesResponse: response });
       if (firstLoad) {
