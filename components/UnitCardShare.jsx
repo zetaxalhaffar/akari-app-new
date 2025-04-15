@@ -12,9 +12,9 @@ const gradientPositions = {
   rightToLeft: { start: { x: 1, y: 0 }, end: { x: 0, y: 0 } },
 };
 
-const user = getSecureStoreNoAsync('user');
 
 const UnitShareCard = ({ item }) => {
+  const user = getSecureStoreNoAsync('user');
   const handleSharePress = () => {
     router.push(`/(shares)/${item.id}`);
   };
@@ -80,7 +80,7 @@ const UnitShareCard = ({ item }) => {
         </View>
         <Image source={{ uri: item?.sector?.cover?.img }} className="h-full w-full" />
         <View className="absolute inset-0 bottom-0 w-full rounded-lg bg-toast-900/90 p-4 backdrop-blur-sm">
-          <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} gap-4 justify-between`}>
+          <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} justify-between gap-4`}>
             <Text className="font-psemibold text-xl text-white">
               {item?.sector?.sector_name?.name} - {item?.sector?.sector_name?.code}
             </Text>
@@ -135,19 +135,21 @@ const UnitShareCard = ({ item }) => {
               <Text className="font-pmedium text-sm text-white">المشاهدات: {item.views}</Text>
             </View>
           </View>
-          <View className="mt-1 flex-row flex-wrap items-center gap-1">
-            <View className="flex-row items-center gap-1">
-              <Image
-                source={icons.user}
-                className={'h-6 w-6'}
-                tintColor={'#FFF'}
-                resizeMode="contain"
-              />
-              <Text className="font-pmedium text-sm text-white">
-                صاحب العلاقة : {item.owner_name}
-              </Text>
+          {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
+            <View className="mt-1 flex-row flex-wrap items-center gap-1">
+              <View className="flex-row items-center gap-1">
+                <Image
+                  source={icons.user}
+                  className={'h-6 w-6'}
+                  tintColor={'#FFF'}
+                  resizeMode="contain"
+                />
+                <Text className="font-pmedium text-sm text-white">
+                  الجهة العارضة : {item.owner_name}
+                </Text>
+              </View>
             </View>
-          </View>
+          )}
         </View>
       </TouchableOpacity>
     </>

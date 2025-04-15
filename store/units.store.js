@@ -36,6 +36,7 @@ export const useUnitsStore = create((set, get) => ({
     try {
       set({ apartmentsLoading: true });
       const response = await axiosInstance.get(`/apartment/list/${regionId}`, { params });
+      console.log('response for apartments', response);
       const currentApartmentsRecords = get().apartmentsRecords; // Access current state
       set({ apartmentsResponse: response });
       if (firstLoad) {

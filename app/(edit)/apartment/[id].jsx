@@ -26,8 +26,8 @@ const EditApartmentScreen = () => {
   } = useEnumsStore();
 
   const {
-    createApartmentRequest,
-    createApartmentRequestLoading,
+    updateApartmentRequest,
+    updateApartmentRequestLoading,
     getApartmentDetails,
     apartmentDetailsLoading,
   } = useUnitsStore();
@@ -145,7 +145,7 @@ const EditApartmentScreen = () => {
   };
 
   const handleCreateApartmentRequest = async () => {
-    const response = await createApartmentRequest(currentType, form);
+    const response = await updateApartmentRequest(id, form);
     console.log(response, 'response');
     if (response?.success) {
       router.replace(`/(apartments)/${id}`);
@@ -358,7 +358,7 @@ const EditApartmentScreen = () => {
               textStyles={'text-white'}
               buttonStyles={'h-[45px]'}
               handleButtonPress={handleCreateApartmentRequest}
-              loading={createApartmentRequestLoading}
+              loading={updateApartmentRequestLoading}
             />
           </View>
         </>

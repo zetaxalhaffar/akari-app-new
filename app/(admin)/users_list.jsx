@@ -95,6 +95,7 @@ const UsersList = () => {
   };
 
   const getUsersList = async (firstLoad = false) => {
+    console.log('getUsersList');
     await getUsersListByAdmin(params.current, firstLoad);
     console.log(usersListByAdminResponse);
   };
@@ -127,7 +128,7 @@ const UsersList = () => {
     if (userSearch.length) {
       return searchUserResponse.data;
     } else {
-      return usersListByAdminResponse.data;
+      return usersListByAdminResponse?.data ?? [];
     }
   };
 

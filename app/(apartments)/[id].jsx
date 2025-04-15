@@ -26,6 +26,8 @@ import { useAdminStore } from '../../store/admin.store';
 import AdminActionItem from '../../components/AdminActionItem';
 
 const UnitDetails = ({ item }) => {
+  const user = getSecureStoreNoAsync('user');
+
   return (
     <View className="px-4 py-4">
       <View className={`rounded-lg border border-toast-100 p-4`}>
@@ -33,13 +35,13 @@ const UnitDetails = ({ item }) => {
         <Text className="font-pregular text-sm text-zinc-600">
           {item?.transaction_type === 'buy' ? (
             <Text className={'font-pregular text-base text-zinc-500'}>
-              نرغب بشراء عقار في {item?.sector?.code?.view_code} بكمية {item?.equity} حصة
-              سهمية بسعر {item?.price} في منطقة {item?.region?.name}
+              نرغب بشراء عقار في {item?.sector?.code?.view_code} بكمية {item?.equity} حصة سهمية بسعر{' '}
+              {item?.price} في منطقة {item?.region?.name}
             </Text>
           ) : (
             <Text className={'font-pregular text-base text-zinc-500'}>
-              نرغب ببيع عقار في {item?.sector?.code?.view_code} بكمية {item?.equity} حصة
-              سهمية بسعر {item?.price} في منطقة {item?.region?.name}
+              نرغب ببيع عقار في {item?.sector?.code?.view_code} بكمية {item?.equity} حصة سهمية بسعر{' '}
+              {item?.price} في منطقة {item?.region?.name}
             </Text>
           )}
         </Text>
@@ -109,16 +111,18 @@ const UnitDetails = ({ item }) => {
         </View>
       </View>
       {/* owner details */}
-      <View className="mt-4 flex-row gap-2">
-        <View className="flex-1 rounded-lg border border-toast-100 p-4">
-          <Image source={icons.owner} className="mb-1 h-7 w-7" tintColor="#a47764" />
-          <Text className="font-pmedium text-base text-zinc-600">مالك الوحدة</Text>
-          <Text
-            className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-            {item?.owner_name}
-          </Text>
+      {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
+        <View className="mt-4 flex-row gap-2">
+          <View className="flex-1 rounded-lg border border-toast-100 p-4">
+            <Image source={icons.owner} className="mb-1 h-7 w-7" tintColor="#a47764" />
+            <Text className="font-pmedium text-base text-zinc-600">الجهة العارضة</Text>
+            <Text
+              className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+              {item?.owner_name}
+            </Text>
+          </View>
         </View>
-      </View>
+      )}
       {/* extra details */}
       <View className="mt-4 gap-2 rounded-lg border border-toast-100 p-4 ">
         <View className=" mb-3">
@@ -330,9 +334,7 @@ const ApartmentDetails = () => {
             />
           ) : (
             <View className="items-center justify-center">
-              <Text className="font-psemibold text-lg text-black">
-                الصفقة مغلقة بالفعل
-              </Text>
+              <Text className="font-psemibold text-lg text-black">الصفقة مغلقة بالفعل</Text>
             </View>
           )}
         </View>
@@ -459,6 +461,18 @@ const ApartmentDetails = () => {
                           />
                         </View>
                       )}
+                      <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4`}>
+                        <CustomButton
+                          hasGradient={true}
+                          colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
+                          title={'تعديل الطلب'}
+                          containerStyles={'flex-grow'}
+                          positionOfGradient={'leftToRight'}
+                          textStyles={'text-white'}
+                          buttonStyles={'h-[45px]'}
+                          handleButtonPress={() => router.push(`/(edit)/apartment/${id}`)}
+                        />
+                      </View>
                       <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4`}>
                         <CustomButton
                           hasGradient={true}

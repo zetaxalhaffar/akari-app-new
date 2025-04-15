@@ -12,9 +12,9 @@ const gradientPositions = {
   rightToLeft: { start: { x: 1, y: 0 }, end: { x: 0, y: 0 } },
 };
 
-const user = getSecureStoreNoAsync('user');
 
 const UnitApartmentCard = ({ item }) => {
+  const user = getSecureStoreNoAsync('user');
   const handleApartmentPress = () => {
     router.push(`/(apartments)/${item.id}`);
   };
@@ -129,15 +129,28 @@ const UnitApartmentCard = ({ item }) => {
         <View className="mt-1 flex-row flex-wrap items-center gap-1">
           <View className="flex-row items-center gap-1">
             <Image
-              source={icons.user}
+              source={icons.home_screen_active}
               className={'h-6 w-6'}
               tintColor={'#FFF'}
               resizeMode="contain"
             />
             <Text className="font-pmedium text-sm text-white">
-              صاحب العلاقة : {item.owner_name}
+              نوع العقار : {item?.apartment_type?.name}
             </Text>
           </View>
+          {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
+            <View className="flex-row items-center gap-1">
+              <Image
+                source={icons.user}
+                className={'h-6 w-6'}
+                tintColor={'#FFF'}
+                resizeMode="contain"
+              />
+              <Text className="font-pmedium text-sm text-white">
+                الجهة العارضة : {item.owner_name}
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>
