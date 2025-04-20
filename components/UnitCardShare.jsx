@@ -3,7 +3,9 @@ import { View, Text, TouchableOpacity, Image, I18nManager } from 'react-native';
 import CustomLinear from './CustomLinear';
 import icons from '@/constants/icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as SecureStore from 'expo-secure-store';
 import { getSecureStoreNoAsync } from '@/composables/secure.store';
+import { useEffect } from 'react';
 
 const gradientPositions = {
   topToBottom: { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } },
@@ -12,9 +14,9 @@ const gradientPositions = {
   rightToLeft: { start: { x: 1, y: 0 }, end: { x: 0, y: 0 } },
 };
 
-
 const UnitShareCard = ({ item }) => {
-  const user = getSecureStoreNoAsync('user');
+  const user = JSON.parse(SecureStore.getItem('user'));
+
   const handleSharePress = () => {
     router.push(`/(shares)/${item.id}`);
   };
@@ -64,6 +66,7 @@ const UnitShareCard = ({ item }) => {
             textStyles="text-white !text-xs mt-1"
             buttonStyles="rounded-lg py-1 px-8"
           />
+
           {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
             <View className="mt-2">
               {item.approve == 0 && (
@@ -93,7 +96,8 @@ const UnitShareCard = ({ item }) => {
           <Text className="mb-1 font-pregular text-base text-white">
             {item.region.name} - {item.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'}
           </Text>
-          <View className="flex-row flex-wrap items-center gap-1">
+          <View
+            className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-wrap items-center gap-1`}>
             <View className="flex-row items-center gap-1">
               <Image
                 source={icons.price}
@@ -115,7 +119,8 @@ const UnitShareCard = ({ item }) => {
               </Text>
             </View>
           </View>
-          <View className="mt-1 flex-row flex-wrap items-center gap-1">
+          <View
+            className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
             <View className="flex-row items-center gap-1">
               <Image
                 source={icons.date}
@@ -136,7 +141,8 @@ const UnitShareCard = ({ item }) => {
             </View>
           </View>
           {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
-            <View className="mt-1 flex-row flex-wrap items-center gap-1">
+            <View
+              className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
               <View className="flex-row items-center gap-1">
                 <Image
                   source={icons.user}

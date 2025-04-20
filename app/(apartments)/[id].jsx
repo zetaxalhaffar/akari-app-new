@@ -399,7 +399,7 @@ const ApartmentDetails = () => {
               </View>
             </ScrollView>
             <View className="p-4">
-              {user?.user_id == apartmentDetailsResponse?.user?.id ? (
+              {user?.user_id == apartmentDetailsResponse?.user?.id && user?.privilege !== 'admin' ? (
                 <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
                   <CustomBottomSheet
                     snapPoints={['25%']}

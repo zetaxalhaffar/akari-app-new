@@ -122,7 +122,16 @@ const OtpValidationScreen = () => {
           description: isDone.message,
         },
       });
+      console.log('isDone ========================= 1======================');
+      console.log('isDone', isDone);
+      console.log('isDone ========================= 2======================');
       SecureStore.setItemAsync('token', isDone.access_token);
+      SecureStore.setItemAsync(
+        'user',
+        JSON.stringify({
+          ...isDone,
+        })
+      );
       router.replace({
         pathname: '(tabs)',
       });

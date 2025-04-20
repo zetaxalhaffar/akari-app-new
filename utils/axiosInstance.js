@@ -103,6 +103,7 @@ axiosInstance.interceptors.response.use(
         case 401:
           // Handle unauthorized error
           await SecureStore.deleteItemAsync('token');
+          router.replace('/(auth)/login');
           break;
         case 403:
           // Handle forbidden error

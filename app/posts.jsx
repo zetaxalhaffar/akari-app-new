@@ -26,13 +26,17 @@ const topTabItems = [
 ];
 
 const MyOrders = () => {
-  const { tab } = useGlobalSearchParams();
+  const { tab } = useGlobalSearchParams(); // 'shares' or 'apartments'
 
-  // Get Shares Based On Region
+  // Filters Ref
   const filtersParams = useRef({
     page: 1,
   });
-  // call order store
+
+  const [tabId, setTabId] = useState('buy');
+
+
+  // Order Store
   const {
     apartmentsOrdersForCurrentUser,
     getApartmentsOrdersForCurrentUser,
@@ -42,61 +46,76 @@ const MyOrders = () => {
     sharesOrdersForCurrentUser,
   } = useOrdersStore();
 
+  // Data Fetching Functions
   const getSharesOrdersData = async (isFirstLoad = false) => {
+    console.log('Fetching shares orders for tab:', tabId, 'page:', filtersParams.current.page);
     await getSharesOrdersForCurrentUser(tabId, filtersParams.current, isFirstLoad);
-    console.log(sharesOrdersForCurrentUser.data.length, 'sharesOrdersForCurrentUser');
   };
 
   const getApartmentsOrdersData = async (isFirstLoad = false) => {
+    console.log('Fetching apartments orders for tab:', tabId, 'page:', filtersParams.current.page);
     await getApartmentsOrdersForCurrentUser(tabId, filtersParams.current, isFirstLoad);
-    console.log(apartmentsOrdersForCurrentUser.data.length, 'apartmentsOrdersForCurrentUser');
   };
 
-  // Handle Tab Change
-  const [tabId, setTabId] = useState('sell');
-  const handleTabChange = (tabId) => {
-    filtersParams.current.page = 1;
-    setTabId(tabId);
+  // Handle Tab Change (Buy/Sell)
+  const handleTabChange = (newTabId) => {
+    filtersParams.current.page = 1; // Reset page on tab change
+    setTabId(newTabId);
   };
 
+  // Initial data fetch and fetch on tabId change
+  useEffect(() => {
+    filtersParams.current.page = 1; // Reset page when tabId changes
+    if (tab === 'shares') {
+      getSharesOrdersData(true);
+    } else if (tab === 'apartments') {
+      getApartmentsOrdersData(true);
+    }
+  }, [tabId, tab]); // Add 'tab' dependency
+
+  // Handle Refresh
   const handleRefresh = () => {
-    filtersParams.current.page = 1;
-    getSharesOrdersData(true);
-    getApartmentsOrdersData(true);
+    filtersParams.current.page = 1; // Reset page on refresh
+    if (tab === 'shares') {
+      getSharesOrdersData(true);
+    } else {
+      getApartmentsOrdersData(true);
+    }
   };
 
+  // Handle Add Button Press
   const handleButtonPress = () => {
-    router.push(`/(create)/${tab}`);
+    // Determine the correct creation path based on the main tab ('shares' or 'apartments')
+    const createPath = tab === 'shares' ? '/(create)/shares' : '/(create)/apartments';
+    // You might need to adjust the actual route names based on your file structure
+    router.push(createPath);
   };
 
-  // Handle End Reached
+  // Handle End Reached for Pagination
   const handleEndReached = () => {
-    console.log(sharesOrdersForCurrentUser.next_page_url, 'sharesOrdersForCurrentUser');
-    console.log(apartmentsOrdersForCurrentUser.next_page_url, 'apartmentsOrdersForCurrentUser');
-    if (tabId == 'shares') {
-      if (sharesOrdersForCurrentUser.next_page_url) {
+    if (tab == 'shares') {
+      if (sharesOrdersForCurrentUser?.next_page_url && !sharesOrdersForCurrentUserLoading) {
         filtersParams.current.page++;
         getSharesOrdersData();
       }
-    } else {
-      if (apartmentsOrdersForCurrentUser.next_page_url) {
+    } else if (tab == 'apartments') {
+      if (apartmentsOrdersForCurrentUser?.next_page_url && !apartmentsOrdersForCurrentUserLoading) {
         filtersParams.current.page++;
         getApartmentsOrdersData();
       }
     }
   };
 
-  useEffect(() => {
-    filtersParams.current.page = 1;
-    getSharesOrdersData(true);
-    getApartmentsOrdersData(true);
-  }, [tabId]);
+  const isLoading =
+    tab == 'shares' ? sharesOrdersForCurrentUserLoading : apartmentsOrdersForCurrentUserLoading;
+  const data =
+    tab == 'shares' ? sharesOrdersForCurrentUser?.data : apartmentsOrdersForCurrentUser?.data;
 
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-row items-center justify-between pe-4">
         <CustomHeadWithBackButton
-          title={`${tab == 'shares' ? 'طلبات الأسهم التنظيمية' : 'طلبات العقارات'}`}
+          title={`${tab === 'shares' ? 'طلبات الأسهم التنظيمية' : 'طلبات العقارات'}`}
           handleButtonPress={() => router.back()}
         />
         <CustomButton
@@ -105,38 +124,29 @@ const MyOrders = () => {
           title="إضافة طلب"
           positionOfGradient="leftToRight"
           textStyles="text-white text-sm pt-1"
-          handleButtonPress={handleButtonPress}
+          handleButtonPress={handleButtonPress} // Updated handler
         />
       </View>
       <View className="flex-1">
         <CustomTopTabs
-          defaultActiveTab="buy"
+          defaultActiveTab="buy" // Changed default to 'sell' as per initial state
           topTabItems={topTabItems}
           onTabChange={handleTabChange}>
           <View className="flex-1 px-4 pt-4">
             <FlashList
-              data={
-                tabId == 'shares'
-                  ? sharesOrdersForCurrentUser?.data
-                  : apartmentsOrdersForCurrentUser?.data
-              }
-              estimatedItemSize={350}
-              refreshing={
-                sharesOrdersForCurrentUserLoading || apartmentsOrdersForCurrentUserLoading
-              }
+              data={data}
+              keyExtractor={(item) => item.id.toString()} // Added keyExtractor
+              estimatedItemSize={350} // Adjust if needed
+              refreshing={isLoading}
               onRefresh={handleRefresh}
               renderItem={({ item }) =>
-                tabId == 'shares' ? (
-                  <UnitShareCard item={item} />
-                ) : (
-                  <UnitApartmentCard item={item} />
-                )
+                tab === 'shares' ? <UnitShareCard item={item} /> : <UnitApartmentCard item={item} />
               }
               onEndReached={handleEndReached}
               onEndReachedThreshold={0.5}
               ListEmptyComponent={() =>
-                sharesOrdersForCurrentUserLoading || apartmentsOrdersForCurrentUserLoading ? (
-                  <Text />
+                isLoading ? (
+                  <Text /> // Or a loading indicator
                 ) : (
                   <EmptyScreen title="لا يوجد طلبات" />
                 )

@@ -73,8 +73,14 @@ export default function RootLayout() {
       I18nManager.forceRTL(true);
       const token = await getSecureStore('token');
       if (token) {
+        console.log('token ========================= 1======================');
+        console.log('token', token);
+        console.log('token ========================= 2======================');
         hasToken.current = true;
         const response = await getAuthData();
+        console.log('response ========================= 3======================');
+        console.log('response', response);
+        console.log('response ========================= 4======================');
         await SecureStore.setItemAsync('user', JSON.stringify(response));
       }
     };

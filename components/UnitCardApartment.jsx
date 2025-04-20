@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image, I18nManager } from 'react-native';
 import CustomLinear from './CustomLinear';
 import icons from '@/constants/icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { getSecureStoreNoAsync } from '@/composables/secure.store';
+import * as SecureStore from 'expo-secure-store';
 
 const gradientPositions = {
   topToBottom: { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } },
@@ -14,7 +14,8 @@ const gradientPositions = {
 
 
 const UnitApartmentCard = ({ item }) => {
-  const user = getSecureStoreNoAsync('user');
+  const user = JSON.parse(SecureStore.getItem('user'));
+
   const handleApartmentPress = () => {
     router.push(`/(apartments)/${item.id}`);
   };
@@ -84,7 +85,7 @@ const UnitApartmentCard = ({ item }) => {
         <Text className="mb-1 font-pregular text-base text-white">
           {item.region?.name} - {item.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'}
         </Text>
-        <View className="flex-row flex-wrap items-center gap-1">
+        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-wrap items-center gap-1`}>
           <View className="flex-row items-center gap-1">
             <Image
               source={icons.price}
@@ -106,7 +107,7 @@ const UnitApartmentCard = ({ item }) => {
             </Text>
           </View>
         </View>
-        <View className="mt-1 flex-row flex-wrap items-center gap-1">
+        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
           <View className="flex-row items-center gap-1">
             <Image
               source={icons.date}
@@ -126,7 +127,7 @@ const UnitApartmentCard = ({ item }) => {
             <Text className="font-pmedium text-sm text-white">المشاهدات: {item.views}</Text>
           </View>
         </View>
-        <View className="mt-1 flex-row flex-wrap items-center gap-1">
+        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
           <View className="flex-row items-center gap-1">
             <Image
               source={icons.home_screen_active}
@@ -139,7 +140,7 @@ const UnitApartmentCard = ({ item }) => {
             </Text>
           </View>
           {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
-            <View className="flex-row items-center gap-1">
+            <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-row items-center gap-1`}>
               <Image
                 source={icons.user}
                 className={'h-6 w-6'}

@@ -147,7 +147,6 @@ const SharesDetails = () => {
   // get Current User
 
   const user = getSecureStoreNoAsync('user');
-  console.log(typeof user, 'user', user);
 
   const getShareDetailsHandler = async () => {
     if (!id) return;
@@ -313,7 +312,7 @@ const SharesDetails = () => {
               </View>
             </ScrollView>
             <View className="p-4">
-              {user?.user_id == shareDetailsResponse?.user?.id ? (
+              {user?.user_id == shareDetailsResponse?.user?.id && user?.privilege !== 'admin' ? (
                 <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
                   <CustomBottomSheet
                     snapPoints={['25%']}
