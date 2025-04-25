@@ -163,4 +163,26 @@ export const useAdminStore = create((set, get) => ({
       set({ deleteUnitLoading: false });
     }
   },
+
+  //https://akari.versetech.net/api /user/update_firebase
+  updateFirebaseLoading: false,
+  updateFirebaseError: null,
+  updateFirebaseResponse: null,
+  updateFirebase: async (params) => {
+    try {
+      set({ updateFirebaseLoading: true });
+      const response = await axiosInstance.get('/user/update_firebase', {
+        params: {
+          firebase: params.firebase,
+        },
+      });
+      set({ updateFirebaseResponse: response });
+      return response;
+    } catch (error) {
+      console.log(error);
+      set({ updateFirebaseError: error });
+    } finally {
+      set({ updateFirebaseLoading: false });
+    }
+  },
 }));

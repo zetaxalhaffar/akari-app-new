@@ -138,6 +138,9 @@ export default function Home() {
                     <Text className="mt-1 font-pmedium text-xs text-white">
                       أسهم / بيع: {item?.sell_shares_count}
                     </Text>
+                    {/* <Text className="mt-1 font-pmedium text-xs text-white">
+                      متوسط سعر السهم: {item?.average_share_price}
+                    </Text> */}
                   </LinearGradient>
                 ))}
                 {statisticsSchemaResponse?.apartment_statistics?.map((item, index) => (
@@ -154,8 +157,12 @@ export default function Home() {
                       className="h-12 w-12"
                       tintColor={'#FFFFFF'}
                     />
-                    <Text className="font-psemibold text-sm text-white">{item?.name}</Text>
-                    <Text className="font-pbold text-xl text-white">{item?.apartments_count}</Text>
+                    <Text className="text-center font-psemibold text-sm text-white">
+                      {item?.name}
+                    </Text>
+                    <Text className="text-center font-pbold text-xl text-white">
+                      {item?.apartments_count}
+                    </Text>
                   </LinearGradient>
                 ))}
               </ScrollView>

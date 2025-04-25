@@ -12,21 +12,14 @@ import images from '../constants/images';
 const NotificationItem = ({ notification }) => {
   return (
     <TouchableOpacity
-      className={`flex-row items-start gap-3 px-4 py-3 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
-      <MaterialIcons name="notes" size={24} color="black" />
+      className={`flex items-center gap-6 px-4 py-3 ${I18nManager.isRTL ? 'rtl-view ' : 'ltr-view'}`}>
+      <View className="flex-row items-center rounded-lg bg-gray-200 p-2">
+        <MaterialIcons name="notes" size={24} color="black" />
+      </View>
       <View className="flex-1">
-        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
-          <Text
-            className={`mt-1 font-psemibold text-lg ${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'}`}>
-            {notification.title}
-          </Text>
-        </View>
-        <View className={`mt-4 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
-          <Text
-            className={`text-justify font-pmedium text-base ${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'}`}>
-            {notification.body}
-          </Text>
-        </View>
+        <Text className={`mt-1 font-psemibold text-lg`}>{notification.title}</Text>
+
+        <Text className={`font-pmedium text-base`}>{notification.body}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -46,7 +39,6 @@ const Notifications = () => {
     const response = await getNotifications();
     setNotifications(response);
     setNotificationCount(0);
-
   };
 
   const handleDeleteAllNotifications = async () => {

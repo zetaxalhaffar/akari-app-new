@@ -15,7 +15,7 @@ import images from '~/constants/images';
 import * as SecureStore from 'expo-secure-store';
 import CustomButton from '@/components/CustomButton.jsx';
 import * as Application from 'expo-application';
-
+import { useAdminStore } from '@/store/admin.store';
 /* ======================= handle notifications ======================= */
 import messaging from '@react-native-firebase/messaging';
 import { useNotificationsStore } from '@/store/notifications.store';
@@ -65,6 +65,7 @@ export default function RootLayout() {
 
   const { setNotificationCount } = useNotificationsStore();
   const { getAuthData } = useAuthStore();
+  const { updateFirebase } = useAdminStore();
 
   useEffect(() => {
     const initialize = async () => {
@@ -73,14 +74,8 @@ export default function RootLayout() {
       I18nManager.forceRTL(true);
       const token = await getSecureStore('token');
       if (token) {
-        console.log('token ========================= 1======================');
-        console.log('token', token);
-        console.log('token ========================= 2======================');
         hasToken.current = true;
         const response = await getAuthData();
-        console.log('response ========================= 3======================');
-        console.log('response', response);
-        console.log('response ========================= 4======================');
         await SecureStore.setItemAsync('user', JSON.stringify(response));
       }
     };
@@ -105,7 +100,10 @@ export default function RootLayout() {
       messaging()
         .getToken()
         .then((token) => {
+          console.log('token ========================= 1====================== firebase token');
           console.log(token);
+          updateFirebase({ firebase: token });
+          console.log('token ========================= 1====================== firebase token');
         });
     } else {
       console.log('no permission', authStatus);
@@ -202,7 +200,7 @@ export default function RootLayout() {
   async function onFetchUpdateAsync() {
     console.log('onFetchUpdateAsync');
     const response = await getVersion();
-    setVersion(response.version);
+    // setVersion(response.version);
     if (response.version > Application.nativeBuildVersion) {
       updateVersionRef.current.present();
     } else if (response.version < Application.nativeBuildVersion) {

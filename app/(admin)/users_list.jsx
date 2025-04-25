@@ -8,6 +8,7 @@ import { useAdminStore } from '../../store/admin.store';
 import { Input } from '@/components/CustomInput';
 import EmptyScreen from '@/components/EmptyScreen';
 import images from '@/constants/images';
+import CustomButton from '../../components/CustomButton';
 
 // Separate CardItem component
 const CardItem = ({ user, blockUnblockUser, onBlockUnblockComplete }) => {
@@ -49,16 +50,16 @@ const CardItem = ({ user, blockUnblockUser, onBlockUnblockComplete }) => {
         </View>
       </View>
       <View className="border-t border-gray-200 pt-4">
-        <Text className="mb-1 mt-2 font-pmedium text-sm text-gray-600">
+        <Text className="mb-1 mt-2 font-pmedium text-sm text-gray-600 text-right">
           رقم الهاتف: {user.phone}
         </Text>
-        <Text className="mb-1 font-pmedium text-sm text-gray-600">
+        <Text className="mb-1 font-pmedium text-sm text-gray-600 text-right">
           عدد الطلبات: {user.orderable_count}
         </Text>
-        <Text className="mb-1 font-pmedium text-sm text-gray-600">
+        <Text className="mb-1 font-pmedium text-sm text-gray-600 text-right">
           عدد الأسهم: {user.shares_count}
         </Text>
-        <Text className="mb-1 font-pmedium text-sm text-gray-600">
+        <Text className="mb-1 font-pmedium text-sm text-gray-600 text-right">
           عدد العقارات: {user.apartment_count}
         </Text>
       </View>
@@ -104,17 +105,23 @@ const UsersList = () => {
 
   const handleSearch = (value) => {
     setUserSearch(value);
-    if (searchTimeout.current) {
-      clearTimeout(searchTimeout.current);
+    // if (searchTimeout.current) {
+    //   clearTimeout(searchTimeout.current);
+    // }
+    // searchTimeout.current = setTimeout(async () => {
+    //   if (value) {
+    //     await searchUser({
+    //       phone: value,
+    //     });
+    //   }
+    //   console.log(searchUserResponse);
+    // }, 500); // Adjust the delay as needed
+  };
+
+  const handleSearchPress = async () => {
+    if (userSearch.length) {
+      await searchUser({ phone: userSearch });
     }
-    searchTimeout.current = setTimeout(async () => {
-      if (value) {
-        await searchUser({
-          phone: value,
-        });
-      }
-      console.log(searchUserResponse);
-    }, 500); // Adjust the delay as needed
   };
 
   // Callback function to refresh the user list
@@ -126,7 +133,7 @@ const UsersList = () => {
 
   const userArrayList = () => {
     if (userSearch.length) {
-      return searchUserResponse.data;
+      return searchUserResponse?.data ?? [];
     } else {
       return usersListByAdminResponse?.data ?? [];
     }
@@ -146,7 +153,15 @@ const UsersList = () => {
           placeholder="رقم المستخدم"
           value={userSearch}
           onChangeText={handleSearch}
-          type="number-pad"
+        />
+        <CustomButton
+          hasGradient={true}
+          colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
+          title="بحث"
+          textStyles={'text-white'}
+          containerStyles={'mt-4'}
+          handleButtonPress={handleSearchPress}
+          loading={searchUserLoading}
         />
       </View>
       <View className="flex-1 px-4">
