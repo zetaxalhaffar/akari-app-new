@@ -41,7 +41,7 @@ const createPullRequest = async (errorDetails, phone) => {
 // Create a default Axios instance
 const axiosInstance = axios.create({
   baseURL:
-    mode === 'development' ? process.env.EXPO_PUBLIC_DEV_URI : process.env.EXPO_PUBLIC_PROD_URI,
+    mode === 'development' ? process.env.EXPO_PUBLIC_PROD_URI : process.env.EXPO_PUBLIC_PROD_URI,
   // baseURL: process.env.EXPO_PUBLIC_DEV_URI,
   headers: {
     'Content-Type': 'application/json',

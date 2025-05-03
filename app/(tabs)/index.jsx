@@ -18,8 +18,9 @@ import { router, useFocusEffect } from 'expo-router';
 import { useEnumsStore } from '../../store/enums.store';
 import icons from '@/constants/icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { notify } from 'react-native-notificated';
+import { createNotifications, notify } from 'react-native-notificated';
 import { useVersionsStore } from '@/store/versions.store';
+
 const gradientPositions = {
   topToBottom: { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } },
   bottomToTop: { start: { x: 0, y: 1 }, end: { x: 0, y: 0 } },
@@ -28,6 +29,8 @@ const gradientPositions = {
 };
 const colors = ['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c'];
 export default function Home() {
+  const { useNotifications } = createNotifications();
+
   const positionOfGradient = 'topToBottom';
   const positionOfGradient2 = 'bottomToTop';
   const { regionResponse, getRegions } = useRegionsStore();
@@ -41,12 +44,19 @@ export default function Home() {
     getRegionsList();
   }, []);
 
+  const { remove } = useNotifications();
+
   const [backPressCount, setBackPressCount] = useState(0);
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
         if (backPressCount === 0) {
-          notify('success', { params: { title: 'يرجى الضغط مرة أخرى للخروج' } });
+          notify('success', {
+            params: { title: 'يرجى الضغط مرة أخرى للخروج' },
+            config: {
+              duration: 2000,
+            },
+          });
           setBackPressCount(1);
 
           setTimeout(() => {
@@ -55,6 +65,7 @@ export default function Home() {
 
           return true; // Prevent default behavior
         } else if (backPressCount === 1) {
+          remove();
           BackHandler.exitApp();
         }
       };

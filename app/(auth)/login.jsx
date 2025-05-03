@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, Image, I18nManager, Button, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  I18nManager,
+  Button,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import CustomIcon from '../../components/CustomIcon';
@@ -51,7 +59,6 @@ const LoginScreen = () => {
       });
     }
   };
-  
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -74,7 +81,8 @@ const LoginScreen = () => {
           </Text>
         </View>
 
-        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view mt-6 !pb-0`}>
+        <View
+          className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view mt-6 !pb-0`}>
           <Text className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-xl`}>
             أدخل رقم تليفونك
           </Text>
@@ -92,8 +100,6 @@ const LoginScreen = () => {
             phoneInputStyles={{
               flagContainer: {
                 backgroundColor: 'transparent',
-
-
               },
               container: {
                 borderColor: '#a47764',
@@ -117,7 +123,6 @@ const LoginScreen = () => {
           />
         </View>
         <View className="justify-end self-stretch">
-
           <View className="mx-4">
             <CustomButton
               hasGradient={true}

@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, I18nManager, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  I18nManager,
+  ActivityIndicator,
+  Linking,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -12,6 +19,15 @@ import images from '../constants/images';
 const NotificationItem = ({ notification }) => {
   return (
     <TouchableOpacity
+      onPress={() => {
+        if (notification.type == 'url') {
+          Linking.openURL(notification.content);
+        } else if (notification.type == 'share') {
+          router.push(`/shares/${notification.content}`);
+        } else if (notification.type == 'apartment') {
+          router.push(`/apartments/${notification.content}`);
+        }
+      }}
       className={`flex items-center gap-6 px-4 py-3 ${I18nManager.isRTL ? 'rtl-view ' : 'ltr-view'}`}>
       <View className="flex-row items-center rounded-lg bg-gray-200 p-2">
         <MaterialIcons name="notes" size={24} color="black" />

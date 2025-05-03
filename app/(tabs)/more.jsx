@@ -12,6 +12,7 @@ import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
 import { useAuthStore } from '@/store/auth.store';
 import * as SecureStore from 'expo-secure-store';
 import { useEffect } from 'react';
+import * as Application from 'expo-application';
 
 const MoreSettingsItem = ({ icon, title, handleItemPress }) => {
   return (
@@ -154,6 +155,9 @@ const MoreScreen = () => {
                 icon={icons.logout}
                 title="تسجيل الخروج"
               />
+            </View>
+            <View className="mb-8 items-center justify-center border-t border-zinc-200 pt-4">
+              <Text>Version {Application.nativeBuildVersion}</Text>
             </View>
           </ScrollView>
         </View>

@@ -77,6 +77,7 @@ const UsersList = () => {
     searchUser,
     searchUserLoading,
     searchUserResponse,
+    usersListByAdminRecords
   } = useAdminStore();
   const params = useRef({
     page: 1,
@@ -86,6 +87,7 @@ const UsersList = () => {
     console.log('End reached, load more data');
     params.current.page += 1;
     // Fetch more data based on the new page
+    getUsersList()
   };
 
   const handleRefresh = () => {
@@ -135,7 +137,7 @@ const UsersList = () => {
     if (userSearch.length) {
       return searchUserResponse?.data ?? [];
     } else {
-      return usersListByAdminResponse?.data ?? [];
+      return usersListByAdminRecords ?? [];
     }
   };
 
@@ -164,7 +166,7 @@ const UsersList = () => {
           loading={searchUserLoading}
         />
       </View>
-      <View className="flex-1 px-4">
+      <View className="flex-1 px-4 pb-8">
         <FlashList
           data={userArrayList() ?? []}
           renderItem={({ item }) => (
@@ -175,8 +177,9 @@ const UsersList = () => {
             />
           )}
           keyExtractor={(item) => item.id}
-          estimatedItemSize={50} // Adjust based on your item size
+          estimatedItemSize={150} // Adjust based on your item size
           onEndReached={handleEndReached}
+          onEndReachedThreshold={0.5}
           onRefresh={handleRefresh}
           refreshing={usersListByAdminLoading || blockUnblockUserLoading || searchUserLoading}
           ListEmptyComponent={() => <EmptyScreen title="لا يوجد مستخدمين" img={images.no_data} />}

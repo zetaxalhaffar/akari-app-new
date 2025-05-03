@@ -24,6 +24,7 @@ import DeleteItem from '../../components/DeleteItem';
 import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
 import { useAdminStore } from '../../store/admin.store';
 import AdminActionItem from '../../components/AdminActionItem';
+import CustomLinear from '../../components/CustomLinear';
 
 const UnitDetails = ({ item }) => {
   const user = getSecureStoreNoAsync('user');
@@ -372,7 +373,7 @@ const ApartmentDetails = () => {
               rightIconPress={() => handleShare(apartmentDetailsResponse)}
               handleButtonPress={() => router.back()}
             />
-            <View>
+            <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} justify-between`}>
               <View className="px-4">
                 <Text className="font-psemibold text-xl">
                   {apartmentDetailsResponse?.sector?.code?.name} -{' '}
@@ -383,6 +384,20 @@ const ApartmentDetails = () => {
                   {apartmentDetailsResponse?.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'}
                 </Text>
               </View>
+              {(user?.privilege == 'admin' ||
+                user?.user_id == apartmentDetailsResponse?.user?.id) && (
+                <View className="mt-2 px-4">
+                  {apartmentDetailsResponse?.approve == 0 && (
+                    <CustomLinear
+                      title={apartmentDetailsResponse?.approve == 1 ? 'متاح' : 'قيد المراجعة'}
+                      colors={['#e3a001', '#b87005', '#95560b', '#7a460d', '#7a460d']}
+                      positionOfGradient="leftToRight"
+                      textStyles="text-white !text-xs mt-1"
+                      buttonStyles="rounded-lg py-1 px-8"
+                    />
+                  )}
+                </View>
+              )}
             </View>
             <ScrollView className="flex-1">
               <View>
@@ -399,7 +414,8 @@ const ApartmentDetails = () => {
               </View>
             </ScrollView>
             <View className="p-4">
-              {user?.user_id == apartmentDetailsResponse?.user?.id && user?.privilege !== 'admin' ? (
+              {user?.user_id == apartmentDetailsResponse?.user?.id &&
+              user?.privilege !== 'admin' ? (
                 <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
                   <CustomBottomSheet
                     snapPoints={['25%']}

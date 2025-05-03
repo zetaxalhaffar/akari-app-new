@@ -38,7 +38,7 @@ const profile = () => {
   };
 
   const handleLogout = () => {
-    router.push('/(auth)');
+    router.replace('/(auth)');
   };
 
   // Renamed component to Profile to follow React naming conventions

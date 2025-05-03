@@ -39,8 +39,8 @@ const MyPostsList = () => {
             </Text>
           </View>
           <TouchableOpacity onPress={handleCreateSharesPost}>
-            <View className="size-12 items-center justify-center rounded-full bg-gray-200 ">
-              <Text className="mt-2 font-psemibold text-2xl">+</Text>
+            <View className="items-center justify-center rounded-full bg-gray-200 p-2">
+              <Text className="text-md px-2 font-psemibold">إضافة طلب</Text>
             </View>
           </TouchableOpacity>
         </TouchableOpacity>
@@ -58,8 +58,8 @@ const MyPostsList = () => {
             </Text>
           </View>
           <TouchableOpacity onPress={handleCreateApartmentsPost}>
-            <View className="size-12 items-center justify-center rounded-full bg-gray-200 ">
-              <Text className="mt-2 font-psemibold text-2xl">+</Text>
+            <View className="items-center justify-center rounded-full bg-gray-200 p-2">
+              <Text className="text-md px-2 font-psemibold">إضافة طلب</Text>
             </View>
           </TouchableOpacity>
         </TouchableOpacity>

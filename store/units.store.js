@@ -335,4 +335,26 @@ export const useUnitsStore = create((set, get) => ({
       set({ searchForUnitsLoading: false });
     }
   },
+  // Update reaction counts for a share
+  updateShareReactions: (shareId, reactionSummary) => {
+    const sharesRecords = get().sharesRecords;
+    const updatedShares = sharesRecords.map(share => {
+      if (share.id === shareId) {
+        return { ...share, reaction_counts: reactionSummary };
+      }
+      return share;
+    });
+    set({ sharesRecords: updatedShares });
+  },
+  // Update reaction counts for an apartment
+  updateApartmentReactions: (apartmentId, reactionSummary) => {
+    const apartmentsRecords = get().apartmentsRecords;
+    const updatedApartments = apartmentsRecords.map(apartment => {
+      if (apartment.id === apartmentId) {
+        return { ...apartment, reaction_counts: reactionSummary };
+      }
+      return apartment;
+    });
+    set({ apartmentsRecords: updatedApartments });
+  },
 }));

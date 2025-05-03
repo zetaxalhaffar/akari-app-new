@@ -35,7 +35,6 @@ const MyOrders = () => {
 
   const [tabId, setTabId] = useState('buy');
 
-
   // Order Store
   const {
     apartmentsOrdersForCurrentUser,
@@ -148,7 +147,11 @@ const MyOrders = () => {
                 isLoading ? (
                   <Text /> // Or a loading indicator
                 ) : (
-                  <EmptyScreen title="لا يوجد طلبات" />
+                  <EmptyScreen
+                    img={''}
+                    mainTitle="تُضِف بعد أي طلب شراء أو بيع."
+                    title="لإضافة طلب جديد، اضغط على زر «إضافة طلب» أعلى الصفحة، ثم اختر إما «طلب شراء» أو «عرض بيع». وسوف تُعرض هنا جميع الطلبات التي قمت بتسجيلها."
+                  />
                 )
               }
             />
