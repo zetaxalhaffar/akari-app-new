@@ -27,15 +27,15 @@ import { FAB, MD3LightTheme as DefaultTheme, PaperProvider } from 'react-native-
 const theme = {
   ...DefaultTheme,
   fonts: {
-    titleLarge: { fontFamily: 'Cairo-Bold' },
+    titleLarge: { fontFamily: 'Cairo-Bold', },
     titleMedium: { fontFamily: 'Cairo-Bold' },
     titleSmall: { fontFamily: 'Cairo-Bold' },
     bodyLarge: { fontFamily: 'Cairo-Regular' },
     bodyMedium: { fontFamily: 'Cairo-Regular' },
     bodySmall: { fontFamily: 'Cairo-Regular' },
-    labelLarge: { fontFamily: 'Cairo-Medium' },
-    labelMedium: { fontFamily: 'Cairo-Medium' },
-    labelSmall: { fontFamily: 'Cairo-Medium' },
+    labelLarge: { fontFamily: 'Cairo-Bold' },
+    labelMedium: { fontFamily: 'Cairo-Bold' },
+    labelSmall: { fontFamily: 'Cairo-Bold' },
   },
 };
 

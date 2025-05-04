@@ -66,11 +66,13 @@ const UnitApartmentCard = ({ item }) => {
   const availableReactions = [
     {
       value: 'like',
-      icon: '👍',
+      icon: '👍🏻',
+      title: 'أعجبني',
     },
     {
       value: 'love',
       icon: '❤️',
+      title: 'أحببته',
     },
     // {
     //   value: 'haha',
@@ -79,25 +81,32 @@ const UnitApartmentCard = ({ item }) => {
     {
       value: 'wow',
       icon: '😮',
+      title: 'أدهشني',
     },
     {
       value: 'sad',
       icon: '😢',
+      title: 'احزنني',
     },
     {
       value: 'angry',
       icon: '😠',
+      title: 'أغضبني',
     },
   ];
 
   const user = JSON.parse(SecureStore.getItem('user'));
 
-  const [selectedReaction, setSelectedReaction] = useState(null);
   const [showReactions, setShowReactions] = useState(false);
+  const [displayedReaction, setDisplayedReaction] = useState(item?.current_user_reaction);
 
   const handleApartmentPress = () => {
     router.push(`/(apartments)/${item.id}`);
   };
+
+  useEffect(() => {
+    setDisplayedReaction(item?.current_user_reaction);
+  }, [item?.current_user_reaction]);
 
   const handleWhatsAppShare = async () => {
     const url = `whatsapp://send?text=${encodeURIComponent(item.id)}`;
@@ -130,6 +139,9 @@ const UnitApartmentCard = ({ item }) => {
   };
 
   const handleReactionSelect = (reaction) => {
+    const previousReaction = displayedReaction;
+    setDisplayedReaction(reaction); // Optimistic update
+    setShowReactions(false);
     setReactions({
       type: reaction,
       post_type: 'apartment',
@@ -137,15 +149,19 @@ const UnitApartmentCard = ({ item }) => {
     }).then(response => {
       if (response) {
         updateApartmentReactions(item.id, response.reaction_summary);
+      } else {
+        // Revert optimistic update on failure
+        setDisplayedReaction(previousReaction);
       }
+    }).catch(() => {
+        // Revert optimistic update on error
+        setDisplayedReaction(previousReaction);
     });
-    setSelectedReaction(reaction);
-    setShowReactions(false);
     console.log(`Reaction selected: ${reaction}`);
   };
 
   const handleLikePress = () => {
-    const currentReaction = selectedReaction || item?.current_user_reaction;
+    const currentReaction = displayedReaction; // Use displayed state
 
     if (showReactions) {
       // If popup is open and user taps like button, select 'like'
@@ -154,19 +170,27 @@ const UnitApartmentCard = ({ item }) => {
     }
 
     if (currentReaction) {
-      // If already reacted (either selected now or fetched), remove reaction
+      // If already reacted, remove reaction
+      const previousReaction = currentReaction; // Store previous state for potential revert
+      setDisplayedReaction(null); // Optimistic update
       removeReaction({
         post_type: 'apartment',
         post_id: item.id,
       }).then(response => {
         if (response) {
           updateApartmentReactions(item.id, response.reaction_summary);
+        } else {
+           // Revert optimistic update on failure
+           setDisplayedReaction(previousReaction);
         }
+      }).catch(() => {
+          // Revert optimistic update on error
+          setDisplayedReaction(previousReaction);
       });
-      setSelectedReaction(null);
       console.log('Reaction cleared');
     } else {
       // If no reaction, select 'like'
+      setDisplayedReaction('like'); // Optimistic update
       setReactions({
         type: 'like',
         post_type: 'apartment',
@@ -174,9 +198,14 @@ const UnitApartmentCard = ({ item }) => {
       }).then(response => {
         if (response) {
           updateApartmentReactions(item.id, response.reaction_summary);
+        } else {
+          // Revert optimistic update on failure
+          setDisplayedReaction(null);
         }
+      }).catch(() => {
+          // Revert optimistic update on error
+          setDisplayedReaction(null);
       });
-      setSelectedReaction('like');
       console.log('Default Like selected');
     }
   };
@@ -210,7 +239,7 @@ const UnitApartmentCard = ({ item }) => {
                     key={reaction.value}
                     className={`flex ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-2 rounded-lg bg-gray-100 p-2`}>
                     <Text className="text-2xl">{reaction.icon}</Text>
-                    <Text className="mt-1 font-pmedium text-sm text-gray-700">{count}</Text>
+                    <Text className="mt-1 font-pmedium text-sm text-gray-700">{reaction.title}</Text>
                   </View>
                 );
               }
@@ -382,7 +411,7 @@ const UnitApartmentCard = ({ item }) => {
               className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} justify-between px-9 py-1`}>
               <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-3`}>
                 {item?.reaction_counts?.like_count > 0 && (
-                  <Text>{item?.reaction_counts?.like_count > 0 ? '👍' : ''}</Text>
+                  <Text>{item?.reaction_counts?.like_count > 0 ? '👍🏻' : ''}</Text>
                 )}
                 {item?.reaction_counts?.angry_count > 0 && (
                   <Text>{item?.reaction_counts?.angry_count > 0 ? '😠' : ''}</Text>
@@ -413,7 +442,7 @@ const UnitApartmentCard = ({ item }) => {
             delayLongPress={200}
             className="flex-1 items-center justify-center rounded-md py-2 hover:bg-gray-100 active:bg-gray-200">
             {(() => {
-              const displayReactionValue = selectedReaction || item?.current_user_reaction;
+              const displayReactionValue = displayedReaction; // Use new state
               const reactionObj = availableReactions.find(
                 (reaction) => reaction.value === displayReactionValue
               );
@@ -424,8 +453,8 @@ const UnitApartmentCard = ({ item }) => {
                   <View
                     className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
                     <Text className="text-xl">{reactionObj.icon}</Text>
-                    <Text className="text-md mb-1 font-psemibold capitalize text-blue-600">
-                      {reactionObj.value}
+                    <Text className="text-md mb-1 font-psemibold capitalize">
+                      {reactionObj.title}
                     </Text>
                   </View>
                 );
