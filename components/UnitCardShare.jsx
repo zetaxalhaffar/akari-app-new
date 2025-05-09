@@ -67,7 +67,7 @@ const UnitShareCard = ({ item }) => {
   const availableReactions = [
     {
       value: 'like',
-      icon: '👍🏻',
+      icon: '👍🏼',
       title: 'أعجبني',
     },
     {
@@ -164,17 +164,19 @@ const UnitShareCard = ({ item }) => {
       removeReaction({
         post_type: 'share',
         post_id: item.id,
-      }).then(response => {
-        if (response) {
-          updateShareReactions(item.id, response.reaction_summary);
-        } else {
-          // Revert optimistic update on failure
-          setDisplayedReaction(previousReaction);
-        }
-      }).catch(() => {
+      })
+        .then((response) => {
+          if (response) {
+            updateShareReactions(item.id, response.reaction_summary);
+          } else {
+            // Revert optimistic update on failure
+            setDisplayedReaction(previousReaction);
+          }
+        })
+        .catch(() => {
           // Revert optimistic update on error
           setDisplayedReaction(previousReaction);
-      });
+        });
       console.log('Reaction cleared');
     } else {
       // If no reaction, select 'like'
@@ -183,17 +185,19 @@ const UnitShareCard = ({ item }) => {
         type: 'like',
         post_type: 'share',
         post_id: item.id,
-      }).then(response => {
-        if (response) {
-          updateShareReactions(item.id, response.reaction_summary);
-        } else {
-           // Revert optimistic update on failure
-           setDisplayedReaction(null);
-        }
-      }).catch(() => {
+      })
+        .then((response) => {
+          if (response) {
+            updateShareReactions(item.id, response.reaction_summary);
+          } else {
+            // Revert optimistic update on failure
+            setDisplayedReaction(null);
+          }
+        })
+        .catch(() => {
           // Revert optimistic update on error
           setDisplayedReaction(null);
-      });
+        });
       console.log('Default Like selected');
     }
   };
@@ -230,7 +234,9 @@ const UnitShareCard = ({ item }) => {
                     className={`flex ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-2 rounded-lg bg-gray-100 p-2`}>
                     <Text className="text-2xl">{count}</Text>
                     <Text className="text-2xl">{reaction.icon}</Text>
-                    <Text className="mt-1 font-pmedium text-sm text-gray-700">{reaction.title}</Text>
+                    <Text className="mt-1 font-pmedium text-sm text-gray-700">
+                      {reaction.title}
+                    </Text>
                   </View>
                 );
               }
@@ -348,7 +354,7 @@ const UnitShareCard = ({ item }) => {
                 />
                 <Text className="font-pmedium text-sm text-white">تاريخ النشر : {item.since}</Text>
               </View>
-              <View className="flex-row items-center gap-1">
+              {/* <View className="flex-row items-center gap-1">
                 <Image
                   source={icons.view}
                   className={'h-6 w-6'}
@@ -356,7 +362,7 @@ const UnitShareCard = ({ item }) => {
                   resizeMode="contain"
                 />
                 <Text className="font-pmedium text-sm text-white">المشاهدات: {item.views}</Text>
-              </View>
+              </View> */}
             </View>
             {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
               <View
@@ -399,7 +405,7 @@ const UnitShareCard = ({ item }) => {
               className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} justify-between px-9 py-1`}>
               <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-3`}>
                 {item?.reaction_counts?.like_count > 0 && (
-                  <Text>{item?.reaction_counts?.like_count > 0 ? '👍🏻' : ''}</Text>
+                  <Text>{item?.reaction_counts?.like_count > 0 ? '👍🏼' : ''}</Text>
                 )}
                 {item?.reaction_counts?.angry_count > 0 && (
                   <Text>{item?.reaction_counts?.angry_count > 0 ? '😠' : ''}</Text>
@@ -441,9 +447,7 @@ const UnitShareCard = ({ item }) => {
                   <View
                     className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
                     <Text className="text-lg">{reactionObj.icon}</Text>
-                    <Text className="text-md mb-1 font-psemibold capitalize">
-                      {reactionObj.title}
-                    </Text>
+                    <Text className="text-md font-psemibold capitalize">{reactionObj.title}</Text>
                   </View>
                 );
               } else {
@@ -452,7 +456,7 @@ const UnitShareCard = ({ item }) => {
                   <View
                     className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex items-center justify-center gap-3`}>
                     <AntDesign name="like2" size={18} color="#374151" />
-                    <Text className="text-md font-psemibold text-gray-700">إعجاب</Text>
+                    <Text className="text-md mt-1 font-psemibold text-gray-700">إعجاب</Text>
                   </View>
                 );
               }
@@ -466,6 +470,19 @@ const UnitShareCard = ({ item }) => {
             {/* Placeholder for Share Icon */}
             <AntDesign name="sharealt" size={16} color="black" />
             <Text className="text-md font-psemibold text-gray-700">مشاركة</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleShareToOtherPress}
+            className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-1 items-center justify-center gap-3 rounded-md p-2 hover:bg-gray-100 active:bg-gray-200`}>
+            {/* Placeholder for Share Icon */}
+            <Image
+              source={icons.view}
+              className={'h-6 w-6'}
+              tintColor={'#000'}
+              resizeMode="contain"
+            />
+            <Text className="text-md font-psemibold text-gray-700"> {item.views} مشاهدة</Text>
           </TouchableOpacity>
 
           {/* WhatsApp Share Button */}

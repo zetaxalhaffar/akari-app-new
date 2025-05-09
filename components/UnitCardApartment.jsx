@@ -66,7 +66,7 @@ const UnitApartmentCard = ({ item }) => {
   const availableReactions = [
     {
       value: 'like',
-      icon: '👍🏻',
+      icon: '👍🏼',
       title: 'أعجبني',
     },
     {
@@ -348,7 +348,7 @@ const UnitApartmentCard = ({ item }) => {
                 />
                 <Text className="font-pmedium text-sm text-white">تاريخ النشر : {item.since}</Text>
               </View>
-              <View className="flex-row items-center gap-1">
+              {/* <View className="flex-row items-center gap-1">
                 <Image
                   source={icons.view}
                   className={'h-6 w-6'}
@@ -356,7 +356,7 @@ const UnitApartmentCard = ({ item }) => {
                   resizeMode="contain"
                 />
                 <Text className="font-pmedium text-sm text-white">المشاهدات: {item.views}</Text>
-              </View>
+              </View> */}
             </View>
             <View
               className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
@@ -411,7 +411,7 @@ const UnitApartmentCard = ({ item }) => {
               className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} justify-between px-9 py-1`}>
               <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-3`}>
                 {item?.reaction_counts?.like_count > 0 && (
-                  <Text>{item?.reaction_counts?.like_count > 0 ? '👍🏻' : ''}</Text>
+                  <Text>{item?.reaction_counts?.like_count > 0 ? '👍🏼' : ''}</Text>
                 )}
                 {item?.reaction_counts?.angry_count > 0 && (
                   <Text>{item?.reaction_counts?.angry_count > 0 ? '😠' : ''}</Text>
@@ -478,6 +478,19 @@ const UnitApartmentCard = ({ item }) => {
             {/* Placeholder for Share Icon */}
             <AntDesign name="sharealt" size={16} color="black" />
             <Text className="text-md font-psemibold text-gray-700">مشاركة</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleShareToOtherPress}
+            className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-1 items-center justify-center gap-3 rounded-md p-2 hover:bg-gray-100 active:bg-gray-200`}>
+            {/* Placeholder for Share Icon */}
+            <Image
+              source={icons.view}
+              className={'h-6 w-6'}
+              tintColor={'#000'}
+              resizeMode="contain"
+            />
+            <Text className="text-md font-psemibold text-gray-700"> {item.views} مشاهدة</Text>
           </TouchableOpacity>
 
           {/* WhatsApp Share Button */}

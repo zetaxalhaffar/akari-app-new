@@ -27,7 +27,7 @@ import { FAB, MD3LightTheme as DefaultTheme, PaperProvider } from 'react-native-
 const theme = {
   ...DefaultTheme,
   fonts: {
-    titleLarge: { fontFamily: 'Cairo-Bold', },
+    titleLarge: { fontFamily: 'Cairo-Bold' },
     titleMedium: { fontFamily: 'Cairo-Bold' },
     titleSmall: { fontFamily: 'Cairo-Bold' },
     bodyLarge: { fontFamily: 'Cairo-Regular' },
@@ -155,6 +155,18 @@ export default function RootLayout() {
             'Notification caused app to open from quit state:',
             remoteMessage.notification
           );
+
+          // Add the same routing logic as onNotificationOpenedApp
+          const data = remoteMessage.data;
+          if (data?.notification_type == 'share') {
+            router.push(`/(shares)/${data?.content}`);
+          } else if (data?.notification_type == 'apartment') {
+            router.push(`/(apartments)/${data?.content}`);
+          } else if (data?.notification_type == 'url') {
+            await Linking.openURL(data?.content as string);
+          } else {
+            router.push('/notifications');
+          }
         }
       });
 
