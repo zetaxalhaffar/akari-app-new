@@ -452,6 +452,8 @@ export default function RootLayout() {
                 marginBottom: (insets.bottom || 0) + 90,
                 marginRight: I18nManager.isRTL ? undefined : 16,
                 marginLeft: I18nManager.isRTL ? 16 : undefined,
+                borderWidth: 1,
+                borderColor: '#a4776450',
               }}
               backdropColor="#00000080" // Kept transparent backdrop
               style={{}}
