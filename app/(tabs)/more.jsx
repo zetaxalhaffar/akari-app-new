@@ -5,14 +5,50 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import icons from '@/constants/icons';
 import { deleteSecureStore } from '@/composables/secure.store';
 import CustomIcon from '../../components/CustomIcon';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, Feather } from '@expo/vector-icons';
 import LogoutItem from '@/components/LogoutItem';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState, useEffect } from 'react';
 import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
 import { useAuthStore } from '@/store/auth.store';
-import * as SecureStore from 'expo-secure-store';
-import { useEffect } from 'react';
 import * as Application from 'expo-application';
+import { NotificationPermissionContext } from '../_layout';
+import Checkbox from 'expo-checkbox';
+
+const NotificationPermissionSwitcher = ({ icon, title }) => {
+  const { requestNotificationPermission, disableNotificationPermission, hasPermission } =
+    useContext(NotificationPermissionContext);
+
+  const handleToggle = async (value) => {
+    if (value) {
+      await requestNotificationPermission();
+    } else {
+      await disableNotificationPermission();
+    }
+  };
+  return (
+    <TouchableOpacity
+      onPress={() => handleToggle(!hasPermission)}
+      className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mx-4 my-2 items-center justify-between gap-4 rounded-lg bg-toast-100 p-4`}>
+      <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-4`}>
+        <View className="flex h-12 w-12 items-center justify-center rounded-full ">
+          <Image source={icon} className="h-6 w-6" resizeMode="contain" tintColor="#a47764" />
+        </View>
+        <View>
+          <Text className="font-psemibold text-lg text-toast-700">{title}</Text>
+        </View>
+      </View>
+      <View>
+        <CustomIcon containerStyles="border-[0]">
+          <Checkbox
+            value={hasPermission}
+            onValueChange={handleToggle}
+            color={hasPermission ? '#a47764' : '#B71C1C'}
+          />
+        </CustomIcon>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const MoreSettingsItem = ({ icon, title, handleItemPress }) => {
   return (
@@ -130,6 +166,8 @@ const MoreScreen = () => {
                 icon={icons.notifications}
                 title="الإشعارات"
               />
+              <NotificationPermissionSwitcher icon={icons.notifications} title="تفعيل الإشعارات" />
+
               <MoreSettingsItem
                 handleItemPress={() => router.push('/(more_screens)/features')}
                 icon={icons.features}

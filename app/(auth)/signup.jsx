@@ -51,6 +51,9 @@ const LoginScreen = () => {
           title: 'تمت العملية بنجاح',
           description: isDone.message,
         },
+        config: {
+          duration: 10000,
+        },
       });
       router.replace({
         pathname: '(auth)/otpvalidation',

@@ -354,15 +354,6 @@ const UnitShareCard = ({ item }) => {
                 />
                 <Text className="font-pmedium text-sm text-white">تاريخ النشر : {item.since}</Text>
               </View>
-              {/* <View className="flex-row items-center gap-1">
-                <Image
-                  source={icons.view}
-                  className={'h-6 w-6'}
-                  tintColor={'#FFF'}
-                  resizeMode="contain"
-                />
-                <Text className="font-pmedium text-sm text-white">المشاهدات: {item.views}</Text>
-              </View> */}
             </View>
             {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
               <View

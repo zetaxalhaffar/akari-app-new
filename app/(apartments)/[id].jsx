@@ -10,6 +10,7 @@ import {
   Share,
   I18nManager,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUnitsStore } from '../../store/units.store';
@@ -26,11 +27,140 @@ import { useAdminStore } from '../../store/admin.store';
 import AdminActionItem from '../../components/AdminActionItem';
 import CustomLinear from '../../components/CustomLinear';
 
-const UnitDetails = ({ item }) => {
+// Imports for Reaction Functionality
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+import { useReactionStore } from '@/store/reaction.store';
+
+// Animated Emoji Button Component
+const EmojiButton = ({ emoji, onPress, isSelected }) => {
+  const scale = useSharedValue(1);
+  const backgroundColor = useSharedValue(isSelected ? '#e5e7eb' : '#f3f4f6');
+
+  useEffect(() => {
+    scale.value = withSpring(isSelected ? 1.2 : 1);
+    backgroundColor.value = withTiming(isSelected ? '#d1d5db' : '#f3f4f6', { duration: 150 });
+  }, [isSelected, scale, backgroundColor]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+      backgroundColor: backgroundColor.value,
+    };
+  });
+
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Animated.View className="rounded-full p-2" style={animatedStyle}>
+        <Text className="text-xl">{emoji}</Text>
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
+
+// Available Reactions
+const availableReactions = [
+  { value: 'like', icon: '👍🏼', title: 'أعجبني' },
+  { value: 'love', icon: '❤️', title: 'أحببته' },
+  { value: 'wow', icon: '😮', title: 'أدهشني' },
+  { value: 'sad', icon: '😢', title: 'احزنني' },
+  { value: 'angry', icon: '😠', title: 'أغضبني' },
+];
+
+const UnitDetails = ({
+  item,
+  displayedReaction,
+  showReactions,
+  onLikePress,
+  onLikeLongPress,
+  onReactionSelect,
+  onOpenReactionsModal,
+}) => {
   const user = getSecureStoreNoAsync('user');
 
   return (
     <View className="px-4 py-4">
+      {/* Reaction UI Integrated Here */}
+      <View className="mb-4">
+        {item?.reaction_counts?.total_count > 0 && (
+          <TouchableOpacity onPress={onOpenReactionsModal} activeOpacity={0.7}>
+            <View
+              className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mb-2 items-center justify-between px-1 py-1`}>
+              <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-1`}>
+                {item?.reaction_counts?.like_count > 0 && (
+                  <Text>{item?.reaction_counts?.like_count > 0 ? '👍🏼' : ''}</Text>
+                )}
+                {item?.reaction_counts?.angry_count > 0 && (
+                  <Text>{item?.reaction_counts?.angry_count > 0 ? '😠' : ''}</Text>
+                )}
+                {item?.reaction_counts?.love_count > 0 && (
+                  <Text>{item?.reaction_counts?.love_count > 0 ? '❤️' : ''}</Text>
+                )}
+                {item?.reaction_counts?.sad_count > 0 && (
+                  <Text>{item?.reaction_counts?.sad_count > 0 ? '😢' : ''}</Text>
+                )}
+                {item?.reaction_counts?.wow_count > 0 && (
+                  <Text>{item?.reaction_counts?.wow_count > 0 ? '😮' : ''}</Text>
+                )}
+              </View>
+              <View>
+                <Text className="font-psemibold text-sm text-gray-600">{item?.views} مشاهدة</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+
+        {showReactions && (
+          <Animated.View
+            className="absolute bottom-12 left-2 z-20 flex-row items-center gap-2 rounded-full border border-gray-300 bg-white p-1 shadow-lg drop-shadow-sm"
+            style={{
+              elevation: 5,
+              transform: [{ translateX: I18nManager.isRTL ? -10 : 10 }],
+              bottom: 50, // Adjust as needed
+            }}>
+            {availableReactions.map((reaction) => (
+              <EmojiButton
+                key={reaction.value}
+                emoji={reaction.icon}
+                onPress={() => onReactionSelect(reaction.value)}
+              />
+            ))}
+          </Animated.View>
+        )}
+
+        <TouchableOpacity
+          onPress={onLikePress}
+          onLongPress={onLikeLongPress}
+          delayLongPress={200}
+          className="relative my-2 flex-1 items-center justify-center rounded-md border border-gray-200 py-3 hover:bg-gray-100 active:bg-gray-200">
+          {(() => {
+            const reactionObj = availableReactions.find((r) => r.value === displayedReaction);
+            if (reactionObj) {
+              return (
+                <View
+                  className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
+                  <Text className="text-lg">{reactionObj.icon}</Text>
+                  <Text className="text-md font-psemibold capitalize text-gray-700">
+                    {reactionObj.title}
+                  </Text>
+                </View>
+              );
+            }
+            return (
+              <View
+                className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
+                <AntDesign name="like2" size={18} color="#374151" />
+                <Text className="text-md mt-1 font-psemibold text-gray-700">إعجاب</Text>
+              </View>
+            );
+          })()}
+        </TouchableOpacity>
+      </View>
+
       <View className={`rounded-lg border border-toast-100 p-4`}>
         <Text className="font-psemibold text-lg text-black">تفاصيل العقار</Text>
         <Text className="font-pregular text-sm text-zinc-600">
@@ -193,7 +323,6 @@ const ApartmentDetails = () => {
   const { id } = useGlobalSearchParams();
 
   // get Current User
-
   const user = getSecureStoreNoAsync('user');
 
   // init store
@@ -206,7 +335,6 @@ const ApartmentDetails = () => {
   } = useUnitsStore();
 
   /*================== admin actions ==================*/
-
   const {
     approveUnitLoading,
     approveUnit,
@@ -215,6 +343,108 @@ const ApartmentDetails = () => {
     deleteUnitLoading,
     deleteUnit,
   } = useAdminStore();
+
+  /*================== Reaction Functionality ==================*/
+  const { setReactions, removeReaction } = useReactionStore();
+  const [showReactions, setShowReactions] = useState(false);
+  const [displayedReaction, setDisplayedReaction] = useState(null);
+  const reactionsBottomSheetModalRef = useRef(null); // For detailed reaction list
+
+  useEffect(() => {
+    if (apartmentDetailsResponse) {
+      setDisplayedReaction(apartmentDetailsResponse.current_user_reaction);
+    }
+  }, [apartmentDetailsResponse?.current_user_reaction]);
+
+  // Function to update reactions locally
+  const updateLocalReactions = (reactionSummary) => {
+    if (apartmentDetailsResponse && reactionSummary) {
+      // Update the reaction counts without refetching the entire apartment
+      const updatedApartment = {
+        ...apartmentDetailsResponse,
+        reaction_counts: reactionSummary,
+      };
+      // Update the store directly
+      useUnitsStore.setState(state => ({
+        ...state,
+        apartmentDetailsResponse: updatedApartment
+      }));
+    }
+  };
+
+  const handleReactionSelect = async (reaction) => {
+    const previousReaction = displayedReaction;
+    setDisplayedReaction(reaction); // Optimistic update
+    setShowReactions(false);
+    
+    const response = await setReactions({
+      type: reaction,
+      post_type: 'apartment',
+      post_id: id,
+    });
+    
+    if (response) {
+      // Update local state with the reaction summary from the response
+      updateLocalReactions(response.reaction_summary);
+    } else {
+      setDisplayedReaction(previousReaction); // Revert on error
+    }
+  };
+
+  const handleLikePress = () => {
+    if (showReactions) {
+      handleReactionSelect('like');
+      return;
+    }
+
+    if (displayedReaction) {
+      const previousReaction = displayedReaction;
+      setDisplayedReaction(null); // Optimistic update
+      
+      removeReaction({
+        post_type: 'apartment',
+        post_id: id,
+      })
+        .then((response) => {
+          if (response) {
+            // Update local state with the reaction summary from the response
+            updateLocalReactions(response.reaction_summary);
+          } else {
+            setDisplayedReaction(previousReaction); // Revert
+          }
+        })
+        .catch(() => {
+          setDisplayedReaction(previousReaction); // Revert
+        });
+    } else {
+      setDisplayedReaction('like'); // Optimistic update for 'like'
+      
+      setReactions({
+        type: 'like',
+        post_type: 'apartment',
+        post_id: id,
+      })
+        .then((response) => {
+          if (response) {
+            // Update local state with the reaction summary from the response
+            updateLocalReactions(response.reaction_summary);
+          } else {
+            setDisplayedReaction(null); // Revert
+          }
+        })
+        .catch(() => {
+          setDisplayedReaction(null); // Revert
+        });
+    }
+  };
+
+  const handleLikeLongPress = () => {
+    setShowReactions(true);
+  };
+
+  const handleOpenReactionsModal = () => {
+    reactionsBottomSheetModalRef.current?.present();
+  };
 
   const handleShare = async (item) => {
     console.log(item);
@@ -360,6 +590,46 @@ const ApartmentDetails = () => {
           />
         </View>
       </CustomBottomModalSheet>
+
+      {/* Modal for Detailed Reaction Counts */}
+      <CustomBottomModalSheet
+        backdropBehave="close"
+        enablePanDownToClose={true}
+        bottomSheetModalRef={reactionsBottomSheetModalRef}
+        handleSheetChanges={() => {}}
+        snapPoints={['30%', '50%', '70%']}
+        handleDismissModalPress={() => {}}>
+        <View className="p-4">
+          <Text className="mb-4 text-center font-psemibold text-lg">التفاعلات</Text>
+          <View className={`flex ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-wrap gap-4`}>
+            {availableReactions.map((reaction) => {
+              const countKey = `${reaction.value}_count`;
+              const count = apartmentDetailsResponse?.reaction_counts?.[countKey] || 0;
+              if (count > 0) {
+                return (
+                  <View
+                    key={reaction.value}
+                    className={`flex ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-2 rounded-lg bg-gray-100 p-2`}>
+                    <Text className="text-2xl">{count}</Text>
+                    <Text className="text-2xl">{reaction.icon}</Text>
+                    <Text className="mt-1 font-pmedium text-sm text-gray-700">
+                      {reaction.title}
+                    </Text>
+                  </View>
+                );
+              }
+              return null;
+            })}
+            {(!apartmentDetailsResponse?.reaction_counts ||
+              apartmentDetailsResponse?.reaction_counts?.total_count === 0) && (
+              <Text className="w-full text-center font-pregular text-gray-500">
+                لا يوجد تفاعلات بعد.
+              </Text>
+            )}
+          </View>
+        </View>
+      </CustomBottomModalSheet>
+
       <SafeAreaView className="flex-1">
         {apartmentDetailsLoading ? (
           <View className="flex-1 items-center justify-center">
@@ -409,7 +679,15 @@ const ApartmentDetails = () => {
                   />
                 )}
                 <View style={{ marginTop: 20 }}>
-                  <UnitDetails item={apartmentDetailsResponse} />
+                  <UnitDetails
+                    item={apartmentDetailsResponse}
+                    displayedReaction={displayedReaction}
+                    showReactions={showReactions}
+                    onLikePress={handleLikePress}
+                    onLikeLongPress={handleLikeLongPress}
+                    onReactionSelect={handleReactionSelect}
+                    onOpenReactionsModal={handleOpenReactionsModal}
+                  />
                 </View>
               </View>
             </ScrollView>
