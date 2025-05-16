@@ -91,21 +91,25 @@ const UnitDetails = ({
             <View
               className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mb-2 items-center justify-between px-1 py-1`}>
               <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-1`}>
-                {item?.reaction_counts?.like_count > 0 && (
-                  <Text>{item?.reaction_counts?.like_count > 0 ? '👍🏼' : ''}</Text>
-                )}
-                {item?.reaction_counts?.angry_count > 0 && (
-                  <Text>{item?.reaction_counts?.angry_count > 0 ? '😠' : ''}</Text>
-                )}
-                {item?.reaction_counts?.love_count > 0 && (
-                  <Text>{item?.reaction_counts?.love_count > 0 ? '❤️' : ''}</Text>
-                )}
-                {item?.reaction_counts?.sad_count > 0 && (
-                  <Text>{item?.reaction_counts?.sad_count > 0 ? '😢' : ''}</Text>
-                )}
-                {item?.reaction_counts?.wow_count > 0 && (
-                  <Text>{item?.reaction_counts?.wow_count > 0 ? '😮' : ''}</Text>
-                )}
+                <View
+                  className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-1`}>
+                  {item?.reaction_counts?.like_count > 0 && (
+                    <Text>{item?.reaction_counts?.like_count > 0 ? '👍🏼' : ''}</Text>
+                  )}
+                  {item?.reaction_counts?.angry_count > 0 && (
+                    <Text>{item?.reaction_counts?.angry_count > 0 ? '😠' : ''}</Text>
+                  )}
+                  {item?.reaction_counts?.love_count > 0 && (
+                    <Text>{item?.reaction_counts?.love_count > 0 ? '❤️' : ''}</Text>
+                  )}
+                  {item?.reaction_counts?.sad_count > 0 && (
+                    <Text>{item?.reaction_counts?.sad_count > 0 ? '😢' : ''}</Text>
+                  )}
+                  {item?.reaction_counts?.wow_count > 0 && (
+                    <Text>{item?.reaction_counts?.wow_count > 0 ? '😮' : ''}</Text>
+                  )}
+                </View>
+                <Text>{item?.reaction_counts?.total_count}</Text>
               </View>
               <View>
                 <Text className="font-psemibold text-sm text-gray-600">{item?.views} مشاهدة</Text>
@@ -365,9 +369,9 @@ const ApartmentDetails = () => {
         reaction_counts: reactionSummary,
       };
       // Update the store directly
-      useUnitsStore.setState(state => ({
+      useUnitsStore.setState((state) => ({
         ...state,
-        apartmentDetailsResponse: updatedApartment
+        apartmentDetailsResponse: updatedApartment,
       }));
     }
   };
@@ -376,13 +380,13 @@ const ApartmentDetails = () => {
     const previousReaction = displayedReaction;
     setDisplayedReaction(reaction); // Optimistic update
     setShowReactions(false);
-    
+
     const response = await setReactions({
       type: reaction,
       post_type: 'apartment',
       post_id: id,
     });
-    
+
     if (response) {
       // Update local state with the reaction summary from the response
       updateLocalReactions(response.reaction_summary);
@@ -400,7 +404,7 @@ const ApartmentDetails = () => {
     if (displayedReaction) {
       const previousReaction = displayedReaction;
       setDisplayedReaction(null); // Optimistic update
-      
+
       removeReaction({
         post_type: 'apartment',
         post_id: id,
@@ -418,7 +422,7 @@ const ApartmentDetails = () => {
         });
     } else {
       setDisplayedReaction('like'); // Optimistic update for 'like'
-      
+
       setReactions({
         type: 'like',
         post_type: 'apartment',

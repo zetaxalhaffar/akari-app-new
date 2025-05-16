@@ -88,24 +88,29 @@ const UnitDetails = ({
             <View
               className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mb-2 items-center justify-between px-1 py-1`}>
               <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-1`}>
-                {item?.reaction_counts?.like_count > 0 && (
-                  <Text>{item?.reaction_counts?.like_count > 0 ? '👍🏼' : ''}</Text>
-                )}
-                {item?.reaction_counts?.angry_count > 0 && (
-                  <Text>{item?.reaction_counts?.angry_count > 0 ? '😠' : ''}</Text>
-                )}
-                {item?.reaction_counts?.love_count > 0 && (
-                  <Text>{item?.reaction_counts?.love_count > 0 ? '❤️' : ''}</Text>
-                )}
-                {item?.reaction_counts?.sad_count > 0 && (
-                  <Text>{item?.reaction_counts?.sad_count > 0 ? '😢' : ''}</Text>
-                )}
-                {item?.reaction_counts?.wow_count > 0 && (
-                  <Text>{item?.reaction_counts?.wow_count > 0 ? '😮' : ''}</Text>
-                )}
+                <View
+                  className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-1`}>
+                  {item?.reaction_counts?.like_count > 0 && (
+                    <Text>{item?.reaction_counts?.like_count > 0 ? '👍🏼' : ''}</Text>
+                  )}
+                  {item?.reaction_counts?.angry_count > 0 && (
+                    <Text>{item?.reaction_counts?.angry_count > 0 ? '😠' : ''}</Text>
+                  )}
+                  {item?.reaction_counts?.love_count > 0 && (
+                    <Text>{item?.reaction_counts?.love_count > 0 ? '❤️' : ''}</Text>
+                  )}
+                  {item?.reaction_counts?.sad_count > 0 && (
+                    <Text>{item?.reaction_counts?.sad_count > 0 ? '😢' : ''}</Text>
+                  )}
+                  {item?.reaction_counts?.wow_count > 0 && (
+                    <Text>{item?.reaction_counts?.wow_count > 0 ? '😮' : ''}</Text>
+                  )}
+                </View>
+                <Text>{item?.reaction_counts?.total_count}</Text>
               </View>
+
               <View>
-                <Text className="text-sm text-gray-600 font-psemibold">{item?.views} مشاهدة</Text>
+                <Text className="font-psemibold text-sm text-gray-600">{item?.views} مشاهدة</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -270,9 +275,9 @@ const SharesDetails = () => {
         reaction_counts: reactionSummary,
       };
       // Update the store directly
-      useUnitsStore.setState(state => ({
+      useUnitsStore.setState((state) => ({
         ...state,
-        shareDetailsResponse: updatedShare
+        shareDetailsResponse: updatedShare,
       }));
     }
   };

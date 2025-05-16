@@ -69,7 +69,7 @@ const LoginScreen = () => {
         <View className={`m-3 mb-0 ${I18nManager.isRTL ? 'ltr-view' : 'rtl-view'}`}>
           <CustomIcon
             handleOnIconPress={() => {
-              router.back();
+              router.replace('/(auth)');
             }}
             containerStyles="border-toast-600 bg-toast-100">
             <EvilIcons name="close" size={22} color="#a47764" className="mb-1" />
