@@ -10,15 +10,15 @@ import UnitShareCard from '../components/UnitCardShare';
 import UnitApartmentCard from '../components/UnitCardApartment';
 import EmptyScreen from '@/components/EmptyScreen';
 const SearchResultsScreen = () => {
-  // Retrieve the passed parameters
-  const { id, region_id, sector_id, price_operator, price, sectoreType, currentType } =
-    useGlobalSearchParams();
+  // Retrieve all passed parameters
+  const searchParams = useGlobalSearchParams();
   const [results, setResults] = useState([]);
 
   const { searchForUnits, searchForUnitsLoading, searchForUnitsResponse } = useUnitsStore();
 
   const getSearchResults = async () => {
-    await searchForUnits({ id, region_id, sector_id, price_operator, price, currentType });
+    // Pass all searchParams to the function
+    await searchForUnits(searchParams);
     console.log('searchForUnitsResponse ====================', searchForUnitsResponse);
   };
 
@@ -32,7 +32,10 @@ const SearchResultsScreen = () => {
 
   useEffect(() => {
     getSearchResults();
-  }, [id, region_id, sector_id, price_operator, price, sectoreType, currentType]);
+    // Depend on the searchParams object.
+    // Note: For objects in dependency arrays, ensure stable references or serialize if needed,
+    // but for searchParams from expo-router, this should generally be fine.
+  }, [searchParams]);
 
   return (
     <SafeAreaView className="flex-1">
@@ -44,7 +47,8 @@ const SearchResultsScreen = () => {
           refreshing={searchForUnitsLoading}
           onRefresh={handleRefresh}
           renderItem={({ item }) =>
-            currentType == 'share' ? (
+            // Use currentType from searchParams
+            searchParams.currentType == 'share' ? (
               <UnitShareCard item={item} />
             ) : (
               <UnitApartmentCard item={item} />

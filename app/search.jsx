@@ -3,6 +3,7 @@ import { View, Text, ScrollView, I18nManager } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import Feather from '@expo/vector-icons/Feather';
 import CustomHeadWithBackButton from '../components/CustomHeadWithBackButton';
 import { Input } from '@/components/CustomInput';
 import CustomRadioButtons from '../components/CustomRadioButtons';
@@ -19,8 +20,18 @@ const price_operator = [
 ];
 
 const SearchScreen = () => {
-  const { getRegions, regions, getSectorsBasedOnRegion, sectorsBasedOnRegionSchema } =
-    useEnumsStore();
+  const {
+    getRegions,
+    regions,
+    getSectorsBasedOnRegion,
+    sectorsBasedOnRegionSchema,
+    getApartmentTypes,
+    apartmentTypesSchema,
+    getDirections,
+    directionsSchema,
+    getApartmentStatus,
+    apartmentStatusSchema,
+  } = useEnumsStore();
 
   const [form, setForm] = useState({
     id: '',
@@ -28,12 +39,27 @@ const SearchScreen = () => {
     sector_id: '',
     price_operator: '=',
     price: '',
+    owner_name: '',
+    apartment_type_id: '',
+    direction_id: '',
+    apartment_status_id: '',
+    area: '',
+    floor: '',
+    rooms_count: '',
+    salons_count: '',
+    balcony_count: '',
+    is_taras: '0',
   });
   const [currentType, setCurrentType] = useState('share');
   const [sectoreType, setSectoreType] = useState('');
   const [sectorsTypes, setSectorsTypes] = useState([]);
   const [mainSectors, setMainSectors] = useState([]);
   const [sectors, setSectors] = useState([]);
+
+  const [apartmentTypesList, setApartmentTypesList] = useState([]);
+  const [directionsList, setDirectionsList] = useState([]);
+  const [apartmentStatusList, setApartmentStatusList] = useState([]);
+  const [fieldsToShowForApartment, setFieldsToShowForApartment] = useState([]);
 
   const unitTypeRadioButtons = useMemo(
     () => [
@@ -44,7 +70,9 @@ const SearchScreen = () => {
   );
 
   const handleChangeRegion = async (value) => {
-    setForm({ ...form, region_id: value });
+    setForm({ ...form, region_id: value, sector_id: '', apartment_type_id: '', direction_id: '', apartment_status_id: '', area: '', floor: '', rooms_count: '', salons_count: '', balcony_count: '', is_taras: '0' });
+    setSectoreType('');
+    setSectors([]);
     const sectorsResponse = await getSectorsBasedOnRegion(value);
     setMainSectors(sectorsResponse);
     const sectorsTypesSelection = [];
@@ -62,17 +90,25 @@ const SearchScreen = () => {
   const handleSelectSectorType = async (value) => {
     setSectoreType(value);
     setSectors(mainSectors[value]?.code);
+    setForm({ ...form, sector_id: '' });
   };
 
   const getEnums = async () => {
     await getRegions();
+    const aptTypes = await getApartmentTypes();
+    const dirs = await getDirections();
+    const aptStatus = await getApartmentStatus();
+    setApartmentTypesList(aptTypes || []);
+    setDirectionsList(dirs || []);
+    setApartmentStatusList(aptStatus || []);
   };
 
   const handleSearch = async () => {
-    // Navigate to the Search Results screen and pass the search parameters
+    const paramsToPush = { ...form, sectoreType, currentType };
+    console.log('Pushing to SearchResults with params:', JSON.stringify(paramsToPush, null, 2));
     router.push({
       pathname: '/SearchResults',
-      params: { ...form, sectoreType, currentType },
+      params: paramsToPush,
     });
   };
 
@@ -80,12 +116,54 @@ const SearchScreen = () => {
     getEnums();
   }, []);
 
+  const tarasRadioButtons = useMemo(
+    () => [
+      { id: '1', label: 'نعم', value: '1', size: 20, color: '#a47764' },
+      { id: '0', label: 'لا', value: '0', size: 20, color: '#a47764' },
+    ],
+    []
+  );
+  
+  const handleApartmentTypeChange = (value) => {
+    setForm({ ...form, apartment_type_id: value });
+    const selectedType = apartmentTypesList.find((item) => item.id === value);
+    setFieldsToShowForApartment(selectedType?.fields || []);
+  };
+  
+  const handleUnitTypeChange = (value) => {
+    setCurrentType(value);
+    setForm({
+      id: '',
+      region_id: '',
+      sector_id: '',
+      price_operator: '=',
+      price: '',
+      owner_name: '',
+      apartment_type_id: '',
+      direction_id: '',
+      apartment_status_id: '',
+      area: '',
+      floor: '',
+      rooms_count: '',
+      salons_count: '',
+      balcony_count: '',
+      is_taras: '0',
+    });
+    setSectoreType('');
+    setSectorsTypes([]);
+    setMainSectors([]);
+    setSectors([]);
+    setFieldsToShowForApartment([]);
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <CustomHeadWithBackButton
         title="البحث عن وحدة"
         handleButtonPress={() => router.back()}
         rightText={''}
+        rightIcon={<Feather name="search" size={20} color="#a47764" />}
+        rightIconPress={() => router.push({ pathname: '/search' })}
       />
       <View className="flex-1 px-4">
         <ScrollView>
@@ -93,7 +171,7 @@ const SearchScreen = () => {
             <Text className="mb-2 font-pmedium text-gray-700">نوع الوحدة</Text>
             <CustomRadioButtons
               radioButtons={unitTypeRadioButtons}
-              handleChangeRadioButton={(value) => setCurrentType(value)}
+              handleChangeRadioButton={handleUnitTypeChange}
               selectedId={currentType}
               disabled={form.id.length > 0}
             />
@@ -142,6 +220,108 @@ const SearchScreen = () => {
               hideLoading={sectorsBasedOnRegionSchema?.loading ? false : true}
             />
           </View>
+          {currentType === 'apartment' && !form.id && (
+            <>
+              <View className="my-4">
+                <CustomSelecteBox
+                  value={form.apartment_type_id}
+                  setValue={handleApartmentTypeChange}
+                  arrayOfValues={apartmentTypesList}
+                  valueKey="id"
+                  placeholder="نوع العقار"
+                  disabled={form.id.length > 0 || apartmentTypesSchema?.loading}
+                  hideLoading={apartmentTypesSchema?.loading ? false : true}
+                />
+              </View>
+              <View className="my-4">
+                <CustomSelecteBox
+                  value={form.direction_id}
+                  setValue={(value) => setForm({ ...form, direction_id: value })}
+                  arrayOfValues={directionsList}
+                  valueKey="id"
+                  placeholder="اتجاه العقار"
+                  disabled={form.id.length > 0 || directionsSchema?.loading}
+                  hideLoading={directionsSchema?.loading ? false : true}
+                />
+              </View>
+              <View className="my-4">
+                <CustomSelecteBox
+                  value={form.apartment_status_id}
+                  setValue={(value) => setForm({ ...form, apartment_status_id: value })}
+                  arrayOfValues={apartmentStatusList}
+                  valueKey="id"
+                  placeholder="حالة العقار"
+                  disabled={form.id.length > 0 || apartmentStatusSchema?.loading}
+                  hideLoading={apartmentStatusSchema?.loading ? false : true}
+                />
+              </View>
+              <View className="my-4">
+                <Input
+                  placeholder="المساحة (متر مربع)"
+                  value={form.area}
+                  onChangeText={(value) => setForm({ ...form, area: value })}
+                  type="numeric"
+                  disabled={form.id.length > 0}
+                />
+              </View>
+
+              {fieldsToShowForApartment.includes('floor') && (
+                <View className="my-4">
+                  <Input
+                    placeholder="الطابق"
+                    value={form.floor}
+                    onChangeText={(value) => setForm({ ...form, floor: value })}
+                    type="numeric"
+                    disabled={form.id.length > 0}
+                  />
+                </View>
+              )}
+              {fieldsToShowForApartment.includes('rooms_count') && (
+                <View className="my-4">
+                  <Input
+                    placeholder="عدد الغرف"
+                    value={form.rooms_count}
+                    onChangeText={(value) => setForm({ ...form, rooms_count: value })}
+                    type="numeric"
+                    disabled={form.id.length > 0}
+                  />
+                </View>
+              )}
+              {fieldsToShowForApartment.includes('salons_count') && (
+                <View className="my-4">
+                  <Input
+                    placeholder="عدد الصالونات"
+                    value={form.salons_count}
+                    onChangeText={(value) => setForm({ ...form, salons_count: value })}
+                    type="numeric"
+                    disabled={form.id.length > 0}
+                  />
+                </View>
+              )}
+              {fieldsToShowForApartment.includes('balcony_count') && (
+                <View className="my-4">
+                  <Input
+                    placeholder="عدد البلكونات"
+                    value={form.balcony_count}
+                    onChangeText={(value) => setForm({ ...form, balcony_count: value })}
+                    type="numeric"
+                    disabled={form.id.length > 0}
+                  />
+                </View>
+              )}
+              {fieldsToShowForApartment.includes('is_taras') && (
+                <View className="my-4">
+                  <Text className="mb-2 font-pmedium text-gray-700">تراس</Text>
+                  <CustomRadioButtons
+                    radioButtons={tarasRadioButtons}
+                    handleChangeRadioButton={(value) => setForm({ ...form, is_taras: value })}
+                    selectedId={form.is_taras}
+                    disabled={form.id.length > 0}
+                  />
+                </View>
+              )}
+            </>
+          )}
           <View>
             <Text className="font-pmedium text-gray-700">السعر</Text>
             <View
@@ -160,11 +340,11 @@ const SearchScreen = () => {
               </View>
               <View className="flex-1">
                 <Input
-                  editable={false}
                   placeholder=""
                   value={form.price}
                   onChangeText={(value) => setForm({ ...form, price: value })}
                   type="numeric"
+                  editable={form.id.length === 0}
                 />
               </View>
             </View>
