@@ -87,13 +87,13 @@ const LoginScreen = () => {
         <View
           className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view mt-6 !pb-0`}>
           <Text className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-xl`}>
-            أدخل رقم تليفونك
+            أدخل رقم هاتفك
           </Text>
         </View>
         <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view !py-0`}>
           <Text
             className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-base text-gray-500`}>
-            الرجاء استخدام رقم تليفونك لتسجيل الدخول
+            الرجاء استخدام رقم هاتفك لتسجيل الدخول
           </Text>
         </View>
         <View
