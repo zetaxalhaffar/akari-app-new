@@ -10,7 +10,7 @@ const PrivacyScreen = () => {
       <HomePageHeader hasActions={false} customActions={false} />
       <ScrollView className="flex-1 px-4">
         <View>
-          <Text className="font-pbold text-2xl text-black">سياسية الخصوصية</Text>
+          <Text className="font-pbold text-2xl text-black">سياسة الخصوصية</Text>
           <Text className="mt-2 font-pregular  text-base">
             تهدف هذه السياسة إلى شرح كيفية جمعنا واستخدامنا وحماية معلوماتك الشخصية عند استخدامك
             لتطبيق "عقاري". نحن ملتزمون بحماية خصوصيتك، ونضمن لك أن معاملتك لبياناتك ستكون وفقًا
