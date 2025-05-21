@@ -98,7 +98,7 @@ const LoginScreen = () => {
         </View>
         <View
           style={{ flexGrow: 1 }}
-          className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view mt-12 !py-0`}>
+          className={`container-view mt-12 !py-0`}>
           <PhoneInput
             phoneInputStyles={{
               flagContainer: {
@@ -108,6 +108,7 @@ const LoginScreen = () => {
                 borderColor: '#a47764',
                 borderWidth: 1,
                 backgroundColor: 'transparent',
+                flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
               },
             }}
             value={form.phone}

@@ -108,6 +108,7 @@ const LoginScreen = () => {
                   borderColor: '#a47764',
                   borderWidth: 1,
                   backgroundColor: 'transparent',
+                  flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
                 },
               }}
               value={form.phone}

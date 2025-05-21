@@ -346,7 +346,7 @@ export default function RootLayout() {
   }, []);
 
   if (!fontsLoaded) {
-    return <Redirect href="/(auth)" />;
+    return <Redirect href="/(auth)/index" />;
   }
 
   return (

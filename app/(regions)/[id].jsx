@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, View } from 'react-native';
+import { I18nManager, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomePageHeader from '@/components/HomePageHeader';
 import { router, useGlobalSearchParams } from 'expo-router';
@@ -11,6 +11,7 @@ import UnitShareCard from '../../components/UnitCardShare';
 import UnitApartmentCard from '../../components/UnitCardApartment';
 import EmptyScreen from '@/components/EmptyScreen';
 import { ActivityIndicator } from 'react-native-web';
+import { Feather } from '@expo/vector-icons';
 
 // Top Tab Items
 const topTabItems = [
@@ -101,17 +102,30 @@ const RegionWithId = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <HomePageHeader hasActions={true} customActions={true}>
-        <CustomButton
-          containerStyles={'mt-3'}
-          hasGradient={true}
-          colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-          title={tabId == 'shares' ? 'إضافة سهم تنظيمي' : 'إضافة عقار'}
-          positionOfGradient={'leftToRight'}
-          textStyles={'text-white text-sm'}
-          handleButtonPress={() => {
-            router.push(`/(create)/${tabId}`);
-          }}
-        />
+        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-2`}>
+          <View className="mt-2">
+            <TouchableOpacity
+              onPress={() =>
+                router.push({
+                  pathname: '/search',
+                })
+              }
+              className="flex-row items-center rounded-full p-2">
+              <Feather name="search" size={20} color="#a47764" />
+            </TouchableOpacity>
+          </View>
+          <CustomButton
+            containerStyles={'mt-3'}
+            hasGradient={true}
+            colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
+            title={tabId == 'shares' ? 'إضافة سهم تنظيمي' : 'إضافة عقار'}
+            positionOfGradient={'leftToRight'}
+            textStyles={'text-white text-sm'}
+            handleButtonPress={() => {
+              router.push(`/(create)/${tabId}`);
+            }}
+          />
+        </View>
       </HomePageHeader>
       <View className="flex-1">
         <CustomTopTabs topTabItems={topTabItems} onTabChange={handleTabChange}>
