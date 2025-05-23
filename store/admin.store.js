@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axiosInstance from '../utils/axiosInstance';
 import { notify } from 'react-native-notificated';
+import { getSecureStore } from '../composables/secure.store';
 
 export const useAdminStore = create((set, get) => ({
   // https://arrows-dev.versetech.net/api/admin/user/ListAll
@@ -170,6 +171,13 @@ export const useAdminStore = create((set, get) => ({
   updateFirebaseResponse: null,
   updateFirebase: async (params) => {
     try {
+      // Check if token is available before making the API call
+      const token = await getSecureStore('token');
+      if (!token) {
+        console.log('No token available, skipping Firebase update');
+        return null;
+      }
+      
       set({ updateFirebaseLoading: true });
       const response = await axiosInstance.get('/user/update_firebase', {
         params: {
