@@ -1,6 +1,6 @@
 // app/SearchResults.jsx
 import { View, Text, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalSearchParams, router } from 'expo-router';
 import CustomHeadWithBackButton from '../components/CustomHeadWithBackButton';
@@ -9,33 +9,66 @@ import { FlashList } from '@shopify/flash-list';
 import UnitShareCard from '../components/UnitCardShare';
 import UnitApartmentCard from '../components/UnitCardApartment';
 import EmptyScreen from '@/components/EmptyScreen';
+
 const SearchResultsScreen = () => {
   // Retrieve all passed parameters
   const searchParams = useGlobalSearchParams();
   const [results, setResults] = useState([]);
+  const [originalSearchParams, setOriginalSearchParams] = useState(null);
+  const isInitialized = useRef(false);
+  const stableSearchParams = useRef(null);
 
   const { searchForUnits, searchForUnitsLoading, searchForUnitsResponse } = useUnitsStore();
 
   const getSearchResults = async () => {
-    // Pass all searchParams to the function
-    await searchForUnits(searchParams);
+    // Use the stable stored params to completely prevent any parameter pollution
+    const paramsToUse = stableSearchParams.current;
+    if (!paramsToUse) {
+      console.log('No stable search params available, skipping request');
+      return;
+    }
+    
+    console.log('Making search request with params:', JSON.stringify(paramsToUse, null, 2));
+    await searchForUnits(paramsToUse);
     console.log('searchForUnitsResponse ====================', searchForUnitsResponse);
   };
 
   const handleRefresh = () => {
+    console.log('handleRefresh called');
     getSearchResults();
   };
 
   const handleEndReached = () => {
+    console.log('handleEndReached called');
     getSearchResults();
   };
 
   useEffect(() => {
-    getSearchResults();
-    // Depend on the searchParams object.
-    // Note: For objects in dependency arrays, ensure stable references or serialize if needed,
-    // but for searchParams from expo-router, this should generally be fine.
-  }, [searchParams]);
+    // Only store params and make request on initial mount
+    if (!isInitialized.current) {
+      console.log('Initializing SearchResults with params:', JSON.stringify(searchParams, null, 2));
+      
+      // Create a clean copy of search params, excluding any router-specific keys
+      const cleanParams = {};
+      for (const [key, value] of Object.entries(searchParams)) {
+        if (!key.startsWith('__EXPO_ROUTER_') && !key.startsWith('_')) {
+          cleanParams[key] = value;
+        }
+      }
+      
+      setOriginalSearchParams(cleanParams);
+      stableSearchParams.current = cleanParams;
+      isInitialized.current = true;
+      getSearchResults();
+    }
+  }, []); // Empty dependency array to run only once
+
+  // Component unmount cleanup
+  useEffect(() => {
+    return () => {
+      console.log('SearchResults component unmounting');
+    };
+  }, []);
 
   return (
     <SafeAreaView className="flex-1">
@@ -47,8 +80,8 @@ const SearchResultsScreen = () => {
           refreshing={searchForUnitsLoading}
           onRefresh={handleRefresh}
           renderItem={({ item }) =>
-            // Use currentType from searchParams
-            searchParams.currentType == 'share' ? (
+            // Use stable params to determine the type
+            stableSearchParams.current?.currentType == 'share' ? (
               <UnitShareCard item={item} />
             ) : (
               <UnitApartmentCard item={item} />
