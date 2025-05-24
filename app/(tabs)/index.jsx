@@ -90,12 +90,13 @@ export default function Home() {
       ) : (
         <ScrollView
           refreshControl={<RefreshControl refreshing={false} onRefresh={getRegionsList} />}>
-          <View className="mt-6 flex-row gap-3 px-3">
+          <View className="mt-6 gap-3 px-3" style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {regionResponse &&
               regionResponse?.map((item) => (
                 <TouchableOpacity
                   key={item?.id}
-                  className="relative h-[200px] flex-1 rounded-lg bg-toast-500"
+                  className="relative h-[200px] rounded-lg bg-toast-500"
+                  style={{ width: '48%' }}
                   onPress={() =>
                     router.push({
                       pathname: `/(regions)/${item?.id}`,
@@ -119,7 +120,7 @@ export default function Home() {
             <Text className="font-pregular text-base">
               تعرف على حركة السوق العقاري في دمشق لحظة بلحظة.
             </Text>
-            <View className="mt-4">
+            <View className="mb-16 mt-4">
               <ScrollView
                 contentContainerStyle={{
                   gap: 16,
