@@ -84,14 +84,35 @@ const UnitDetails = ({
 }) => {
   const user = getSecureStoreNoAsync('user');
 
+  // Conditions for showing extra details
+  const roomsCountValue = item?.rooms_count;
+  const showRooms = roomsCountValue != null && parseInt(String(roomsCountValue), 10) > 0;
+
+  const salonsCountValue = item?.salons_count;
+  const showSalons = salonsCountValue != null && parseInt(String(salonsCountValue), 10) > 0;
+
+  const balconyCountValue = item?.balcony_count;
+  const showBalcony = balconyCountValue != null && parseInt(String(balconyCountValue), 10) > 0;
+
+  const showTerrace = item?.is_taras === 1 || item?.is_taras === '1';
+  const showApartmentStatus = !!item?.apartment_status?.name;
+  const showApartmentType = !!item?.apartment_type?.name;
+
+  const showExtraDetailsSection =
+    showRooms ||
+    showSalons ||
+    showBalcony ||
+    showTerrace ||
+    showApartmentStatus ||
+    showApartmentType;
+
   return (
     <View className="px-4 py-4">
       {/* Reaction UI Integrated Here */}
       <View className="mb-4">
-        {item?.reaction_counts?.total_count > 0 && (
-          <TouchableOpacity onPress={onOpenReactionsModal} activeOpacity={0.7}>
-            <View
-              className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mb-2 items-center justify-between px-1 py-1`}>
+        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mb-2 items-center justify-between px-1 py-1`}>
+          {item?.reaction_counts?.total_count > 0 && (
+            <TouchableOpacity onPress={onOpenReactionsModal} activeOpacity={0.7}>
               <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-1`}>
                 <View
                   className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-1`}>
@@ -113,12 +134,12 @@ const UnitDetails = ({
                 </View>
                 <Text>{item?.reaction_counts?.total_count}</Text>
               </View>
-              <View>
-                <Text className="font-psemibold text-sm text-gray-600">{item?.views} مشاهدة</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
+            </TouchableOpacity>
+          )}
+          <View>
+            <Text className="font-psemibold text-sm text-gray-600">{item?.views} مشاهدة</Text>
+          </View>
+        </View>
 
         {showReactions && (
           <>
@@ -183,7 +204,7 @@ const UnitDetails = ({
 
       <View className={`rounded-lg border border-toast-100 p-4`}>
         <Text className="font-psemibold text-lg text-black">تفاصيل العقار</Text>
-        <Text className="font-pregular text-sm text-zinc-600">
+        <Text className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} font-pregular text-sm text-zinc-600`}>
           {item?.transaction_type === 'buy' ? (
             <Text className={'font-pregular text-base text-zinc-500'}>
               نرغب بشراء عقار في {item?.sector?.code?.view_code} بكمية {item?.equity} حصة سهمية بسعر{' '}
@@ -197,7 +218,7 @@ const UnitDetails = ({
           )}
         </Text>
       </View>
-      <View className="mt-4 flex-row gap-2">
+      <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 flex-row gap-2`}>
         <View className="flex-1 rounded-lg border border-toast-100 p-4">
           <Image source={icons.price} className="mb-1 h-7 w-7" tintColor="#a47764" />
           <Text className="font-pmedium text-base text-zinc-600">سعر العقار</Text>
@@ -215,7 +236,7 @@ const UnitDetails = ({
           </Text>
         </View>
       </View>
-      <View className="mt-4 flex-row gap-2">
+      <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 flex-row gap-2`}>
         <View className="flex-1 rounded-lg border border-toast-100 p-4">
           <Image source={icons.location} className="mb-1 h-7 w-7" tintColor="#a47764" />
           <Text className="font-pmedium text-base text-zinc-600">المنطقة</Text>
@@ -235,7 +256,7 @@ const UnitDetails = ({
         </View>
       </View>
       {/* apartment details */}
-      <View className="mt-4 flex-row gap-2">
+      <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 flex-row gap-2`}>
         <View className="flex-1 rounded-lg border border-toast-100 p-4">
           <Image source={icons.area} className="mb-1 h-7 w-7" tintColor="#a47764" />
           <Text className="font-pmedium text-base text-zinc-600">المساحة</Text>
@@ -249,7 +270,7 @@ const UnitDetails = ({
           <Text className="font-pmedium text-base text-zinc-600">الطابق</Text>
           <Text
             className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-            {item?.floor}
+            {item?.floor || 'أرضي'}
           </Text>
         </View>
         <View className="flex-1 rounded-lg border border-toast-100 p-4">
@@ -263,7 +284,7 @@ const UnitDetails = ({
       </View>
       {/* owner details */}
       {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
-        <View className="mt-4 flex-row gap-2">
+        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 flex-row gap-2`}>
           <View className="flex-1 rounded-lg border border-toast-100 p-4">
             <Image source={icons.owner} className="mb-1 h-7 w-7" tintColor="#a47764" />
             <Text className="font-pmedium text-base text-zinc-600">الجهة العارضة</Text>
@@ -275,65 +296,107 @@ const UnitDetails = ({
         </View>
       )}
       {/* extra details */}
-      <View className="mt-4 gap-2 rounded-lg border border-toast-100 p-4 ">
-        <View className=" mb-3">
-          <Text className="font-psemibold text-lg text-black">تفاصيل إضافية</Text>
+      {showExtraDetailsSection && (
+        <View className="mt-4 gap-2 rounded-lg border border-toast-100 p-4 ">
+          <View className=" mb-3">
+            <Text className="font-psemibold text-lg text-black">تفاصيل إضافية</Text>
+          </View>
+          {(() => {
+            const availableItems = [];
+            
+            if (showRooms) {
+              availableItems.push(
+                <View key="rooms" className="flex-1 rounded-lg">
+                  <Image source={icons.rooms} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                  <Text className="font-pmedium text-base text-zinc-600">عدد الغرف</Text>
+                  <Text
+                    className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                    {item?.rooms_count}
+                  </Text>
+                </View>
+              );
+            }
+            
+            if (showSalons) {
+              availableItems.push(
+                <View key="salons" className="flex-1 rounded-lg">
+                  <Image source={icons.salons} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                  <Text className="font-pmedium text-base text-zinc-600">عدد الصالونات</Text>
+                  <Text
+                    className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                    {item?.salons_count}
+                  </Text>
+                </View>
+              );
+            }
+            
+            if (showBalcony) {
+              availableItems.push(
+                <View key="balcony" className="flex-1 rounded-lg">
+                  <Image source={icons.balcons} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                  <Text className="font-pmedium text-base text-zinc-600">عدد البلكونات</Text>
+                  <Text
+                    className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                    {item?.balcony_count}
+                  </Text>
+                </View>
+              );
+            }
+            
+            if (showTerrace) {
+              availableItems.push(
+                <View key="terrace" className="flex-1 rounded-lg">
+                  <Image source={icons.terrace} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                  <Text className="font-pmedium text-base text-zinc-600">تراس</Text>
+                  <Text
+                    className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                    {item?.is_taras == 1 ? 'موجود' : 'غير موجود'}
+                  </Text>
+                </View>
+              );
+            }
+            
+            if (showApartmentStatus) {
+              availableItems.push(
+                <View key="status" className="flex-1 rounded-lg">
+                  <Image source={icons.apartment_status} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                  <Text className="font-pmedium text-base text-zinc-600">حالة العقار</Text>
+                  <Text
+                    className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                    {item?.apartment_status?.name}
+                  </Text>
+                </View>
+              );
+            }
+            
+            if (showApartmentType) {
+              availableItems.push(
+                <View key="type" className="flex-1 rounded-lg">
+                  <Image source={icons.building_type} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                  <Text className="font-pmedium text-base text-zinc-600">نوع العقار</Text>
+                  <Text
+                    className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                    {item?.apartment_type?.name}
+                  </Text>
+                </View>
+              );
+            }
+            
+                         // Group items into rows of 2
+             const rows = [];
+             for (let i = 0; i < availableItems.length; i += 2) {
+               const rowItems = availableItems.slice(i, i + 2);
+               rows.push(
+                 <View key={`row-${i}`} className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-row gap-7`}>
+                   {rowItems}
+                 </View>
+               );
+             }
+            
+            return rows;
+          })()}
         </View>
-        <View className="flex-row">
-          <View className="flex-1 rounded-lg">
-            <Image source={icons.rooms} className="mb-1 h-7 w-7" tintColor="#a47764" />
-            <Text className="font-pmedium text-base text-zinc-600">عدد الغرف</Text>
-            <Text
-              className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-              {item?.rooms_count || 'غير موجود'}
-            </Text>
-          </View>
-          <View className="flex-1 rounded-lg">
-            <Image source={icons.salons} className="mb-1 h-7 w-7" tintColor="#a47764" />
-            <Text className="font-pmedium text-base text-zinc-600">عدد الصالونات</Text>
-            <Text
-              className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-              {item?.salons_count || 'غير موجود'}
-            </Text>
-          </View>
-        </View>
-        <View className="flex-row gap-2">
-          <View className="flex-1 rounded-lg">
-            <Image source={icons.balcons} className="mb-1 h-7 w-7" tintColor="#a47764" />
-            <Text className="font-pmedium text-base text-zinc-600">عدد البلكونات</Text>
-            <Text
-              className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-              {item?.balcony_count || 'غير موجود'}
-            </Text>
-          </View>
-          <View className="flex-1 rounded-lg">
-            <Image source={icons.terrace} className="mb-1 h-7 w-7" tintColor="#a47764" />
-            <Text className="font-pmedium text-base text-zinc-600">تراس</Text>
-            <Text
-              className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-              {item?.is_taras == 1 ? 'موجود' : 'غير موجود'}
-            </Text>
-          </View>
-        </View>
-        <View className="flex-row gap-2">
-          <View className="flex-1 rounded-lg">
-            <Image source={icons.apartment_status} className="mb-1 h-7 w-7" tintColor="#a47764" />
-            <Text className="font-pmedium text-base text-zinc-600">حالة العقار</Text>
-            <Text
-              className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-              {item?.apartment_status?.name}
-            </Text>
-          </View>
-          <View className="flex-1 rounded-lg">
-            <Image source={icons.building_type} className="mb-1 h-7 w-7" tintColor="#a47764" />
-            <Text className="font-pmedium text-base text-zinc-600">نوع العقار</Text>
-            <Text
-              className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-              {item?.apartment_type?.name}
-            </Text>
-          </View>
-        </View>
-      </View>
+      )}
     </View>
   );
 };

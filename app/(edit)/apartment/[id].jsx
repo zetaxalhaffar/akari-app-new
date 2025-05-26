@@ -140,12 +140,34 @@ const EditApartmentScreen = () => {
     []
   );
 
-  const handleChangeApartmentType = async (value) => {
-    setForm({ ...form, apartment_type_id: value });
+  const handleChangeApartmentType = (value) => {
+    const selectedApartmentType = apartmentTypes.find(type => type.id === value);
+    setFieldsToShow(selectedApartmentType?.fields ?? []);
+    setForm(prevForm => ({ ...prevForm, apartment_type_id: value }));
   };
 
   const handleCreateApartmentRequest = async () => {
-    const response = await updateApartmentRequest(id, form);
+    const dataToSend = { ...form };
+    const conditionalFields = ['floor', 'rooms_count', 'salons_count', 'balcony_count', 'is_taras'];
+
+    conditionalFields.forEach(field => {
+      if (!fieldsToShow.includes(field)) {
+        dataToSend[field] = '';
+      }
+    });
+
+    // Ensure is_taras sends boolean false if not shown or explicitly set to 'false', otherwise true.
+    // This handles the case where it might be an empty string from the above logic,
+    // but the backend might expect a boolean or specific string like "true"/"false".
+    // If your backend expects empty string for 'is_taras' when not applicable, this specific block can be adjusted.
+    if (fieldsToShow.includes('is_taras')) {
+        // If is_taras is meant to be a string "true" or "false"
+        dataToSend.is_taras = '1';
+    } else {
+        dataToSend.is_taras = '0'; // Or specific value backend expects for "not applicable"
+    }
+
+    const response = await updateApartmentRequest(id, dataToSend);
     console.log(response, 'response');
     if (response?.success) {
       router.replace(`/(apartments)/${id}`);
@@ -161,9 +183,7 @@ const EditApartmentScreen = () => {
     console.log(sectorType, 'sectorType');
     if (sectorType) {
       await handleSelectSectorType(sectorType.id);
-      setForm({ ...form, sector_id: response.sector_id });
     }
-    await handleChangeApartmentType(response.apartment_type_id);
     setFieldsToShow(response.apartment_type.fields ?? []);
     setForm({
       owner_name: response.owner_name,
@@ -233,7 +253,7 @@ const EditApartmentScreen = () => {
                 disabled={sectorsBasedOnRegionSchema?.loading}
                 valueKey="id"
                 emptyMessage="يرجى اختيار نوع المقسم أولا"
-                placeholder=" المقسم"
+                placeholder="المقسم"
                 keyName="code"
               />
             </View>

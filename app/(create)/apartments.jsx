@@ -129,7 +129,24 @@ const CreateApartmentScreen = () => {
   );
 
   const handleCreateApartmentRequest = async () => {
-    const response = await createApartmentRequest(currentType, form);
+    const dataToSend = { ...form };
+    const conditionalFields = ['floor', 'rooms_count', 'salons_count', 'balcony_count', 'is_taras'];
+
+    conditionalFields.forEach(field => {
+      if (!fieldsToShow.includes(field)) {
+        dataToSend[field] = '';
+      }
+    });
+
+    // Handle is_taras specifically based on its presence in fieldsToShow
+    if (fieldsToShow.includes('is_taras')) {
+        // Ensure it sends "true" or "false" as strings, matching radio button values
+        dataToSend.is_taras = '1';
+    } else {
+        dataToSend.is_taras = '0'; // Or specific value backend expects for "not applicable"
+    }
+
+    const response = await createApartmentRequest(currentType, dataToSend);
     console.log(response, 'response');
     if (response?.success) {
       router.replace(`/(apartments)/${response.id}`);
