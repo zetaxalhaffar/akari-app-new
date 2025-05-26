@@ -329,7 +329,7 @@ const UnitShareCard = ({ item }) => {
                   tintColor={'#FFF'}
                   resizeMode="contain"
                 />
-                <Text className="font-pmedium text-sm text-white">سعر السهم : {item.price}</Text>
+                <Text className="font-pmedium text-sm text-white">سعر السهم : {item.price_view}</Text>
               </View>
               <View className="flex-row items-center gap-1">
                 <Image
