@@ -188,12 +188,12 @@ const UnitDetails = ({
           {item?.transaction_type === 'buy' ? (
             <Text className={'font-pregular text-zinc-500'}>
               نرغب بشراء اسهم تنظيمية في {item?.sector?.code?.view_code} بكمية {item?.quantity} سهم
-              بسعر {item?.price_view} بالسهم في منطقة {item?.region?.name}
+              بسعر {item?.price} بالسهم في منطقة {item?.region?.name}
             </Text>
           ) : (
             <Text className={'font-pregular text-zinc-500'}>
               نرغب ببيع اسهم تنظيمية في {item?.sector?.code?.view_code} بكمية {item?.quantity} سهم
-              بسعر {item?.price_view} بالسهم في منطقة {item?.region?.name}
+              بسعر {item?.price} بالسهم في منطقة {item?.region?.name}
             </Text>
           )}
         </Text>
@@ -204,7 +204,7 @@ const UnitDetails = ({
           <Text className="font-pmedium text-base text-zinc-600">سعر السهم المطروح</Text>
           <Text
             className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
-            {item?.price_view}
+            {item?.price}
           </Text>
         </View>
         <View className="flex-1 rounded-lg border border-toast-100 p-4">

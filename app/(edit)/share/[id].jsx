@@ -81,7 +81,7 @@ const EditShare = () => {
       region_id: response.region_id,
       sector_id: response.sector_id,
       owner_name: response.owner_name,
-      price: response.price,
+      price: response.price_key,
       quantity: response.quantity_key,
     });
   };
