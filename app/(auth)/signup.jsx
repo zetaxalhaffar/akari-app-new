@@ -149,7 +149,7 @@ const LoginScreen = () => {
             <CustomButton
               hasGradient={true}
               colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-              title={'إبدأ الان'}
+              title={'حساب جديد'}
               containerStyles={'flex-grow'}
               positionOfGradient={'leftToRight'}
               textStyles={'text-white'}

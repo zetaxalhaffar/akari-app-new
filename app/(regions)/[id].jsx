@@ -40,6 +40,8 @@ const RegionWithId = () => {
     sharesRecords,
     apartmentsRecords,
     apartmentsLoading,
+    clearSharesRecords,
+    clearApartmentsRecords,
   } = useUnitsStore();
 
   // Get Shares Based On Region
@@ -59,6 +61,9 @@ const RegionWithId = () => {
   const [tabId, setTabId] = useState('shares');
   const handleTabChange = (tabId) => {
     filtersParams.current.page = 1;
+    // Clear content when switching tabs
+    clearSharesRecords();
+    clearApartmentsRecords();
     setTabId(tabId);
   };
 

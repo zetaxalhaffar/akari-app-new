@@ -335,6 +335,27 @@ export const useUnitsStore = create((set, get) => ({
       set({ searchForUnitsLoading: false });
     }
   },
+  // Clear search results
+  clearSearchResults: () => {
+    set({ 
+      searchForUnitsResponse: { data: [] },
+      searchForUnitsError: null 
+    });
+  },
+  // Clear shares records
+  clearSharesRecords: () => {
+    set({ 
+      sharesRecords: [],
+      sharesResponse: []
+    });
+  },
+  // Clear apartments records
+  clearApartmentsRecords: () => {
+    set({ 
+      apartmentsRecords: [],
+      apartmentsResponse: []
+    });
+  },
   // Update reaction counts for a share
   updateShareReactions: (shareId, reactionSummary) => {
     const sharesRecords = get().sharesRecords;

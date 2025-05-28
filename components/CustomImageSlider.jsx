@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
   Image,
@@ -17,6 +17,7 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 
 const ImageSlider = ({ images, height, resizeMode = 'cover', newImages }) => {
   const { width } = Dimensions.get('window');
+  const scrollViewRef = useRef(null);
 
   const [active, setActive] = useState(0);
 
@@ -67,6 +68,16 @@ const ImageSlider = ({ images, height, resizeMode = 'cover', newImages }) => {
     }
   };
 
+  const scrollToImage = (index) => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({
+        x: index * (width - 30),
+        animated: true,
+      });
+      setActive(index);
+    }
+  };
+
   useEffect(() => {
     getImages();
   }, [newImages]);
@@ -99,6 +110,7 @@ const ImageSlider = ({ images, height, resizeMode = 'cover', newImages }) => {
           'relative mx-4 mt-4 flex-row-reverse justify-center rounded-lg border border-toast-100'
         }>
         <ScrollView
+          ref={scrollViewRef}
           pagingEnabled
           horizontal
           onScroll={onScrollChange}
@@ -117,7 +129,7 @@ const ImageSlider = ({ images, height, resizeMode = 'cover', newImages }) => {
                   source={image.source}
                   className="rounded-lg"
                   resizeMode={resizeMode}
-                  style={{ width: width - 32, height }}
+                  style={{ width: width - 30, height }}
                 />
               </Pressable>
             ))}
@@ -127,8 +139,9 @@ const ImageSlider = ({ images, height, resizeMode = 'cover', newImages }) => {
           style={{ bottom: -28 }}>
           {imageSlider.length ? (
             imageSlider?.map((i, k) => (
-              <View
+              <TouchableOpacity
                 key={k}
+                onPress={() => scrollToImage(k)}
                 className={`h-5 w-5 items-center justify-center rounded-full border-4 border-toast-300 ${k == active ? 'bg-white' : 'bg-toast-300'}`}>
                 <Image
                   source={icons.dots}
@@ -136,7 +149,7 @@ const ImageSlider = ({ images, height, resizeMode = 'cover', newImages }) => {
                   resizeMode={'contain'}
                   className={'mx-1.5 h-3 w-3 shadow-lg'}
                 />
-              </View>
+              </TouchableOpacity>
             ))
           ) : (
             <>
