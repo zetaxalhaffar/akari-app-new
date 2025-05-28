@@ -198,7 +198,7 @@ const UnitDetails = ({
           )}
         </Text>
       </View>
-      <View className="mt-4 flex-row gap-2">
+      <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 flex-row gap-2`}>
         <View className="flex-1 rounded-lg border border-toast-100 p-4">
           <Image source={icons.price} className="mb-1 h-7 w-7" tintColor="#a47764" />
           <Text className="font-pmedium text-base text-zinc-600">سعر السهم المطروح</Text>
@@ -216,22 +216,23 @@ const UnitDetails = ({
           </Text>
         </View>
       </View>
-      <View className="mt-4 flex-row gap-2">
+      <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 flex-row gap-2`}>
         <View className="flex-1 rounded-lg border border-toast-100 p-4">
           <Image source={icons.location} className="mb-1 h-7 w-7" tintColor="#a47764" />
           <Text className="font-pmedium text-base text-zinc-600">المنطقة</Text>
-          <Text className="font-pregular text-sm text-zinc-600">{item?.region?.name}</Text>
+          <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>{item?.region?.name}</Text>
         </View>
         <View className="flex-1 rounded-lg border border-toast-100 p-4">
           <Image source={icons.sector} className="mb-1 h-7 w-7" tintColor="#a47764" />
           <Text className="font-pmedium text-base text-zinc-600">القطاع</Text>
-          <Text className="font-pregular text-sm text-zinc-600">{item?.sector?.code?.name}</Text>
+          <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>{item?.sector?.code?.name}</Text>
         </View>
         <View className="flex-1 rounded-lg border border-toast-100 p-4">
           <Image source={icons.section_number} className="mb-1 h-7 w-7" tintColor="#a47764" />
           <Text className="font-pmedium text-base text-zinc-600">رقم المقسم</Text>
-          <Text className="font-pregular text-sm text-zinc-600">
-            {item?.sector?.code?.view_code}
+          <Text
+            className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+            {item?.sector?.code?.code}
           </Text>
         </View>
       </View>

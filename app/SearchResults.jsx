@@ -18,9 +18,9 @@ const SearchResultsScreen = () => {
   const isInitialized = useRef(false);
   const stableSearchParams = useRef(null);
 
-  const { searchForUnits, searchForUnitsLoading, searchForUnitsResponse } = useUnitsStore();
+  const { searchForUnits, searchForUnitsLoading, searchForUnitsResponse, clearSearchResults } = useUnitsStore();
 
-  const getSearchResults = async () => {
+  const getSearchResults = async (clearPrevious = false) => {
     // Use the stable stored params to completely prevent any parameter pollution
     const paramsToUse = stableSearchParams.current;
     if (!paramsToUse) {
@@ -28,7 +28,13 @@ const SearchResultsScreen = () => {
       return;
     }
     
+    // Clear previous search results if this is a new search
+    if (clearPrevious) {
+      clearSearchResults();
+    }
+    
     console.log('Making search request with params:', JSON.stringify(paramsToUse, null, 2));
+    console.log('Expected API endpoint:', `/${paramsToUse.currentType}/search`);
     await searchForUnits(paramsToUse);
     console.log('searchForUnitsResponse ====================', searchForUnitsResponse);
   };
@@ -48,6 +54,9 @@ const SearchResultsScreen = () => {
     if (!isInitialized.current) {
       console.log('Initializing SearchResults with params:', JSON.stringify(searchParams, null, 2));
       
+      // Clear any previous search results immediately
+      clearSearchResults();
+      
       // Create a clean copy of search params, excluding any router-specific keys
       const cleanParams = {};
       for (const [key, value] of Object.entries(searchParams)) {
@@ -59,7 +68,7 @@ const SearchResultsScreen = () => {
       setOriginalSearchParams(cleanParams);
       stableSearchParams.current = cleanParams;
       isInitialized.current = true;
-      getSearchResults();
+      getSearchResults(true); // Clear previous results on initial load
     }
   }, []); // Empty dependency array to run only once
 
@@ -79,14 +88,18 @@ const SearchResultsScreen = () => {
           estimatedItemSize={350}
           refreshing={searchForUnitsLoading}
           onRefresh={handleRefresh}
-          renderItem={({ item }) =>
-            // Use stable params to determine the type
-            stableSearchParams.current?.currentType == 'share' ? (
+          renderItem={({ item }) => {
+            // Use the actual post_type from the data to determine which card to render
+            // This prevents mismatches between expected type and actual data
+            const isShare = item.post_type === 'share' || stableSearchParams.current?.currentType === 'share';
+            console.log(`Rendering item ${item.id}: post_type=${item.post_type}, currentType=${stableSearchParams.current?.currentType}, using=${isShare ? 'UnitShareCard' : 'UnitApartmentCard'}`);
+            
+            return isShare ? (
               <UnitShareCard item={item} />
             ) : (
               <UnitApartmentCard item={item} />
-            )
-          }
+            );
+          }}
           onEndReached={handleEndReached}
           onEndReachedThreshold={0.5}
           ListEmptyComponent={() => (searchForUnitsLoading ? <Text /> : <EmptyScreen />)}
