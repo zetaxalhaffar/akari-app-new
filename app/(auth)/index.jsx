@@ -20,7 +20,7 @@ const AuthMainStack = () => {
           <CustomButton
             hasGradient={true}
             colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-            title={'إبدأ الان'}
+            title={'حساب جديد'}
             containerStyles={'flex-grow'}
             positionOfGradient={'leftToRight'}
             textStyles={'text-white'}
@@ -30,7 +30,7 @@ const AuthMainStack = () => {
             }}
           />
           <CustomButton
-            title={'الدخول'}
+            title={'تسجيل الدخول'}
             containerStyles={'flex-grow'}
             buttonStyles={'border border-gray-600 h-[45px]'}
             textStyles={'text-gray-600'}
