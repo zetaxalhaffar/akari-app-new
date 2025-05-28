@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, View, Text, Image } from 'react-native';
 import images from '~/constants/images';
 import { useUnitsStore } from '../store/units.store';
@@ -12,6 +12,11 @@ const CustomTopTabs = ({
   itemTitle = 'title',
 }) => {
   const [activeTab, setActiveTab] = useState(defaultActiveTab);
+
+  // Update activeTab when defaultActiveTab prop changes
+  useEffect(() => {
+    setActiveTab(defaultActiveTab);
+  }, [defaultActiveTab]);
 
   return (
     <>

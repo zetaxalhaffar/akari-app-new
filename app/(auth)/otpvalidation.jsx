@@ -164,7 +164,7 @@ const OtpValidationScreen = () => {
         <View
           className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view mt-4 !pb-0`}>
           <Text className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-xl`}>
-            تأكيد رقم التليفون
+            تأكيد رقم الهاتف
           </Text>
         </View>
         <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view !py-0`}>

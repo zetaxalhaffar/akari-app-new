@@ -130,52 +130,72 @@ export default function Home() {
                 }}
                 showsHorizontalScrollIndicator={false}>
                 {statisticsSchemaResponse?.share_statistics?.map((item, index) => (
-                  <LinearGradient
-                    style={{ borderRadius: 6, width: '47%' }}
-                    colors={colors}
-                    className={`h-[130px] items-center justify-center rounded-lg p-2`}
-                    start={gradientPositions[positionOfGradient2].start}
+                  <TouchableOpacity
                     key={index}
-                    end={gradientPositions[positionOfGradient2].end}>
-                    <Image
-                      source={icons.building_1}
-                      resizeMode="cover"
-                      className="h-12 w-12"
-                      tintColor={'#FFFFFF'}
-                    />
-                    <Text className="font-psemibold text-sm text-white">{item?.name}</Text>
-                    <Text className="mt-1 font-pmedium text-xs text-white">
-                      أسهم / شراء: {item?.buy_shares_count}
-                    </Text>
-                    <Text className="mt-1 font-pmedium text-xs text-white">
-                      أسهم / بيع: {item?.sell_shares_count}
-                    </Text>
-                    {/* <Text className="mt-1 font-pmedium text-xs text-white">
-                      متوسط سعر السهم: {item?.average_share_price}
-                    </Text> */}
-                  </LinearGradient>
+                    style={{ width: '47%' }}
+                    onPress={() =>
+                      router.push({
+                        pathname: `/(regions)/${item?.id}`,
+                      })
+                    }>
+                    <LinearGradient
+                      style={{ borderRadius: 6 }}
+                      colors={colors}
+                      className={`h-[130px] items-center justify-center rounded-lg p-2`}
+                      start={gradientPositions[positionOfGradient2].start}
+                      end={gradientPositions[positionOfGradient2].end}>
+                      <Image
+                        source={icons.building_1}
+                        resizeMode="cover"
+                        className="h-12 w-12"
+                        tintColor={'#FFFFFF'}
+                      />
+                      <Text className="font-psemibold text-sm text-white">{item?.name}</Text>
+                      <Text className="mt-1 font-pmedium text-xs text-white">
+                        أسهم / شراء: {item?.buy_shares_count}
+                      </Text>
+                      <Text className="mt-1 font-pmedium text-xs text-white">
+                        أسهم / بيع: {item?.sell_shares_count}
+                      </Text>
+                      {/* <Text className="mt-1 font-pmedium text-xs text-white">
+                        متوسط سعر السهم: {item?.average_share_price}
+                      </Text> */}
+                    </LinearGradient>
+                  </TouchableOpacity>
                 ))}
                 {statisticsSchemaResponse?.apartment_statistics?.map((item, index) => (
-                  <LinearGradient
-                    style={{ borderRadius: 6, width: '47%' }}
-                    colors={colors}
-                    className={`h-[130px] items-center justify-center rounded-lg p-2`}
-                    start={gradientPositions[positionOfGradient].start}
+                  <TouchableOpacity
                     key={index}
-                    end={gradientPositions[positionOfGradient].end}>
-                    <Image
-                      source={icons.building_1}
-                      resizeMode="cover"
-                      className="h-12 w-12"
-                      tintColor={'#FFFFFF'}
-                    />
-                    <Text className="text-center font-psemibold text-sm text-white">
-                      {item?.name}
-                    </Text>
-                    <Text className="text-center font-pbold text-xl text-white">
-                      {item?.apartments_count}
-                    </Text>
-                  </LinearGradient>
+                    style={{ width: '47%' }}
+                    onPress={() =>
+                      router.push({
+                        pathname: '/SearchResults',
+                        params: {
+                          currentType: 'apartment',
+                          apartment_type_id: item?.id,
+                        },
+                      })
+                    }>
+                    <LinearGradient
+                      style={{ borderRadius: 6 }}
+                      colors={colors}
+                      className={`h-[130px] items-center justify-center rounded-lg p-2`}
+                      start={gradientPositions[positionOfGradient].start}
+                      end={gradientPositions[positionOfGradient].end}>
+                      <Image
+                        source={icons.building_1}
+                        resizeMode="cover"
+                        className="h-12 w-12"
+                        tintColor={'#FFFFFF'}
+                      />
+                      <Text className="text-center font-psemibold text-sm text-white">
+                        {item?.name}
+                      </Text>
+                      <Text className="text-center font-pbold text-xl text-white">
+                        {item?.apartments_count}
+                      </Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
