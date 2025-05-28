@@ -92,8 +92,14 @@ const LoginScreen = () => {
         </View>
         <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view !py-0`}>
           <Text
-            className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-base text-gray-500`}>
-            الرجاء استخدام رقم هاتفك لتسجيل الدخول
+            className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-base text-gray-500 text-right`}>
+        الرجاء إستخدام رقم هاتفك لتسجيل الدخول
+          </Text>
+        </View>
+        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} container-view !py-0`}>
+          <Text
+            className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-base text-gray-500 text-right`}>
+            سوف يتم إرسال كود تحقق إلى رقمك.
           </Text>
         </View>
         <View
@@ -131,7 +137,7 @@ const LoginScreen = () => {
             <CustomButton
               hasGradient={true}
               colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-              title={'إبدأ الان'}
+              title={'إرسال الكود'}
               containerStyles={'flex-grow'}
               positionOfGradient={'leftToRight'}
               textStyles={'text-white'}
