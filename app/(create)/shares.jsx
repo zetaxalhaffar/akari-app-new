@@ -37,7 +37,9 @@ const CreateShareScreen = () => {
 
   const handleSelectSectorType = async (value) => {
     setSectoreType(value);
-    setSectors(mainSectors[value]?.code);
+    const sectorIndex = parseInt(value);
+    const selectedSectorData = mainSectors?.data?.[sectorIndex];
+    setSectors(selectedSectorData?.code || []);
   };
 
   const handleChangeRegion = async (value) => {
@@ -45,14 +47,13 @@ const CreateShareScreen = () => {
     const sectorsResponse = await getSectorsBasedOnRegion(value);
     setMainSectors(sectorsResponse);
     const sectorsTypesSelection = [];
-
-    for (let sector in sectorsResponse) {
-      if (sectorsResponse[sector] !== true) {
+    if (sectorsResponse?.data) {
+      sectorsResponse.data.forEach((sectorItem, index) => {
         sectorsTypesSelection.push({
-          id: sector,
-          name: sectorsResponse[sector]?.key,
+          id: index.toString(),
+          name: sectorItem.key,
         });
-      }
+      });
     }
     setSectorsTypes(sectorsTypesSelection);
   };

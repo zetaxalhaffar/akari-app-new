@@ -40,7 +40,9 @@ const EditShare = () => {
 
   const handleSelectSectorType = async (value) => {
     setSectoreType(value);
-    setSectors(mainSectorsRef.current[value]?.code);
+    const sectorIndex = parseInt(value);
+    const selectedSectorData = mainSectorsRef.current?.data?.[sectorIndex];
+    setSectors(selectedSectorData?.code || []);
   };
 
   const mainSectorsRef = useRef([]);
@@ -51,14 +53,13 @@ const EditShare = () => {
     mainSectorsRef.current = sectorsResponse;
     setMainSectors(sectorsResponse);
     const sectorsTypesSelection = [];
-
-    for (let sector in sectorsResponse) {
-      if (sectorsResponse[sector] !== true) {
+    if (sectorsResponse?.data) {
+      sectorsResponse.data.forEach((sectorItem, index) => {
         sectorsTypesSelection.push({
-          id: sector,
-          name: sectorsResponse[sector]?.key,
+          id: index.toString(),
+          name: sectorItem.key,
         });
-      }
+      });
     }
     setSectorsTypes(sectorsTypesSelection);
     return sectorsTypesSelection;

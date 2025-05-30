@@ -59,7 +59,7 @@ const RegionWithId = () => {
     }
     
     // Check if we have sorting parameters
-    const hasSortingParams = filtersParams.current.sort_by || filtersParams.current.sort_direction || filtersParams.current.transaction_type;
+    const hasSortingParams = filtersParams.current.sort_by || filtersParams.current.sort_direction || filtersParams.current.transaction_type || filtersParams.current.my_posts_first;
     
     if (hasSortingParams) {
       const shares = await getAllSortedSharesForRegion(id, filtersParams.current, firstLoad);
@@ -76,7 +76,7 @@ const RegionWithId = () => {
     }
     
     // Check if we have sorting parameters
-    const hasSortingParams = filtersParams.current.sort_by || filtersParams.current.sort_direction || filtersParams.current.transaction_type;
+    const hasSortingParams = filtersParams.current.sort_by || filtersParams.current.sort_direction || filtersParams.current.transaction_type || filtersParams.current.my_posts_first;
     
     if (hasSortingParams) {
       const apartments = await getAllSortedApartmentsForRegion(id, filtersParams.current, firstLoad);
@@ -91,6 +91,7 @@ const RegionWithId = () => {
   const [sortBy, setSortBy] = useState('');
   const [sortDirection, setSortDirection] = useState('');
   const [transactionType, setTransactionType] = useState('');
+  const [myPostsFirst, setMyPostsFirst] = useState('0');
 
   // Bottom Sheet Animation - Simplified
   const screenHeight = Dimensions.get('window').height;
@@ -126,9 +127,11 @@ const RegionWithId = () => {
     filtersParams.current.sort_by = '';
     filtersParams.current.sort_direction = '';
     filtersParams.current.transaction_type = '';
+    filtersParams.current.my_posts_first = '0';
     setSortBy('');
     setSortDirection('');
     setTransactionType('');
+    setMyPostsFirst('0');
     setTabId(tabId);
   };
 
@@ -160,32 +163,35 @@ const RegionWithId = () => {
 
   // Sorting Options for Shares
   const sharesSortingOptions = [
-    { label: 'الاعلى سعرا', sortBy: 'price', sortDirection: 'desc', transactionType: '' },
-    { label: 'الأقل سعرا', sortBy: 'price', sortDirection: 'asc', transactionType: '' },
-    { label: 'الاكثر مشاهدة', sortBy: 'views', sortDirection: 'desc', transactionType: '' },
+       { label: 'الأعلى سعراً', sortBy: 'price', sortDirection: 'desc', transactionType: '' },
+    { label: 'الأقل سعراً', sortBy: 'price', sortDirection: 'asc', transactionType: '' },
+    { label: 'الأكثر مشاهدة', sortBy: 'views', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل مشاهدة', sortBy: 'views', sortDirection: 'asc', transactionType: '' },
-    { label: 'الاكثر شعبية', sortBy: 'reactions', sortDirection: 'desc', transactionType: '' },
+    { label: 'الأكثر شعبية', sortBy: 'reactions', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل شعبية', sortBy: 'reactions', sortDirection: 'asc', transactionType: '' },
     { label: 'الأكثر عدد أسهم', sortBy: 'quantity', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل عدد أسهم', sortBy: 'quantity', sortDirection: 'asc', transactionType: '' },
-    { label: 'عروض البيع أولا', sortBy: '', sortDirection: '', transactionType: '1' },
-    { label: 'طلبات الشراء أولا', sortBy: '', sortDirection: '', transactionType: '2' },
-    { label: 'العروض الحديثة أولا', sortBy: 'created_date', sortDirection: 'desc', transactionType: '' },
-    { label: 'العروض القديمة أولا', sortBy: 'created_date', sortDirection: 'asc', transactionType: '' },
+    { label: 'عروض البيع أولاً', sortBy: '', sortDirection: '', transactionType: '1' },
+    { label: 'طلبات الشراء أولاً', sortBy: '', sortDirection: '', transactionType: '2' },
+    { label: 'العروض الحديثة أولاً', sortBy: 'created_date', sortDirection: 'desc', transactionType: '' },
+    { label: 'العروض القديمة أولاً', sortBy: 'created_date', sortDirection: 'asc', transactionType: '' },
+    { label: 'منشوراتي أولاً', sortBy: '', sortDirection: '', transactionType: '', myPostsFirst: '1' },
   ];
 
   // Sorting Options for Apartments (without share-specific options)
   const apartmentsSortingOptions = [
-    { label: 'الاعلى سعرا', sortBy: 'price', sortDirection: 'desc', transactionType: '' },
-    { label: 'الأقل سعرا', sortBy: 'price', sortDirection: 'asc', transactionType: '' },
-    { label: 'الاكثر مشاهدة', sortBy: 'views', sortDirection: 'desc', transactionType: '' },
+     { label: 'الأعلى سعراً', sortBy: 'price', sortDirection: 'desc', transactionType: '' },
+    { label: 'الأقل سعراً', sortBy: 'price', sortDirection: 'asc', transactionType: '' },
+    { label: 'الأكثر مشاهدة', sortBy: 'views', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل مشاهدة', sortBy: 'views', sortDirection: 'asc', transactionType: '' },
-    { label: 'الاكثر شعبية', sortBy: 'reactions', sortDirection: 'desc', transactionType: '' },
+    { label: 'الأكثر شعبية', sortBy: 'reactions', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل شعبية', sortBy: 'reactions', sortDirection: 'asc', transactionType: '' },
-    { label: 'عروض البيع أولا', sortBy: '', sortDirection: '', transactionType: '1' },
-    { label: 'طلبات الشراء أولا', sortBy: '', sortDirection: '', transactionType: '2' },
-    { label: 'العروض الحديثة أولا', sortBy: 'created_date', sortDirection: 'desc', transactionType: '' },
-    { label: 'العروض القديمة أولا', sortBy: 'created_date', sortDirection: 'asc', transactionType: '' },
+    { label: 'عروض البيع أولاً', sortBy: '', sortDirection: '', transactionType: '1' },
+    { label: 'طلبات الشراء أولاً', sortBy: '', sortDirection: '', transactionType: '2' },
+    { label: 'العروض الحديثة أولاً', sortBy: 'created_date', sortDirection: 'desc', transactionType: '' },
+    { label: 'العروض القديمة أولاً', sortBy: 'created_date', sortDirection: 'asc', transactionType: '' },
+    { label: 'منشوراتي أولاً', sortBy: '', sortDirection: '', transactionType: '', myPostsFirst: '1' },
+ 
   ];
 
   // Get current sorting options based on active tab
@@ -198,6 +204,7 @@ const RegionWithId = () => {
     setSortBy(option.sortBy);
     setSortDirection(option.sortDirection);
     setTransactionType(option.transactionType);
+    setMyPostsFirst(option.myPostsFirst || '0');
     hideBottomSheet();
     
     // Apply sorting
@@ -205,6 +212,7 @@ const RegionWithId = () => {
     filtersParams.current.sort_by = option.sortBy;
     filtersParams.current.sort_direction = option.sortDirection;
     filtersParams.current.transaction_type = option.transactionType;
+    filtersParams.current.my_posts_first = option.myPostsFirst || '0';
     
     if (tabId === 'shares') {
       getSharesBasedOnRegion(true);
@@ -220,11 +228,13 @@ const RegionWithId = () => {
     filtersParams.current.sort_by = '';
     filtersParams.current.sort_direction = '';
     filtersParams.current.transaction_type = '';
+    filtersParams.current.my_posts_first = '0';
     
     // Reset state variables
     setSortBy('');
     setSortDirection('');
     setTransactionType('');
+    setMyPostsFirst('0');
     
     // Hide bottom sheet
     hideBottomSheet();
