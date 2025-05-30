@@ -21,6 +21,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useReactionStore } from '@/store/reaction.store';
+import { useFavoriteStore } from '@/store/favorite.store';
 import { AntDesign } from '@expo/vector-icons';
 import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
 import { useUnitsStore } from '../store/units.store';
@@ -60,8 +61,10 @@ const EmojiButton = ({ emoji, onPress, isSelected }) => {
 
 const UnitApartmentCard = ({ item }) => {
   const { setReactions, removeReaction } = useReactionStore();
+  const { toggleFavorite } = useFavoriteStore();
   const bottomSheetModalRef = useRef(null);
   const { updateApartmentReactions } = useUnitsStore();
+  const reactionTimerRef = useRef(null);
 
   const availableReactions = [
     {
@@ -99,6 +102,7 @@ const UnitApartmentCard = ({ item }) => {
 
   const [showReactions, setShowReactions] = useState(false);
   const [displayedReaction, setDisplayedReaction] = useState(item?.current_user_reaction);
+  const [displayedFavorite, setDisplayedFavorite] = useState(Boolean(item?.is_favorited));
 
   const handleApartmentPress = () => {
     router.push(`/(apartments)/${item.id}`);
@@ -107,6 +111,20 @@ const UnitApartmentCard = ({ item }) => {
   useEffect(() => {
     setDisplayedReaction(item?.current_user_reaction);
   }, [item?.current_user_reaction]);
+
+  useEffect(() => {
+    console.log('UnitCardApartment - item.is_favorited changed:', item?.is_favorited, 'type:', typeof item?.is_favorited);
+    setDisplayedFavorite(Boolean(item?.is_favorited));
+  }, [item?.is_favorited]);
+
+  // Clear timer on component unmount
+  useEffect(() => {
+    return () => {
+      if (reactionTimerRef.current) {
+        clearTimeout(reactionTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleWhatsAppShare = async () => {
     const url = `whatsapp://send?text=${encodeURIComponent(item.id)}`;
@@ -139,6 +157,11 @@ const UnitApartmentCard = ({ item }) => {
   };
 
   const handleReactionSelect = (reaction) => {
+    // Clear the auto-hide timer when user selects a reaction
+    if (reactionTimerRef.current) {
+      clearTimeout(reactionTimerRef.current);
+    }
+    
     const previousReaction = displayedReaction;
     setDisplayedReaction(reaction); // Optimistic update
     setShowReactions(false);
@@ -212,10 +235,47 @@ const UnitApartmentCard = ({ item }) => {
 
   const handleLikeLongPress = () => {
     setShowReactions(true);
+    
+    // Clear any existing timer
+    if (reactionTimerRef.current) {
+      clearTimeout(reactionTimerRef.current);
+    }
+    
+    // Set timer to auto-hide reactions after 2 seconds
+    reactionTimerRef.current = setTimeout(() => {
+      setShowReactions(false);
+    }, 3000);
   };
 
   const handleOpenReactionsModal = () => {
     bottomSheetModalRef.current?.present();
+  };
+
+  const handleFavoritePress = () => {
+    const previousFavorite = displayedFavorite;
+    setDisplayedFavorite(!displayedFavorite); // Optimistic update
+    
+    console.log('UnitCardApartment - Favorite button pressed. Previous state:', previousFavorite, 'New optimistic state:', !displayedFavorite);
+    
+    toggleFavorite({
+      type: 'apartment',
+      id: item.id,
+    }).then(response => {
+      console.log('UnitCardApartment - Toggle favorite response:', response);
+      if (response && response.data) {
+        // Update with actual response from server
+        console.log('UnitCardApartment - Server response is_favorited:', response.data.is_favorited, 'type:', typeof response.data.is_favorited);
+        setDisplayedFavorite(Boolean(response.data.is_favorited));
+      } else {
+        // Revert optimistic update on failure
+        console.log('UnitCardApartment - No response data, reverting to:', previousFavorite);
+        setDisplayedFavorite(previousFavorite);
+      }
+    }).catch(() => {
+      // Revert optimistic update on error
+      console.log('UnitCardApartment - Error occurred, reverting to:', previousFavorite);
+      setDisplayedFavorite(previousFavorite);
+    });
   };
 
   return (
@@ -451,8 +511,8 @@ const UnitApartmentCard = ({ item }) => {
                 // Display Selected/Fetched Reaction
                 return (
                   <View
-                    className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
-                    <Text className="text-xl">{reactionObj.icon}</Text>
+                    className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-1`}>
+                    <Text className="text-md">{reactionObj.icon}</Text>
                     <Text className="text-md mb-1 font-psemibold capitalize">
                       {reactionObj.title}
                     </Text>
@@ -477,9 +537,20 @@ const UnitApartmentCard = ({ item }) => {
             className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-1 items-center justify-center gap-3 rounded-md p-2 hover:bg-gray-100 active:bg-gray-200`}>
             {/* Placeholder for Share Icon */}
             <AntDesign name="sharealt" size={16} color="black" />
-            <Text className="text-md font-psemibold text-gray-700">مشاركة</Text>
+            <Text className="text-md font-psemibold text-gray-700">شارك</Text>
           </TouchableOpacity>
 
+          {/* Favorite Button */}
+          <TouchableOpacity
+            onPress={handleFavoritePress}
+            className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-1 items-center justify-center gap-3 rounded-md p-2 hover:bg-gray-100 active:bg-gray-200`}>
+            <AntDesign 
+              name={displayedFavorite ? "star" : "staro"} 
+              size={18} 
+              color={displayedFavorite ? "#FFD700" : "#374151"} 
+            />
+            <Text className="text-md font-psemibold text-gray-700">مفضلة</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={handleShareToOtherPress}
             className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-1 items-center justify-center gap-3 rounded-md p-2 hover:bg-gray-100 active:bg-gray-200`}>
@@ -490,9 +561,8 @@ const UnitApartmentCard = ({ item }) => {
               tintColor={'#000'}
               resizeMode="contain"
             />
-            <Text className="text-md font-psemibold text-gray-700"> {item.views} مشاهدة</Text>
+            <Text className="text-md font-psemibold text-gray-700"> {item.views} </Text>
           </TouchableOpacity>
-
           {/* WhatsApp Share Button */}
           {/* <TouchableOpacity
             onPress={handleWhatsAppShare}

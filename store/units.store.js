@@ -27,6 +27,30 @@ export const useUnitsStore = create((set, get) => ({
       set({ sharesLoading: false });
     }
   },
+  // https://arrows-dev.versetech.net/api/share/sort
+  getAllSortedSharesForRegion: async (regionId, params, firstLoad = false) => {
+    try {
+      set({ sharesLoading: true });
+      const sortParams = {
+        ...params,
+        region_id: regionId
+      };
+      const response = await axiosInstance.get('/share/sort', { params: sortParams });
+      console.log('sorted response', response);
+      const currentSharesRecords = get().sharesRecords;
+      set({ sharesResponse: response });
+      if (firstLoad) {
+        set({ sharesRecords: response.data });
+      } else {
+        set({ sharesRecords: [...currentSharesRecords, ...response.data] });
+      }
+      return response;
+    } catch (error) {
+      set({ sharesError: error });
+    } finally {
+      set({ sharesLoading: false });
+    }
+  },
   // https://arrows-dev.versetech.net/api/apartment/list/{region_id}
   apartmentsLoading: false,
   apartmentsError: null,
@@ -377,5 +401,29 @@ export const useUnitsStore = create((set, get) => ({
       return apartment;
     });
     set({ apartmentsRecords: updatedApartments });
+  },
+  // https://arrows-dev.versetech.net/api/apartment/sort
+  getAllSortedApartmentsForRegion: async (regionId, params, firstLoad = false) => {
+    try {
+      set({ apartmentsLoading: true });
+      const sortParams = {
+        ...params,
+        region_id: regionId
+      };
+      const response = await axiosInstance.get('/apartment/sort', { params: sortParams });
+      console.log('sorted apartments response', response);
+      const currentApartmentsRecords = get().apartmentsRecords;
+      set({ apartmentsResponse: response });
+      if (firstLoad) {
+        set({ apartmentsRecords: response.data });
+      } else {
+        set({ apartmentsRecords: [...currentApartmentsRecords, ...response.data] });
+      }
+      return response;
+    } catch (error) {
+      set({ apartmentsError: error });
+    } finally {
+      set({ apartmentsLoading: false });
+    }
   },
 }));

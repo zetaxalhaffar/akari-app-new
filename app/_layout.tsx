@@ -476,6 +476,7 @@ export default function RootLayout() {
                 <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
                 <Stack.Screen name="notifications" options={{ headerShown: false }} />
                 <Stack.Screen name="search" options={{ headerShown: false }} />
+                <Stack.Screen name="myfavorites" options={{ headerShown: false }} />
                 <Stack.Screen name="posts" options={{ headerShown: false }} />
                 <Stack.Screen name="(regions)/[id]" options={{ headerShown: false }} />
                 <Stack.Screen name="(shares)/[id]" options={{ headerShown: false }} />

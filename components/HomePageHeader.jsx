@@ -46,6 +46,16 @@ const HomePageHeader = ({ hasActions = true, customActions = false, children }) 
             className="flex-row items-center rounded-full p-2">
             <Feather name="search" size={20} color="#a47764" />
           </TouchableOpacity>
+ 
+            <TouchableOpacity
+              onPress={() =>
+                router.push({
+                  pathname: '/myfavorites',
+                })
+              }
+              className="flex-row items-center rounded-full p-2">
+              <Feather name="star" size={20} color="#a47764" />
+            </TouchableOpacity>
         </View>
       )}
       {hasActions && customActions && children}

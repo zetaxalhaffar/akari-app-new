@@ -276,12 +276,22 @@ const SharesDetails = () => {
   const [showReactions, setShowReactions] = useState(false);
   const [displayedReaction, setDisplayedReaction] = useState(null);
   const reactionsBottomSheetModalRef = useRef(null);
+  const reactionTimerRef = useRef(null);
 
   useEffect(() => {
     if (shareDetailsResponse) {
       setDisplayedReaction(shareDetailsResponse.current_user_reaction);
     }
   }, [shareDetailsResponse?.current_user_reaction]);
+
+  // Clear timer on component unmount
+  useEffect(() => {
+    return () => {
+      if (reactionTimerRef.current) {
+        clearTimeout(reactionTimerRef.current);
+      }
+    };
+  }, []);
 
   // Function to update reactions locally
   const updateLocalReactions = (reactionSummary) => {
@@ -300,6 +310,11 @@ const SharesDetails = () => {
   };
 
   const handleReactionSelect = async (reaction) => {
+    // Clear the auto-hide timer when user selects a reaction
+    if (reactionTimerRef.current) {
+      clearTimeout(reactionTimerRef.current);
+    }
+    
     const previousReaction = displayedReaction;
     setDisplayedReaction(reaction);
     setShowReactions(false);
@@ -363,6 +378,16 @@ const SharesDetails = () => {
 
   const handleLikeLongPress = () => {
     setShowReactions(true);
+    
+    // Clear any existing timer
+    if (reactionTimerRef.current) {
+      clearTimeout(reactionTimerRef.current);
+    }
+    
+    // Set timer to auto-hide reactions after 2 seconds
+    reactionTimerRef.current = setTimeout(() => {
+      setShowReactions(false);
+    }, 3000);
   };
 
   const handleOpenReactionsModal = () => {

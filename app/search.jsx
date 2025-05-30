@@ -340,11 +340,12 @@ const SearchScreen = () => {
               </View>
               <View className="flex-1">
                 <Input
-                  placeholder=""
+                  placeholder="السعر"
                   value={form.price}
                   onChangeText={(value) => setForm({ ...form, price: value })}
                   type="numeric"
-                  editable={form.id.length === 0}
+                  disabled={form.id.length > 0}
+                  showPlaceholder={false}
                 />
               </View>
             </View>

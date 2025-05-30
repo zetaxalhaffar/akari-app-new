@@ -25,10 +25,21 @@ const support = () => {
             title={'واتساب'}
             containerStyles={'flex-grow mx-4 mt-4'}
             positionOfGradient={'leftToRight'}
-            textStyles={'text-black text-green-500'}
-            buttonStyles={'h-[45px] border border-green-500'}
+            textStyles={'text-black text-green-700'}
+            buttonStyles={'h-[45px] border border-green-700'}
             handleButtonPress={() => {
               Linking.openURL(`https://wa.me/${user?.support_phone}`);
+            }}
+          />
+          <CustomButton
+            hasGradient={false}
+            title={`اتصال هاتفي: ${user?.support_phone}+`}
+            containerStyles={'flex-grow mx-4 mt-3'}
+            positionOfGradient={'leftToRight'}
+            textStyles={'text-black text-blue-500'}
+            buttonStyles={'h-[45px] border border-blue-500'}
+            handleButtonPress={() => {
+              Linking.openURL(`tel:+${user?.support_phone}`);
             }}
           />
         </View>

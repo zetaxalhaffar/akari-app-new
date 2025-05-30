@@ -21,6 +21,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useReactionStore } from '@/store/reaction.store';
+import { useFavoriteStore } from '@/store/favorite.store';
 import { AntDesign } from '@expo/vector-icons';
 import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
 import { useUnitsStore } from '../store/units.store';
@@ -62,8 +63,10 @@ const EmojiButton = ({ emoji, onPress, isSelected }) => {
 
 const UnitShareCard = ({ item }) => {
   const { setReactions, removeReaction, reactionSchemaResponse } = useReactionStore();
+  const { toggleFavorite } = useFavoriteStore();
 
   const { sharesRecords, updateShareReactions } = useUnitsStore();
+  const reactionTimerRef = useRef(null);
   const availableReactions = [
     {
       value: 'like',
@@ -100,6 +103,7 @@ const UnitShareCard = ({ item }) => {
 
   const [showReactions, setShowReactions] = useState(false);
   const [displayedReaction, setDisplayedReaction] = useState(item?.current_user_reaction);
+  const [displayedFavorite, setDisplayedFavorite] = useState(Boolean(item?.is_favorited));
 
   const handleShareToOtherPress = async () => {
     console.log(item);
@@ -129,8 +133,27 @@ const UnitShareCard = ({ item }) => {
     setDisplayedReaction(item?.current_user_reaction);
   }, [item?.current_user_reaction]);
 
+  useEffect(() => {
+    console.log('UnitCardShare - item.is_favorited changed:', item?.is_favorited, 'type:', typeof item?.is_favorited);
+    setDisplayedFavorite(Boolean(item?.is_favorited));
+  }, [item?.is_favorited]);
+
+  // Clear timer on component unmount
+  useEffect(() => {
+    return () => {
+      if (reactionTimerRef.current) {
+        clearTimeout(reactionTimerRef.current);
+      }
+    };
+  }, []);
+
   // Handles selecting a reaction from the popup
   const handleReactionSelect = async (reaction) => {
+    // Clear the auto-hide timer when user selects a reaction
+    if (reactionTimerRef.current) {
+      clearTimeout(reactionTimerRef.current);
+    }
+    
     const previousReaction = displayedReaction;
     setDisplayedReaction(reaction); // Optimistic update
     setShowReactions(false);
@@ -204,10 +227,47 @@ const UnitShareCard = ({ item }) => {
 
   const handleLikeLongPress = () => {
     setShowReactions(true);
+    
+    // Clear any existing timer
+    if (reactionTimerRef.current) {
+      clearTimeout(reactionTimerRef.current);
+    }
+    
+    // Set timer to auto-hide reactions after 2 seconds
+    reactionTimerRef.current = setTimeout(() => {
+      setShowReactions(false);
+    }, 3000);
   };
 
   const handleOpenReactionsModal = () => {
     bottomSheetModalRef.current?.present();
+  };
+
+  const handleFavoritePress = () => {
+    const previousFavorite = displayedFavorite;
+    setDisplayedFavorite(!displayedFavorite); // Optimistic update
+    
+    console.log('UnitCardShare - Favorite button pressed. Previous state:', previousFavorite, 'New optimistic state:', !displayedFavorite);
+    
+    toggleFavorite({
+      type: 'share',
+      id: item.id,
+    }).then(response => {
+      console.log('UnitCardShare - Toggle favorite response:', response);
+      if (response && response.data) {
+        // Update with actual response from server
+        console.log('UnitCardShare - Server response is_favorited:', response.data.is_favorited, 'type:', typeof response.data.is_favorited);
+        setDisplayedFavorite(Boolean(response.data.is_favorited));
+      } else {
+        // Revert optimistic update on failure
+        console.log('UnitCardShare - No response data, reverting to:', previousFavorite);
+        setDisplayedFavorite(previousFavorite);
+      }
+    }).catch(() => {
+      // Revert optimistic update on error
+      console.log('UnitCardShare - Error occurred, reverting to:', previousFavorite);
+      setDisplayedFavorite(previousFavorite);
+    });
   };
 
   const bottomSheetModalRef = useRef(null);
@@ -436,8 +496,8 @@ const UnitShareCard = ({ item }) => {
                 // Display Selected/Fetched Reaction
                 return (
                   <View
-                    className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
-                    <Text className="text-lg">{reactionObj.icon}</Text>
+                    className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-1`}>
+                    <Text className="text-md">{reactionObj.icon}</Text>
                     <Text className="text-md font-psemibold capitalize">{reactionObj.title}</Text>
                   </View>
                 );
@@ -460,7 +520,19 @@ const UnitShareCard = ({ item }) => {
             className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-1 items-center justify-center gap-3 rounded-md p-2 hover:bg-gray-100 active:bg-gray-200`}>
             {/* Placeholder for Share Icon */}
             <AntDesign name="sharealt" size={16} color="black" />
-            <Text className="text-md font-psemibold text-gray-700">مشاركة</Text>
+            <Text className="text-md font-psemibold text-gray-700">شارك</Text>
+          </TouchableOpacity>
+
+          {/* Favorite Button */}
+          <TouchableOpacity
+            onPress={handleFavoritePress}
+            className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-1 items-center justify-center gap-3 rounded-md p-2 hover:bg-gray-100 active:bg-gray-200`}>
+            <AntDesign 
+              name={displayedFavorite ? "star" : "staro"} 
+              size={18} 
+              color={displayedFavorite ? "#FFD700" : "#374151"} 
+            />
+            <Text className="text-md font-psemibold text-gray-700">مفضلة</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -473,7 +545,7 @@ const UnitShareCard = ({ item }) => {
               tintColor={'#000'}
               resizeMode="contain"
             />
-            <Text className="text-md font-psemibold text-gray-700"> {item.views} مشاهدة</Text>
+            <Text className="text-md font-psemibold text-gray-700"> {item.views} </Text>
           </TouchableOpacity>
 
           {/* WhatsApp Share Button */}

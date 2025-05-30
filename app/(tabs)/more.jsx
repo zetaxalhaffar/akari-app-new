@@ -1,11 +1,11 @@
 import HomePageHeader from '@/components/HomePageHeader';
 import { router } from 'expo-router';
-import { I18nManager, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { I18nManager, Image, ScrollView, Text, TouchableOpacity, View, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import icons from '@/constants/icons';
 import { deleteSecureStore } from '@/composables/secure.store';
 import CustomIcon from '../../components/CustomIcon';
-import { Entypo, Feather } from '@expo/vector-icons';
+import { Entypo, Feather, FontAwesome } from '@expo/vector-icons';
 import LogoutItem from '@/components/LogoutItem';
 import { useContext, useRef, useState, useEffect } from 'react';
 import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
@@ -72,6 +72,28 @@ const MoreSettingsItem = ({ icon, title, handleItemPress }) => {
   );
 };
 
+const MoreSettingsItemWithVectorIcon = ({ iconName, IconComponent, title, handleItemPress }) => {
+  return (
+    <TouchableOpacity
+      onPress={handleItemPress}
+      className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mx-4 my-2 items-center justify-between gap-4 rounded-lg bg-toast-100 p-4`}>
+      <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-4`}>
+        <View className="flex h-12 w-12 items-center justify-center rounded-full ">
+          <IconComponent name={iconName} size={24} color="#a47764" />
+        </View>
+        <View>
+          <Text className="font-psemibold text-lg text-toast-700">{title}</Text>
+        </View>
+      </View>
+      <View>
+        <CustomIcon containerStyles="border-[0]">
+          <Entypo name="chevron-left" size={24} color="#71717a" />
+        </CustomIcon>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 const LogoutInnerItem = ({ icon, title, handleItemPress }) => {
   return (
     <TouchableOpacity
@@ -98,6 +120,20 @@ const MoreScreen = () => {
   const bottomSheetModalRef = useRef(null);
   const { getAuthData } = useAuthStore();
   const [user, setUser] = useState(null);
+  
+  const handleOpenURL = async (url) => {
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        console.log("Don't know how to open URI: " + url);
+      }
+    } catch (error) {
+      console.error('Error opening URL:', error);
+    }
+  };
+  
   useEffect(() => {
     const initialize = async () => {
       const response = await getAuthData();
@@ -161,6 +197,14 @@ const MoreScreen = () => {
                 icon={icons.gold}
                 title="الحساب الذهبي"
               />
+
+              <MoreSettingsItemWithVectorIcon
+                handleItemPress={() => router.push('/myfavorites')}
+                iconName="star"
+                IconComponent={Entypo}
+                title="المفضلة"
+              />
+
               <MoreSettingsItem
                 handleItemPress={() => router.push('/notifications')}
                 icon={icons.notifications}
@@ -178,6 +222,14 @@ const MoreScreen = () => {
                 icon={icons.support}
                 title="الدعم"
               />
+
+              <MoreSettingsItemWithVectorIcon
+                handleItemPress={() => handleOpenURL('https://www.facebook.com/akari.damascus')}
+                iconName="facebook"
+                IconComponent={FontAwesome}
+                title="صفحة الفيسبوك"
+              />
+
               <MoreSettingsItem
                 handleItemPress={() => router.push('/(more_screens)/privacy')}
                 icon={icons.terms}

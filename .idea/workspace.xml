@@ -6,20 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="afe187f7-44b5-41fc-9051-4f1ab51d1e7c" name="Changes" comment="#">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(apartments)/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(apartments)/[id].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/otpvalidation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/otpvalidation.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/signup.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/signup.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(regions)/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(regions)/[id].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(shares)/[id].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(shares)/[id].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/sectors.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/sectors.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/SearchResults.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/SearchResults.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/notifications.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/notifications.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/CustomImageSlider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/CustomImageSlider.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/CustomTopTabs.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/CustomTopTabs.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/HomePageHeader.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/HomePageHeader.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/sectores.store.js" beforeDir="false" afterPath="$PROJECT_DIR$/store/sectores.store.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/units.store.js" beforeDir="false" afterPath="$PROJECT_DIR$/store/units.store.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/search.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/search.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/CustomInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/CustomInput.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

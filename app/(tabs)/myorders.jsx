@@ -97,7 +97,6 @@ const OrderListItem = ({ parentId, type, item, onOrderDeleted }) => {
             {item.sector.sector_name.name} - {item.sector.sector_name.code}
           </Text>
           <Text className="font-pmedium text-sm">السعر : {item.price}</Text>
-          <Text className="font-pmedium text-sm">{item.owner_name}</Text>
         </View>
         <TouchableOpacity onPress={() => bottomSheetModalRef.current.present()}>
           <View className="flex size-12 items-center justify-center rounded-full bg-red-700 p-2 px-4">
