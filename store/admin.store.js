@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import axiosInstance from '../utils/axiosInstance';
 import { notify } from 'react-native-notificated';
 import { getSecureStore } from '../composables/secure.store';
+import { version } from 'react';
 
 export const useAdminStore = create((set, get) => ({
   // https://arrows-dev.versetech.net/api/admin/user/ListAll
@@ -182,6 +183,7 @@ export const useAdminStore = create((set, get) => ({
       const response = await axiosInstance.get('/user/update_firebase', {
         params: {
           firebase: params.firebase,
+          version: params.version,
         },
       });
       set({ updateFirebaseResponse: response });

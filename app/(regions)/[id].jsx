@@ -168,8 +168,7 @@ const RegionWithId = () => {
   // Sorting Options for Shares
   const sharesSortingOptions = [
     { label: 'منشوراتي أولاً', sortBy: '', sortDirection: '', transactionType: '', myPostsFirst: '1' },
-
-       { label: 'الأعلى سعراً', sortBy: 'price', sortDirection: 'desc', transactionType: '' },
+    { label: 'الأعلى سعراً', sortBy: 'price', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل سعراً', sortBy: 'price', sortDirection: 'asc', transactionType: '' },
     { label: 'الأكثر مشاهدة', sortBy: 'views', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل مشاهدة', sortBy: 'views', sortDirection: 'asc', transactionType: '' },
@@ -186,7 +185,7 @@ const RegionWithId = () => {
   // Sorting Options for Apartments (without share-specific options)
   const apartmentsSortingOptions = [
     { label: 'منشوراتي أولاً', sortBy: '', sortDirection: '', transactionType: '', myPostsFirst: '1' },
-     { label: 'الأعلى سعراً', sortBy: 'price', sortDirection: 'desc', transactionType: '' },
+    { label: 'الأعلى سعراً', sortBy: 'price', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل سعراً', sortBy: 'price', sortDirection: 'asc', transactionType: '' },
     { label: 'الأكثر مشاهدة', sortBy: 'views', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل مشاهدة', sortBy: 'views', sortDirection: 'asc', transactionType: '' },
