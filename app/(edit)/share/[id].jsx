@@ -72,6 +72,9 @@ const EditShare = () => {
   const getShareDetailsHandler = async () => {
     if (!id) return;
     const response = await getShareDetails(id);
+    console.log('Share details response:', response);
+    console.log('Price key:', response.price_key);
+    console.log('Quantity key:', response.quantity_key);
     const sectorsTypesSelection = await handleChangeRegion(response.region_id);
     setCurrentType(response.transaction_type);
     const sectorType = sectorsTypesSelection.find((item) => item.name == response.sector.code.name);
@@ -82,8 +85,8 @@ const EditShare = () => {
       region_id: response.region_id,
       sector_id: response.sector_id,
       owner_name: response.owner_name,
-      price: response.price_key,
-      quantity: response.quantity_key,
+      price: String(response.price_key),
+      quantity: String(response.quantity_key),
     });
   };
 
@@ -95,14 +98,14 @@ const EditShare = () => {
     () => [
       {
         id: 'buy',
-        label: 'طلب شراء',
+        label: 'أريد أن أشتري',
         value: 'buy',
         size: 20,
         color: '#a47764',
       },
       {
         id: 'sell',
-        label: 'عرض بيع',
+        label: 'أريد أن أبيع',
         value: 'sell',
         size: 20,
         color: '#a47764',
@@ -112,9 +115,10 @@ const EditShare = () => {
   );
 
   const handleUpdateShareRequest = async () => {
-    const response = await updateShareRequest(id, form);
+    const transactionTypeValue = currentType === 'sell' ? 1 : 2;
+    const response = await updateShareRequest(id, { ...form, transaction_type: transactionTypeValue });
     if (response?.success) {
-      router.replace(`/(shares)/${id}`);
+      router.back();
     }
   };
 
@@ -127,7 +131,7 @@ const EditShare = () => {
       ) : (
         <>
           <CustomHeadWithBackButton
-            title="تعديل سهم تنظيمي"
+            title="تعديل بيانات الأسهم التنظيمية"
             handleButtonPress={() => router.back()}
           />
           <ScrollView className="flex-1 px-4">
@@ -196,7 +200,7 @@ const EditShare = () => {
             <CustomButton
               hasGradient={true}
               colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-              title={`تعديل طلب ${currentType === 'buy' ? 'الشراء' : 'البيع'}`}
+              title={`تعديل إعلان ${currentType === 'buy' ? 'الشراء' : 'البيع'}`}
               containerStyles={'flex-grow'}
               positionOfGradient={'leftToRight'}
               textStyles={'text-white'}

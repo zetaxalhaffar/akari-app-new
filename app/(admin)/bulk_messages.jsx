@@ -26,14 +26,14 @@ const Notifications = () => {
       {
         value: 'share',
         id: 'share',
-        name: 'عرض لسهم تنظيمي',
+        name: 'عرض أسهم تنظيمية',
         size: 20,
         color: '#a47764',
       },
       {
         value: 'apartment',
         id: 'apartment',
-        name: 'عرض لعقار',
+        name: 'عرض عقار',
         size: 20,
         color: '#a47764',
       },

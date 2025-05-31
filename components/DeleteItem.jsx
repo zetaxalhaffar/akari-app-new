@@ -10,10 +10,10 @@ const DeleteItem = ({ onDeleteConfirm, onClose,confirmLoading }) => {
         <Image source={icons.delete_icon} tintColor={'#C10007'} />
       </View>
       <Text className="text-center font-pbold text-base text-black">
-        هل أنت متاكد من حذف الطلب؟
+        هل أنت متاكد من حذف الإعلان؟
       </Text>
       <Text className="text-center font-pregular text-base text-black">
-        سيتم حذف الطلب والإشعارات المرتبطة به
+        سيتم حذف الإعلان والإشعارات المرتبطة به
       </Text>
       <View
         className={`m-4 flex items-center justify-center gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>

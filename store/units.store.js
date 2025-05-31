@@ -264,7 +264,7 @@ export const useUnitsStore = create((set, get) => ({
       notify('success', {
         params: {
           title: 'تمت العملية بنجاح',
-          description: response?.message ?? 'تم حذف الطلب بنجاح',
+          description: response?.message ?? 'تم حذف الإعلان بنجاح',
         },
       });
       return response;
@@ -287,7 +287,7 @@ export const useUnitsStore = create((set, get) => ({
       notify('success', {
         params: {
           title: 'تمت العملية بنجاح',
-          description: response?.message ?? 'تم حذف الطلب بنجاح',
+          description: response?.message ?? 'تم حذف الإعلان بنجاح',
         },
       });
       return response;
@@ -309,7 +309,7 @@ export const useUnitsStore = create((set, get) => ({
       notify('success', {
         params: {
           title: 'تمت العملية بنجاح',
-          description: response?.message ?? 'تم تعديل الطلب بنجاح',
+          description: response?.message ?? 'تم تعديل الإعلان بنجاح',
         },
       });
       return response;
@@ -331,7 +331,7 @@ export const useUnitsStore = create((set, get) => ({
       notify('success', {
         params: {
           title: 'تمت العملية بنجاح',
-          description: response?.message ?? 'تم تعديل الطلب بنجاح',
+          description: response?.message ?? 'تم تعديل الإعلان بنجاح',
         },
       });
       return response;

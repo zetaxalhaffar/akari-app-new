@@ -207,8 +207,11 @@ const MyFavorites = () => {
   };
 
   const loadMoreData = () => {
+    const currentData = tabId === 'share' ? sharesFavorites : apartmentsFavorites;
     const hasMore = tabId === 'share' ? hasMoreShares : hasMoreApartments;
-    if (!favoritesListLoading && hasMore) {
+    
+    // Only load more if we have at least 3 items and there's more data available
+    if (!favoritesListLoading && hasMore && currentData.length >= 3) {
       getFavoritesData(tabId, false);
     }
   };
@@ -239,7 +242,7 @@ const MyFavorites = () => {
                 />
               )}
               onEndReached={loadMoreData}
-              onEndReachedThreshold={0.5}
+              onEndReachedThreshold={0.1}
               ListEmptyComponent={() =>
                 favoritesListLoading ? (
                   <Text />

@@ -52,6 +52,10 @@ const RegionWithId = () => {
   const filtersParams = useRef({
     page: 1,
   });
+  
+  // FlashList ref for scrolling to top
+  const flashListRef = useRef(null);
+
   const getSharesBasedOnRegion = async (firstLoad = false) => {
     if (!id || id === 'myfavorites') {
       console.log('Invalid region ID, skipping API call:', id);
@@ -163,6 +167,8 @@ const RegionWithId = () => {
 
   // Sorting Options for Shares
   const sharesSortingOptions = [
+    { label: 'منشوراتي أولاً', sortBy: '', sortDirection: '', transactionType: '', myPostsFirst: '1' },
+
        { label: 'الأعلى سعراً', sortBy: 'price', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل سعراً', sortBy: 'price', sortDirection: 'asc', transactionType: '' },
     { label: 'الأكثر مشاهدة', sortBy: 'views', sortDirection: 'desc', transactionType: '' },
@@ -172,14 +178,14 @@ const RegionWithId = () => {
     { label: 'الأكثر عدد أسهم', sortBy: 'quantity', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل عدد أسهم', sortBy: 'quantity', sortDirection: 'asc', transactionType: '' },
     { label: 'عروض البيع أولاً', sortBy: '', sortDirection: '', transactionType: '1' },
-    { label: 'طلبات الشراء أولاً', sortBy: '', sortDirection: '', transactionType: '2' },
+    { label: 'إعلانات الشراء أولاً', sortBy: '', sortDirection: '', transactionType: '2' },
     { label: 'العروض الحديثة أولاً', sortBy: 'created_date', sortDirection: 'desc', transactionType: '' },
     { label: 'العروض القديمة أولاً', sortBy: 'created_date', sortDirection: 'asc', transactionType: '' },
-    { label: 'منشوراتي أولاً', sortBy: '', sortDirection: '', transactionType: '', myPostsFirst: '1' },
-  ];
+     ];
 
   // Sorting Options for Apartments (without share-specific options)
   const apartmentsSortingOptions = [
+    { label: 'منشوراتي أولاً', sortBy: '', sortDirection: '', transactionType: '', myPostsFirst: '1' },
      { label: 'الأعلى سعراً', sortBy: 'price', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل سعراً', sortBy: 'price', sortDirection: 'asc', transactionType: '' },
     { label: 'الأكثر مشاهدة', sortBy: 'views', sortDirection: 'desc', transactionType: '' },
@@ -187,11 +193,10 @@ const RegionWithId = () => {
     { label: 'الأكثر شعبية', sortBy: 'reactions', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل شعبية', sortBy: 'reactions', sortDirection: 'asc', transactionType: '' },
     { label: 'عروض البيع أولاً', sortBy: '', sortDirection: '', transactionType: '1' },
-    { label: 'طلبات الشراء أولاً', sortBy: '', sortDirection: '', transactionType: '2' },
+    { label: 'إعلانات الشراء أولاً', sortBy: '', sortDirection: '', transactionType: '2' },
     { label: 'العروض الحديثة أولاً', sortBy: 'created_date', sortDirection: 'desc', transactionType: '' },
     { label: 'العروض القديمة أولاً', sortBy: 'created_date', sortDirection: 'asc', transactionType: '' },
-    { label: 'منشوراتي أولاً', sortBy: '', sortDirection: '', transactionType: '', myPostsFirst: '1' },
- 
+  
   ];
 
   // Get current sorting options based on active tab
@@ -219,6 +224,13 @@ const RegionWithId = () => {
     } else {
       getApartmentsBasedOnRegion(true);
     }
+    
+    // Scroll to top after a brief delay to ensure data is loaded
+    setTimeout(() => {
+      if (flashListRef.current) {
+        flashListRef.current.scrollToOffset({ offset: 0, animated: true });
+      }
+    }, 100);
   };
 
   // Clear filters and reload default data
@@ -245,10 +257,17 @@ const RegionWithId = () => {
     } else {
       getAllApartmentsForRegion(id, filtersParams.current, true);
     }
+    
+    // Scroll to top after clearing filters
+    setTimeout(() => {
+      if (flashListRef.current) {
+        flashListRef.current.scrollToOffset({ offset: 0, animated: true });
+      }
+    }, 100);
   };
 
   const topTabAction = useRef({
-    title: tabId == 'share' ? 'إضافة سهم تنظيمي' : 'إضافة عقار',
+    title: tabId == 'share' ? 'أضف إعلانك الأن' : 'أضف إعلانك الأن',
   });
 
   // Get Shares and Apartments Based On Region UseEffect
@@ -288,7 +307,7 @@ const RegionWithId = () => {
             containerStyles={'mt-3'}
             hasGradient={true}
             colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-            title={tabId == 'shares' ? 'إضافة طلب تنظيمي' : 'إضافة عقار'}
+            title={tabId == 'shares' ? 'أضف إعلانك الأن' : 'أضف إعلانك الأن'}
             positionOfGradient={'leftToRight'}
             textStyles={'text-white text-sm'}
             handleButtonPress={() => {
@@ -301,6 +320,7 @@ const RegionWithId = () => {
         <CustomTopTabs topTabItems={topTabItems} onTabChange={handleTabChange}>
           <View className="flex-1 px-4 pt-4">
             <FlashList
+              ref={flashListRef}
               data={tabId == 'shares' ? sharesRecords : apartmentsRecords}
               estimatedItemSize={350}
               refreshing={sharesLoading}

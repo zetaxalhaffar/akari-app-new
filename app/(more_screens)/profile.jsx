@@ -151,7 +151,7 @@ const profile = () => {
                       className="h-12 w-12"
                       tintColor={'#FFFFFF'}
                     />
-                    <Text className="font-psemibold text-sm text-white">عدد الطلبات</Text>
+                    <Text className="font-psemibold text-sm text-white">عدد الإعلانات</Text>
                     <Text className="mt-1 font-pmedium text-xs text-white">
                       {userProfileSchemaResponse?.orderable_count}
                     </Text>

@@ -381,6 +381,20 @@ const UnitShareCard = ({ item }) => {
               {item.region.name} - {item.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'}
             </Text>
             <View
+              className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
+              <View className="flex-row items-center gap-1">
+                <Image
+                  source={icons.price}
+                  className={'h-6 w-6'}
+                  tintColor={'#FFF'}
+                  resizeMode="contain"
+                />
+                <Text className="font-pmedium text-sm text-white">
+                  {item.transaction_type == 'sell' ? 'رغبة في البيع' : 'رغبة في الشراء'}
+                </Text>
+              </View>
+            </View>
+            <View
               className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-wrap items-center gap-1`}>
               <View className="flex-row items-center gap-1">
                 <Image
@@ -391,7 +405,9 @@ const UnitShareCard = ({ item }) => {
                 />
                 <Text className="font-pmedium text-sm text-white">سعر السهم : {item.price}</Text>
               </View>
-              <View className="flex-row items-center gap-1">
+
+            </View>
+            <View className="flex-row items-center gap-1">
                 <Image
                   source={icons.quantity}
                   className={'h-6 w-6'}
@@ -402,7 +418,6 @@ const UnitShareCard = ({ item }) => {
                   الأسهم المطروحة : {item.quantity}
                 </Text>
               </View>
-            </View>
             <View
               className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
               <View className="flex-row items-center gap-1">
@@ -431,6 +446,7 @@ const UnitShareCard = ({ item }) => {
                 </View>
               </View>
             )}
+
           </View>
         </TouchableOpacity>
 

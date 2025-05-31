@@ -375,7 +375,21 @@ const UnitApartmentCard = ({ item }) => {
               {item.region?.name} - {item.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'}
             </Text>
             <View
+              className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
+              <View className="flex-row items-center gap-1">
+                <Image
+                  source={icons.price}
+                  className={'h-6 w-6'}
+                  tintColor={'#FFF'}
+                  resizeMode="contain"
+                />
+                <Text className="font-pmedium text-sm text-white">
+                  {item.transaction_type == 'sell' ? 'رغبة في البيع' : 'رغبة في الشراء'}
+                </Text>
+              </View>
+            </View><View
               className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-wrap items-center gap-1`}>
+              
               <View className="flex-row items-center gap-1">
                 <Image
                   source={icons.price}
@@ -431,7 +445,9 @@ const UnitApartmentCard = ({ item }) => {
                   نوع العقار : {item?.apartment_type?.name}
                 </Text>
               </View>
-              {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
+
+            </View>
+            {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
                 <View
                   className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-row items-center gap-1`}>
                   <Image
@@ -445,7 +461,6 @@ const UnitApartmentCard = ({ item }) => {
                   </Text>
                 </View>
               )}
-            </View>
           </View>
         </TouchableOpacity>
 

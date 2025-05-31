@@ -101,7 +101,7 @@ export const useAdminStore = create((set, get) => ({
       notify('success', {
         params: {
           title: 'تمت العملية بنجاح',
-          description: response?.message ?? 'تم الموافقة على الطلب بنجاح',
+          description: response?.message ?? 'تم الموافقة على الإعلان بنجاح',
         },
       });
       return response;
@@ -150,7 +150,7 @@ export const useAdminStore = create((set, get) => ({
       notify('success', {
         params: {
           title: 'تمت العملية بنجاح',
-          description: response?.message ?? 'تم حذف الطلب بنجاح',
+          description: response?.message ?? 'تم حذف الإعلان بنجاح',
         },
       });
       set({ deleteUnitResponse: response });

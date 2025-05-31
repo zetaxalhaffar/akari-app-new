@@ -106,14 +106,14 @@ const EditApartmentScreen = () => {
     () => [
       {
         id: 'buy',
-        label: 'طلب شراء',
+        label: 'أريد أن أشتري',
         value: 'buy',
         size: 20,
         color: '#a47764',
       },
       {
         id: 'sell',
-        label: 'عرض بيع',
+        label: 'أريد أن أبيع',
         value: 'sell',
         size: 20,
         color: '#a47764',
@@ -171,7 +171,7 @@ const EditApartmentScreen = () => {
     const response = await updateApartmentRequest(id, dataToSend);
     console.log(response, 'response');
     if (response?.success) {
-      router.replace(`/(apartments)/${id}`);
+      router.back();
     }
   };
 
@@ -219,7 +219,7 @@ const EditApartmentScreen = () => {
         </View>
       ) : (
         <>
-          <CustomHeadWithBackButton title="تعديل العقار" handleButtonPress={() => router.back()} />
+          <CustomHeadWithBackButton title="تعديل بيانات العقار" handleButtonPress={() => router.back()} />
           <ScrollView className="flex-1 px-4">
             <CustomRadioButtons
               radioButtons={radioButtons}
@@ -373,7 +373,7 @@ const EditApartmentScreen = () => {
             <CustomButton
               hasGradient={true}
               colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-              title={`تعديل طلب ${currentType === 'buy' ? 'الشراء' : 'البيع'}`}
+              title={`تعديل إعلان ${currentType === 'buy' ? 'الشراء' : 'البيع'}`}
               containerStyles={'flex-grow'}
               positionOfGradient={'leftToRight'}
               textStyles={'text-white'}

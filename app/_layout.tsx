@@ -502,13 +502,13 @@ export default function RootLayout() {
                 visible={isAuthenticated && pathname == '/'} // Show FAB only when authenticated
                 icon={fabOpen ? 'close' : 'plus'}
                 color="#FFF"
-                label={'إضافة عرض'}
-                theme={{ fonts: { ...theme.fonts, labelLarge: { ...theme.fonts.labelLarge, fontSize: 16 } } }}
+                label={'أضف إعلانك الأن'}
+                theme={{ fonts: { ...theme.fonts, labelLarge: { ...theme.fonts.labelLarge, fontSize: 14 } } }}
                 rippleColor={'#00000060'}
                 actions={[
                   {
                     icon: 'home-plus-outline', // Or choose another appropriate icon
-                    label: 'إضافة عقار',
+                    label: 'إضافة إعلان عن عقار',
                     onPress: () => router.push('/(create)/apartments'),
                     style: { backgroundColor: '#a47764' }, // Optional: Style the action button
                     labelTextColor: 'white', // Optional: Style the label
@@ -516,7 +516,7 @@ export default function RootLayout() {
                   },
                   {
                     icon: 'trending-up', // Or choose another appropriate icon
-                    label: 'إضافة طلب تنظيمي',
+                    label: 'إضافة إعلان عن أسهم تنظيمية',
                     onPress: () => router.push('/(create)/shares'),
                     style: { backgroundColor: '#a47764' }, // Optional: Style the action button
                     labelTextColor: 'white', // Optional: Style the label
@@ -529,7 +529,8 @@ export default function RootLayout() {
                   marginBottom: (insets.bottom || 0) + 90,
                   marginRight: I18nManager.isRTL ? undefined : 16,
                   marginLeft: I18nManager.isRTL ? 16 : undefined,
-                  borderWidth: 4,
+                  
+                  borderWidth: 5,
                   borderColor: '#a4776450',
                 }}
                 backdropColor="#00000080" // Kept transparent backdrop

@@ -24,7 +24,7 @@ const MyPostsList = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <CustomHeadWithBackButton title="طلباتي" handleButtonPress={() => router.back()} />
+      <CustomHeadWithBackButton title="إعلاناتي" handleButtonPress={() => router.back()} />
       <View className="mt-6 gap-8 px-4">
         <TouchableOpacity
           onPress={handleSharesPress}
@@ -33,14 +33,14 @@ const MyPostsList = () => {
             <Image tintColor={'#1f2937'} source={icons.building_1} className="h-8 w-8" />
           </View>
           <View className="flex-1">
-            <Text className="font-psemibold text-lg">طلبات الأسهم التنظيمية</Text>
+            <Text className="font-psemibold text-lg">إعلانات الأسهم التنظيمية</Text>
             <Text className="max-w-[230px] font-pregular text-sm">
-              هنا يمكنك مشاهدة طلباتك التي قمت بإنشاءها
+              هنا يمكنك مشاهدة إعلاناتك التي قمت بنشرها
             </Text>
           </View>
           <TouchableOpacity onPress={handleCreateSharesPost}>
             <View className="items-center justify-center rounded-full bg-gray-200 p-2">
-              <Text className="text-md px-2 font-psemibold">إضافة طلب</Text>
+              <Text className="text-md px-2 font-psemibold">إضافة إعلان</Text>
             </View>
           </TouchableOpacity>
         </TouchableOpacity>
@@ -52,14 +52,14 @@ const MyPostsList = () => {
             <Image tintColor={'#1f2937'} source={icons.building_1} className="h-8 w-8" />
           </View>
           <View className="flex-1">
-            <Text className="font-psemibold text-lg">طلبات العقارات</Text>
+            <Text className="font-psemibold text-lg">إعلانات العقارات</Text>
             <Text className="max-w-[230px] font-pregular text-sm">
-              هنا يمكنك مشاهدة طلباتك التي قمت بإنشاءها
+              هنا يمكنك مشاهدة إعلاناتك التي قمت بنشرها
             </Text>
           </View>
           <TouchableOpacity onPress={handleCreateApartmentsPost}>
             <View className="items-center justify-center rounded-full bg-gray-200 p-2">
-              <Text className="text-md px-2 font-psemibold">إضافة طلب</Text>
+              <Text className="text-md px-2 font-psemibold">إضافة إعلان</Text>
             </View>
           </TouchableOpacity>
         </TouchableOpacity>

@@ -36,6 +36,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useReactionStore } from '@/store/reaction.store';
+import { useFavoriteStore } from '@/store/favorite.store';
 
 const EmojiButton = ({ emoji, onPress, isSelected }) => {
   const scale = useSharedValue(1);
@@ -79,6 +80,8 @@ const UnitDetails = ({
   onReactionSelect,
   onOpenReactionsModal,
   onDismissReactions,
+  displayedFavorite,
+  onFavoritePress,
 }) => {
   const user = getSecureStoreNoAsync('user');
 
@@ -150,37 +153,53 @@ const UnitDetails = ({
           </>
         )}
 
-        <TouchableOpacity
-          onPress={onLikePress}
-          onLongPress={onLikeLongPress}
-          delayLongPress={200}
-          className="relative my-2 flex-1 items-center justify-center rounded-md border border-gray-200 py-3 hover:bg-gray-100 active:bg-gray-200">
-          {(() => {
-            const reactionObj = availableReactions.find(
-              (reaction) => reaction.value === displayedReaction
-            );
+        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} my-2 flex-row gap-2`}>
+          <TouchableOpacity
+            onPress={onLikePress}
+            onLongPress={onLikeLongPress}
+            delayLongPress={200}
+            className="relative flex-1 items-center justify-center rounded-md border border-gray-200 py-3 hover:bg-gray-100 active:bg-gray-200">
+            {(() => {
+              const reactionObj = availableReactions.find(
+                (reaction) => reaction.value === displayedReaction
+              );
 
-            if (reactionObj) {
-              return (
-                <View
-                  className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
-                  <Text className="text-lg">{reactionObj.icon}</Text>
-                  <Text className="text-md font-psemibold capitalize text-gray-700">
-                    {reactionObj.title}
-                  </Text>
-                </View>
-              );
-            } else {
-              return (
-                <View
-                  className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
-                  <AntDesign name="like2" size={18} color="#374151" />
-                  <Text className="text-md mt-1 font-psemibold text-gray-700">إعجاب</Text>
-                </View>
-              );
-            }
-          })()}
-        </TouchableOpacity>
+              if (reactionObj) {
+                return (
+                  <View
+                    className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
+                    <Text className="text-lg">{reactionObj.icon}</Text>
+                    <Text className="text-md font-psemibold capitalize text-gray-700">
+                      {reactionObj.title}
+                    </Text>
+                  </View>
+                );
+              } else {
+                return (
+                  <View
+                    className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
+                    <AntDesign name="like2" size={18} color="#374151" />
+                    <Text className="text-md mt-1 font-psemibold text-gray-700">إعجاب</Text>
+                  </View>
+                );
+              }
+            })()}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={onFavoritePress}
+            className="relative flex-1 items-center justify-center rounded-md border border-gray-200 py-3 hover:bg-gray-100 active:bg-gray-200">
+            <View
+              className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
+              <AntDesign 
+                name={displayedFavorite ? "star" : "staro"} 
+                size={18} 
+                color={displayedFavorite ? "#FFD700" : "#374151"} 
+              />
+              <Text className="text-md mt-1 font-psemibold text-gray-700">مفضلة</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
       <View className={`rounded-lg border border-toast-100 p-4`}>
         <Text className="font-psemibold text-lg text-black">تفاصيل الوحدة</Text>
@@ -273,16 +292,19 @@ const SharesDetails = () => {
   } = useAdminStore();
 
   const { setReactions, removeReaction } = useReactionStore();
+  const { toggleFavorite } = useFavoriteStore();
   const [showReactions, setShowReactions] = useState(false);
   const [displayedReaction, setDisplayedReaction] = useState(null);
+  const [displayedFavorite, setDisplayedFavorite] = useState(false);
   const reactionsBottomSheetModalRef = useRef(null);
   const reactionTimerRef = useRef(null);
 
   useEffect(() => {
     if (shareDetailsResponse) {
       setDisplayedReaction(shareDetailsResponse.current_user_reaction);
+      setDisplayedFavorite(Boolean(shareDetailsResponse.is_favorited));
     }
-  }, [shareDetailsResponse?.current_user_reaction]);
+  }, [shareDetailsResponse?.current_user_reaction, shareDetailsResponse?.is_favorited]);
 
   // Clear timer on component unmount
   useEffect(() => {
@@ -394,6 +416,33 @@ const SharesDetails = () => {
     reactionsBottomSheetModalRef.current?.present();
   };
 
+  const handleFavoritePress = () => {
+    const previousFavorite = displayedFavorite;
+    setDisplayedFavorite(!displayedFavorite); // Optimistic update
+    
+    console.log('SharesDetails - Favorite button pressed. Previous state:', previousFavorite, 'New optimistic state:', !displayedFavorite);
+    
+    toggleFavorite({
+      type: 'share',
+      id: id,
+    }).then(response => {
+      console.log('SharesDetails - Toggle favorite response:', response);
+      if (response && response.data) {
+        // Update with actual response from server
+        console.log('SharesDetails - Server response is_favorited:', response.data.is_favorited, 'type:', typeof response.data.is_favorited);
+        setDisplayedFavorite(Boolean(response.data.is_favorited));
+      } else {
+        // Revert optimistic update on failure
+        console.log('SharesDetails - No response data, reverting to:', previousFavorite);
+        setDisplayedFavorite(previousFavorite);
+      }
+    }).catch(() => {
+      // Revert optimistic update on error
+      console.log('SharesDetails - Error occurred, reverting to:', previousFavorite);
+      setDisplayedFavorite(previousFavorite);
+    });
+  };
+
   const handleShare = async (item) => {
     console.log(item);
     try {
@@ -483,8 +532,8 @@ const SharesDetails = () => {
         handleDismissModalPress={() => {}}>
         <View className="h-full items-center justify-center">
           <AdminActionItem
-            title="الموافقة على الطلب"
-            description="هل أنت متاكد من الموافقة على الطلب؟"
+            title="الموافقة على الإعلان"
+            description="هل أنت متاكد من الموافقة على الإعلان؟"
             icon={icons.admin_approve}
             color="#3cab3d"
             confirm_color="bg-[#3cab3d]"
@@ -529,8 +578,8 @@ const SharesDetails = () => {
         handleDismissModalPress={() => {}}>
         <View className="h-full items-center justify-center">
           <AdminActionItem
-            title="حذف الطلب"
-            description="هل أنت متاكد من حذف الطلب؟"
+            title="حذف الإعلان"
+            description="هل أنت متاكد من حذف الإعلان؟"
             icon={icons.delete_icon}
             color="#82181A"
             confirm_color="bg-[#82181A]"
@@ -633,6 +682,8 @@ const SharesDetails = () => {
                     onReactionSelect={handleReactionSelect}
                     onOpenReactionsModal={handleOpenReactionsModal}
                     onDismissReactions={() => setShowReactions(false)}
+                    displayedFavorite={displayedFavorite}
+                    onFavoritePress={handleFavoritePress}
                   />
                 </View>
               </View>
@@ -646,7 +697,7 @@ const SharesDetails = () => {
                       <CustomButton
                         hasGradient={true}
                         colors={['#82181A', '#82181A', '#82181A', '#9F0712', '#C10007']}
-                        title={'حذف الطلب'}
+                        title={'حذف الإعلان'}
                         containerStyles={'flex-grow'}
                         positionOfGradient={'leftToRight'}
                         textStyles={'text-white'}
@@ -661,7 +712,7 @@ const SharesDetails = () => {
                   <CustomButton
                     hasGradient={true}
                     colors={['#314158', '#62748E', '#90A1B9', '#90A1B9', '#90A1B9']}
-                    title={'تعديل الطلب'}
+                    title={'تعديل الإعلان'}
                     containerStyles={'flex-grow'}
                     positionOfGradient={'leftToRight'}
                     textStyles={'text-white'}
@@ -691,7 +742,7 @@ const SharesDetails = () => {
                           <CustomButton
                             hasGradient={true}
                             colors={['#3cab3d', '#2d8c2e', '#266f27', '#2d8c2e', '#3cab3d']}
-                            title={'الموافقة على الطلب'}
+                            title={'الموافقة على الإعلان'}
                             containerStyles={'flex-grow'}
                             positionOfGradient={'leftToRight'}
                             textStyles={'text-white'}
@@ -704,7 +755,7 @@ const SharesDetails = () => {
                         <CustomButton
                           hasGradient={true}
                           colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-                          title={'تعديل الطلب'}
+                          title={'تعديل الإعلان'}
                           containerStyles={'flex-grow'}
                           positionOfGradient={'leftToRight'}
                           textStyles={'text-white'}
@@ -726,7 +777,7 @@ const SharesDetails = () => {
                         <CustomButton
                           hasGradient={true}
                           colors={['#82181A', '#82181A', '#82181A', '#9F0712', '#C10007']}
-                          title={'حذف الطلب'}
+                          title={'حذف الإعلان'}
                           containerStyles={'flex-grow'}
                           positionOfGradient={'leftToRight'}
                           textStyles={'text-white'}

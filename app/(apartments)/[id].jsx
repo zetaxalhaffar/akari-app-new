@@ -36,6 +36,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useReactionStore } from '@/store/reaction.store';
+import { useFavoriteStore } from '@/store/favorite.store';
 
 // Animated Emoji Button Component
 const EmojiButton = ({ emoji, onPress, isSelected }) => {
@@ -81,6 +82,8 @@ const UnitDetails = ({
   onReactionSelect,
   onOpenReactionsModal,
   onDismissReactions,
+  displayedFavorite,
+  onFavoritePress,
 }) => {
   const user = getSecureStoreNoAsync('user');
 
@@ -173,33 +176,49 @@ const UnitDetails = ({
           </>
         )}
 
-        <TouchableOpacity
-          onPress={onLikePress}
-          onLongPress={onLikeLongPress}
-          delayLongPress={200}
-          className="relative my-2 flex-1 items-center justify-center rounded-md border border-gray-200 py-3 hover:bg-gray-100 active:bg-gray-200">
-          {(() => {
-            const reactionObj = availableReactions.find((r) => r.value === displayedReaction);
-            if (reactionObj) {
+        <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} my-2 flex-row gap-2`}>
+          <TouchableOpacity
+            onPress={onLikePress}
+            onLongPress={onLikeLongPress}
+            delayLongPress={200}
+            className="relative flex-1 items-center justify-center rounded-md border border-gray-200 py-3 hover:bg-gray-100 active:bg-gray-200">
+            {(() => {
+              const reactionObj = availableReactions.find((r) => r.value === displayedReaction);
+              if (reactionObj) {
+                return (
+                  <View
+                    className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
+                    <Text className="text-lg">{reactionObj.icon}</Text>
+                    <Text className="text-md font-psemibold capitalize text-gray-700">
+                      {reactionObj.title}
+                    </Text>
+                  </View>
+                );
+              }
               return (
                 <View
                   className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
-                  <Text className="text-lg">{reactionObj.icon}</Text>
-                  <Text className="text-md font-psemibold capitalize text-gray-700">
-                    {reactionObj.title}
-                  </Text>
+                  <AntDesign name="like2" size={18} color="#374151" />
+                  <Text className="text-md mt-1 font-psemibold text-gray-700">إعجاب</Text>
                 </View>
               );
-            }
-            return (
-              <View
-                className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
-                <AntDesign name="like2" size={18} color="#374151" />
-                <Text className="text-md mt-1 font-psemibold text-gray-700">إعجاب</Text>
-              </View>
-            );
-          })()}
-        </TouchableOpacity>
+            })()}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={onFavoritePress}
+            className="relative flex-1 items-center justify-center rounded-md border border-gray-200 py-3 hover:bg-gray-100 active:bg-gray-200">
+            <View
+              className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex flex-row items-center justify-center gap-2`}>
+              <AntDesign 
+                name={displayedFavorite ? "star" : "staro"} 
+                size={18} 
+                color={displayedFavorite ? "#FFD700" : "#374151"} 
+              />
+              <Text className="text-md mt-1 font-psemibold text-gray-700">مفضلة</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View className={`rounded-lg border border-toast-100 p-4`}>
@@ -429,16 +448,19 @@ const ApartmentDetails = () => {
 
   /*================== Reaction Functionality ==================*/
   const { setReactions, removeReaction } = useReactionStore();
+  const { toggleFavorite } = useFavoriteStore();
   const [showReactions, setShowReactions] = useState(false);
   const [displayedReaction, setDisplayedReaction] = useState(null);
+  const [displayedFavorite, setDisplayedFavorite] = useState(false);
   const reactionsBottomSheetModalRef = useRef(null); // For detailed reaction list
   const reactionTimerRef = useRef(null);
 
   useEffect(() => {
     if (apartmentDetailsResponse) {
       setDisplayedReaction(apartmentDetailsResponse.current_user_reaction);
+      setDisplayedFavorite(Boolean(apartmentDetailsResponse.is_favorited));
     }
-  }, [apartmentDetailsResponse?.current_user_reaction]);
+  }, [apartmentDetailsResponse?.current_user_reaction, apartmentDetailsResponse?.is_favorited]);
 
   // Clear timer on component unmount
   useEffect(() => {
@@ -554,6 +576,33 @@ const ApartmentDetails = () => {
     reactionsBottomSheetModalRef.current?.present();
   };
 
+  const handleFavoritePress = () => {
+    const previousFavorite = displayedFavorite;
+    setDisplayedFavorite(!displayedFavorite); // Optimistic update
+    
+    console.log('ApartmentDetails - Favorite button pressed. Previous state:', previousFavorite, 'New optimistic state:', !displayedFavorite);
+    
+    toggleFavorite({
+      type: 'apartment',
+      id: id,
+    }).then(response => {
+      console.log('ApartmentDetails - Toggle favorite response:', response);
+      if (response && response.data) {
+        // Update with actual response from server
+        console.log('ApartmentDetails - Server response is_favorited:', response.data.is_favorited, 'type:', typeof response.data.is_favorited);
+        setDisplayedFavorite(Boolean(response.data.is_favorited));
+      } else {
+        // Revert optimistic update on failure
+        console.log('ApartmentDetails - No response data, reverting to:', previousFavorite);
+        setDisplayedFavorite(previousFavorite);
+      }
+    }).catch(() => {
+      // Revert optimistic update on error
+      console.log('ApartmentDetails - Error occurred, reverting to:', previousFavorite);
+      setDisplayedFavorite(previousFavorite);
+    });
+  };
+
   const handleShare = async (item) => {
     console.log(item);
     try {
@@ -641,8 +690,8 @@ const ApartmentDetails = () => {
         handleDismissModalPress={() => {}}>
         <View className="h-full items-center justify-center">
           <AdminActionItem
-            title="الموافقة على الطلب"
-            description="هل أنت متاكد من الموافقة على الطلب؟"
+            title="الموافقة على الإعلان"
+            description="هل أنت متاكد من الموافقة على الإعلان؟"
             icon={icons.admin_approve}
             color="#3cab3d"
             confirm_color="bg-[#3cab3d]"
@@ -687,8 +736,8 @@ const ApartmentDetails = () => {
         handleDismissModalPress={() => {}}>
         <View className="h-full items-center justify-center">
           <AdminActionItem
-            title="حذف الطلب"
-            description="هل أنت متاكد من حذف الطلب؟"
+            title="حذف الإعلان"
+            description="هل أنت متاكد من حذف الإعلان؟"
             icon={icons.delete_icon}
             color="#82181A"
             confirm_color="bg-[#82181A]"
@@ -796,6 +845,8 @@ const ApartmentDetails = () => {
                     onReactionSelect={handleReactionSelect}
                     onOpenReactionsModal={handleOpenReactionsModal}
                     onDismissReactions={() => setShowReactions(false)}
+                    displayedFavorite={displayedFavorite}
+                    onFavoritePress={handleFavoritePress}
                   />
                 </View>
               </View>
@@ -810,7 +861,7 @@ const ApartmentDetails = () => {
                       <CustomButton
                         hasGradient={true}
                         colors={['#82181A', '#82181A', '#82181A', '#9F0712', '#C10007']}
-                        title={'حذف الطلب'}
+                        title={'حذف الإعلان'}
                         containerStyles={'flex-grow'}
                         positionOfGradient={'leftToRight'}
                         textStyles={'text-white'}
@@ -825,7 +876,7 @@ const ApartmentDetails = () => {
                   <CustomButton
                     hasGradient={true}
                     colors={['#314158', '#62748E', '#90A1B9', '#90A1B9', '#90A1B9']}
-                    title={'تعديل الطلب'}
+                    title={'تعديل الإعلان'}
                     containerStyles={'flex-grow'}
                     positionOfGradient={'leftToRight'}
                     textStyles={'text-white'}
@@ -855,7 +906,7 @@ const ApartmentDetails = () => {
                           <CustomButton
                             hasGradient={true}
                             colors={['#3cab3d', '#2d8c2e', '#266f27', '#2d8c2e', '#3cab3d']}
-                            title={'الموافقة على الطلب'}
+                            title={'الموافقة على الإعلان'}
                             containerStyles={'flex-grow'}
                             positionOfGradient={'leftToRight'}
                             textStyles={'text-white'}
@@ -868,7 +919,7 @@ const ApartmentDetails = () => {
                         <CustomButton
                           hasGradient={true}
                           colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-                          title={'تعديل الطلب'}
+                          title={'تعديل الإعلان'}
                           containerStyles={'flex-grow'}
                           positionOfGradient={'leftToRight'}
                           textStyles={'text-white'}
@@ -890,7 +941,7 @@ const ApartmentDetails = () => {
                         <CustomButton
                           hasGradient={true}
                           colors={['#82181A', '#82181A', '#82181A', '#9F0712', '#C10007']}
-                          title={'حذف الطلب'}
+                          title={'حذف الإعلان'}
                           containerStyles={'flex-grow'}
                           positionOfGradient={'leftToRight'}
                           textStyles={'text-white'}

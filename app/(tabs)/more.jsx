@@ -63,7 +63,7 @@ const MoreSettingsItem = ({ icon, title, handleItemPress }) => {
           <Text className="font-psemibold text-lg text-toast-700">{title}</Text>
         </View>
       </View>
-      <View>
+      <View pointerEvents="none">
         <CustomIcon containerStyles="border-[0]">
           <Entypo name="chevron-left" size={24} color="#71717a" />
         </CustomIcon>
@@ -85,7 +85,7 @@ const MoreSettingsItemWithVectorIcon = ({ iconName, IconComponent, title, handle
           <Text className="font-psemibold text-lg text-toast-700">{title}</Text>
         </View>
       </View>
-      <View>
+      <View pointerEvents="none">
         <CustomIcon containerStyles="border-[0]">
           <Entypo name="chevron-left" size={24} color="#71717a" />
         </CustomIcon>
@@ -107,7 +107,7 @@ const LogoutInnerItem = ({ icon, title, handleItemPress }) => {
           <Text className="font-psemibold text-lg text-white">{title}</Text>
         </View>
       </View>
-      <View>
+      <View pointerEvents="none">
         <CustomIcon containerStyles="border-[0]">
           <Entypo name="chevron-left" size={24} color="#ffffff" />
         </CustomIcon>
@@ -168,7 +168,7 @@ const MoreScreen = () => {
               <Text className="font-psemibold text-sm text-zinc-400">تفاصيل الحساب</Text>
             </View>
           </View>
-          <View>
+          <View pointerEvents="none">
             <CustomIcon containerStyles="border-[0]">
               <Entypo name="chevron-left" size={24} color="#71717a" />
             </CustomIcon>

@@ -66,14 +66,14 @@ const CreateShareScreen = () => {
     () => [
       {
         id: 'buy',
-        label: 'طلب شراء',
+        label: 'أريد أن أشتري',
         value: 'buy',
         size: 20,
         color: '#a47764',
       },
       {
         id: 'sell',
-        label: 'عرض بيع',
+        label: 'أريد أن أبيع',
         value: 'sell',
         size: 20,
         color: '#a47764',
@@ -83,7 +83,8 @@ const CreateShareScreen = () => {
   );
 
   const handleCreateShareRequest = async () => {
-    const response = await createShareRequest(currentType, form);
+    const transactionTypeValue = currentType === 'sell' ? 1 : 2;
+    const response = await createShareRequest(currentType, { ...form, transaction_type: transactionTypeValue });
     console.log(response, 'response');
     if (response?.success) {
       router.replace(`/(shares)/${response.id}`);
@@ -92,7 +93,7 @@ const CreateShareScreen = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <CustomHeadWithBackButton title="إضافة سهم تنظيمي" handleButtonPress={() => router.back()} />
+      <CustomHeadWithBackButton title="إضافة إعلان عن أسهم تنظيمية" handleButtonPress={() => router.back()} />
       <ScrollView className="flex-1 px-4">
         <CustomRadioButtons
           radioButtons={radioButtons}
@@ -159,7 +160,7 @@ const CreateShareScreen = () => {
         <CustomButton
           hasGradient={true}
           colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-          title={`إضافة طلب ${currentType === 'buy' ? 'الشراء' : 'البيع'}`}
+          title={`إضافة إعلان ${currentType === 'buy' ? 'الشراء' : 'البيع'}`}
           containerStyles={'flex-grow'}
           positionOfGradient={'leftToRight'}
           textStyles={'text-white'}

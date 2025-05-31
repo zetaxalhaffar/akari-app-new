@@ -23,9 +23,9 @@ const NotificationItem = ({ notification }) => {
         if (notification.type == 'url') {
           Linking.openURL(notification.content);
         } else if (notification.type == 'share') {
-          router.push(`/shares/${notification.content}`);
+          router.push(`/(shares)/${notification.content}`);
         } else if (notification.type == 'apartment') {
-          router.push(`/apartments/${notification.content}`);
+          router.push(`/(apartments)/${notification.content}`);
         }
       }}
       className={`flex items-center gap-6 px-4 py-3 ${I18nManager.isRTL ? 'rtl-view ' : 'ltr-view'}`}>

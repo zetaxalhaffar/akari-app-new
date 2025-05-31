@@ -17,11 +17,11 @@ import { useOrdersStore } from '@/store/orders.store';
 const topTabItems = [
   {
     id: 'buy',
-    title: 'طلبات الشراء',
+    title: 'إعلانات الشراء',
   },
   {
     id: 'sell',
-    title: 'طلبات البيع',
+    title: 'إعلانات البيع',
   },
 ];
 
@@ -114,13 +114,13 @@ const MyOrders = () => {
     <SafeAreaView className="flex-1">
       <View className="flex-row items-center justify-between pe-4">
         <CustomHeadWithBackButton
-          title={`${tab === 'shares' ? 'طلبات الأسهم التنظيمية' : 'طلبات العقارات'}`}
+          title={`${tab === 'shares' ? 'إعلانات الأسهم التنظيمية' : 'إعلانات العقارات'}`}
           handleButtonPress={() => router.back()}
         />
         <CustomButton
           hasGradient
           colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-          title="إضافة طلب"
+          title="إضافة إعلان"
           positionOfGradient="leftToRight"
           textStyles="text-white text-sm pt-1"
           handleButtonPress={handleButtonPress} // Updated handler
@@ -149,8 +149,8 @@ const MyOrders = () => {
                 ) : (
                   <EmptyScreen
                     img={''}
-                    mainTitle="لم تُضِف بعد أي طلب شراء أو بيع"
-                    title="لإضافة طلب جديد، اضغط على زر «إضافة طلب» أعلى الصفحة، ثم اختر إما «طلب شراء» أو «عرض بيع». وسوف تُعرض هنا جميع الطلبات التي قمت بتسجيلها."
+                    mainTitle="لم تُضِف بعد أي إعلان  شراء أو بيع"
+                    title="لإضافة إعلان جديد، اضغط على زر «إضافة إعلان» أعلى الصفحة، ثم اختر إما «إعلان شراء» أو «إعلان بيع». وسوف تُعرض هنا جميع الإعلانات التي قمت بتسجيلها."
                   />
                 )
               }

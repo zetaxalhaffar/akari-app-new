@@ -116,7 +116,7 @@ const Contact = () => {
         handleSheetChanges={() => {}}
         handleDismissModalPress={() => {}}>
         <View className="h-full items-center justify-center">
-          <Text className="mt-4 font-psemibold text-xl">هل أنت متأكد من إلغاء الطلب؟</Text>
+          <Text className="mt-4 font-psemibold text-xl">هل أنت متأكد من إلغاء الإعلان؟</Text>
           <View
             className={`m-4 flex items-center justify-center gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
             <CustomButton
@@ -181,7 +181,7 @@ const Contact = () => {
             <View>
               <Text className="font-psemibold text-lg">ترتيب موعد</Text>
               <Text className="max-w-[250px] font-pregular text-sm">
-                أرسل طلبك إلينا وسيقوم فريق عقاري بالتواصل معك لتحديد الموعد المناسب وترتيب كافة
+                أرسل إعلانك إلينا وسيقوم فريق عقاري بالتواصل معك لتحديد الموعد المناسب وترتيب كافة
                 التفاصيل.
               </Text>
             </View>

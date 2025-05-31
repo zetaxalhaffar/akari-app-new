@@ -94,14 +94,14 @@ const CreateApartmentScreen = () => {
     () => [
       {
         id: 'buy',
-        label: 'طلب شراء',
+        label: 'أريد أن أشتري',
         value: 'buy',
         size: 20,
         color: '#a47764',
       },
       {
         id: 'sell',
-        label: 'عرض بيع',
+        label: 'أريد أن أبيع',
         value: 'sell',
         size: 20,
         color: '#a47764',
@@ -156,7 +156,7 @@ const CreateApartmentScreen = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <CustomHeadWithBackButton title="إضافة عقار" handleButtonPress={() => router.back()} />
+      <CustomHeadWithBackButton title="إضافة إعلان عن عقار" handleButtonPress={() => router.back()} />
       <ScrollView className="flex-1 px-4">
         <CustomRadioButtons
           radioButtons={radioButtons}
@@ -314,7 +314,7 @@ const CreateApartmentScreen = () => {
         <CustomButton
           hasGradient={true}
           colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-          title={`إضافة طلب ${currentType === 'buy' ? 'الشراء' : 'البيع'}`}
+          title={`إضافة إعلان ${currentType === 'buy' ? 'الشراء' : 'البيع'}`}
           containerStyles={'flex-grow'}
           positionOfGradient={'leftToRight'}
           textStyles={'text-white'}

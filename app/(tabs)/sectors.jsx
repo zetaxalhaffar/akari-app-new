@@ -16,9 +16,10 @@ const SectorImageCarousel = ({ photos, height = 300, onImagePress }) => {
   const { width } = Dimensions.get('window');
   const scrollViewRef = useRef(null);
   const [active, setActive] = useState(0);
+  const imageWidth = width - 32;
   
   const onScrollChange = ({ nativeEvent }) => {
-    const slide = Math.round(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
+    const slide = Math.round(nativeEvent.contentOffset.x / imageWidth);
     if (slide !== active) {
       setActive(slide);
     }
@@ -27,7 +28,7 @@ const SectorImageCarousel = ({ photos, height = 300, onImagePress }) => {
   const scrollToImage = (index) => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({
-        x: index * (width - 32),
+        x: index * imageWidth,
         animated: true,
       });
       setActive(index);
@@ -73,18 +74,18 @@ const SectorImageCarousel = ({ photos, height = 300, onImagePress }) => {
       </View>
       {photos.length > 1 && (
         <View 
-          className="absolute left-0 right-0 flex-row justify-center gap-2"
+          className="absolute left-0 right-0 flex-row-reverse justify-center gap-2"
           style={{ bottom: -28 }}>
           {photos.map((_, index) => (
             <TouchableOpacity
               key={index}
               onPress={() => scrollToImage(index)}
               className={`h-5 w-5 items-center justify-center rounded-full border-4 border-toast-300 ${
-                index === active ? 'bg-white' : 'bg-toast-300'
+                index === active ? 'bg-toast-500' : 'bg-toast-300'
               }`}>
               <View
                 className={`h-3 w-3 rounded-full ${
-                  index === active ? 'bg-toast-500' : ''
+                  index === active ? 'bg-white' : ''
                 }`}
                 style={index === active ? {} : { backgroundColor: '#bda28c' }}
               />
@@ -103,6 +104,7 @@ const SectorsScreen = () => {
   const filtersParams = useRef({
     page: 1,
   });
+  const flashListRef = useRef(null);
 
   const [sectoreSection, setSectoreSection] = useState([]);
   const [selectedSector, setSelectedSector] = useState(null);
@@ -143,6 +145,10 @@ const SectorsScreen = () => {
     // Clear sector section when changing region (sector tab will be reset in getSectorsList)
     setSectoreSection([]);
     getSectorsList(tabId, true);
+    // Scroll to top when changing region tabs
+    setTimeout(() => {
+      flashListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    }, 100);
   };
 
   const [sectorTabId, setSectorTabId] = useState('0');
@@ -150,6 +156,10 @@ const SectorsScreen = () => {
     setSectorTabId(tabId);
     // Clear selected sector when changing sector tabs
     setSelectedSector(null);
+    // Scroll to top when changing sector tabs
+    setTimeout(() => {
+      flashListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    }, 100);
   };
 
   // Handle End Reached for pagination
@@ -238,6 +248,7 @@ const SectorsScreen = () => {
                 itemTitle="name">
                 <View className="flex-1 px-4 pt-4">
                   <FlashList
+                    ref={flashListRef}
                     data={getCurrentSectorData()}
                     estimatedItemSize={350}
                     refreshing={sectorsLoading}

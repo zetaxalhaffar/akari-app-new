@@ -54,7 +54,7 @@ const CardItem = ({ user, blockUnblockUser, onBlockUnblockComplete }) => {
           رقم الهاتف: {user.phone}
         </Text>
         <Text className="mb-1 font-pmedium text-sm text-gray-600 text-right">
-          عدد الطلبات: {user.orderable_count}
+          عدد الإعلانات: {user.orderable_count}
         </Text>
         <Text className="mb-1 font-pmedium text-sm text-gray-600 text-right">
           عدد الأسهم: {user.shares_count}

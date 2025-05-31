@@ -98,7 +98,7 @@ export default function TabLayout() {
                   tintColor={color}
                 />
                 <Text className="font-psemibold" style={{ color, fontSize: 10, marginTop: 2 }}>
-                  طلباتي
+                  إعلاناتي
                 </Text>
               </View>
             ),
