@@ -122,7 +122,9 @@ const RegionWithId = () => {
     });
   };
   
-  const handleTabChange = (tabId) => {
+  const handleTabChange = (newTabId) => {
+    const isSameTab = tabId === newTabId;
+    
     filtersParams.current.page = 1;
     // Clear content when switching tabs
     clearSharesRecords();
@@ -136,7 +138,16 @@ const RegionWithId = () => {
     setSortDirection('');
     setTransactionType('');
     setMyPostsFirst('0');
-    setTabId(tabId);
+    setTabId(newTabId);
+    
+    // If it's the same tab (double tap), reload content immediately
+    if (isSameTab) {
+      if (newTabId === 'shares') {
+        getSharesBasedOnRegion(true);
+      } else {
+        getApartmentsBasedOnRegion(true);
+      }
+    }
   };
 
   // Handle End Reached
@@ -277,9 +288,21 @@ const RegionWithId = () => {
       return;
     }
     
+    // Only load data if we don't already have records loaded
+    const hasSharesData = sharesRecords && sharesRecords.length > 0;
+    const hasApartmentsData = apartmentsRecords && apartmentsRecords.length > 0;
+    
     filtersParams.current.page = 1;
-    getSharesBasedOnRegion(true);
-    getApartmentsBasedOnRegion(true);
+    
+    // Only load shares if we don't have data already
+    if (!hasSharesData) {
+      getSharesBasedOnRegion(true);
+    }
+    
+    // Only load apartments if we don't have data already
+    if (!hasApartmentsData) {
+      getApartmentsBasedOnRegion(true);
+    }
   }, [tabId, id]); // Add id as dependency
 
   return (
