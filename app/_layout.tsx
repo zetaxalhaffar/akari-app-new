@@ -492,6 +492,7 @@ export default function RootLayout() {
                 <Stack.Screen name="(more_screens)/privacy" options={{ headerShown: false }} />
                 <Stack.Screen name="(more_screens)/terms" options={{ headerShown: false }} />
                 <Stack.Screen name="(more_screens)/premium" options={{ headerShown: false }} />
+                <Stack.Screen name="(more_screens)/information" options={{ headerShown: false }} />
                 <Stack.Screen name="(admin)/users_list" options={{ headerShown: false }} />
                 <Stack.Screen name="(admin)/bulk_messages" options={{ headerShown: false }} />
                 <Stack.Screen name="SearchResults" options={{ headerShown: false }} />

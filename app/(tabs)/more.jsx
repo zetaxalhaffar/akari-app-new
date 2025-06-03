@@ -178,6 +178,11 @@ const MoreScreen = () => {
         <View className="flex-1">
           <ScrollView>
             <View className="flex-1">
+              <MoreSettingsItem
+                handleItemPress={() => router.push('/(more_screens)/information')}
+                icon={icons.support}
+                title="شرح شامل عن الأسهم"
+              />
               {user && user?.privilege == 'admin' && (
                 <MoreSettingsItem
                   handleItemPress={() => router.push('/(admin)/users_list')}
