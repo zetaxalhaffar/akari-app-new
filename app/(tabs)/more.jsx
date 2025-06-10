@@ -183,6 +183,14 @@ const MoreScreen = () => {
                 icon={icons.support}
                 title="شرح شامل عن الأسهم"
               />
+              <MoreSettingsItem
+                handleItemPress={() => router.push({
+                  pathname: '/(more_screens)/information',
+                  params: { url: 'https://arrows-dev.versetech.net/info.html#app-fees' }
+                })}
+                icon={icons.support}
+                title="أجور تطبيق عقاري دمشق"
+              />
               {user && user?.privilege == 'admin' && (
                 <MoreSettingsItem
                   handleItemPress={() => router.push('/(admin)/users_list')}
@@ -197,10 +205,14 @@ const MoreScreen = () => {
                   title="رسائل جماعية"
                 />
               )}
+
               <MoreSettingsItem
-                handleItemPress={() => router.push('/(more_screens)/premium')}
-                icon={icons.gold}
-                title="الحساب الذهبي"
+                      handleItemPress={() => router.push({
+                        pathname: '/(more_screens)/information',
+                        params: { url: 'https://arrows-dev.versetech.net/golden-account.html' }
+                      })}
+                      icon={icons.gold}
+                      title="الحساب الذهبي"
               />
 
               <MoreSettingsItemWithVectorIcon
@@ -213,15 +225,12 @@ const MoreScreen = () => {
               <MoreSettingsItem
                 handleItemPress={() => router.push('/notifications')}
                 icon={icons.notifications}
-                title="الإشعارات"
+                title="مركز الإشعارات"
               />
+
               <NotificationPermissionSwitcher icon={icons.notifications} title="تفعيل الإشعارات" />
 
-              <MoreSettingsItem
-                handleItemPress={() => router.push('/(more_screens)/features')}
-                icon={icons.features}
-                title="المزايا"
-              />
+
               <MoreSettingsItem
                 handleItemPress={() => router.push('/(more_screens)/support')}
                 icon={icons.support}
@@ -235,16 +244,26 @@ const MoreScreen = () => {
                 title="صفحة الفيسبوك"
               />
 
+
+
               <MoreSettingsItem
-                handleItemPress={() => router.push('/(more_screens)/privacy')}
-                icon={icons.terms}
-                title="سياسية الخصوصية"
-              />
-              <MoreSettingsItem
-                handleItemPress={() => router.push('/(more_screens)/terms')}
+                handleItemPress={() => router.push({
+                  pathname: '/(more_screens)/information',
+                  params: { url: 'https://arrows-dev.versetech.net/privacy-policy.html' }
+                })}
                 icon={icons.privacy}
-                title="الأحكام والشروط"
+                title="سياسة الخصوصية"
               />
+
+              <MoreSettingsItem
+                handleItemPress={() => router.push({
+                  pathname: '/(more_screens)/information',
+                  params: { url: 'https://arrows-dev.versetech.net/terms.html' }
+                })}
+                icon={icons.terms}
+                title="شروط الاستخدام"
+              />
+
               <LogoutInnerItem
                 handleItemPress={() => bottomSheetModalRef.current.present()}
                 icon={icons.logout}

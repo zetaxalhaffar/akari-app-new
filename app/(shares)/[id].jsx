@@ -216,6 +216,12 @@ const UnitDetails = ({
             </Text>
           )}
         </Text>
+        <Text
+          className={`font-pregular mt-2 text-sm text-zinc-500 ${
+            I18nManager.isRTL ? 'text-left' : 'text-right'
+          }`}>
+          تم النشر {item?.since}
+        </Text>
       </View>
       <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 flex-row gap-2`}>
         <View className="flex-1 rounded-lg border border-toast-100 p-4">

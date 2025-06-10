@@ -486,12 +486,8 @@ export default function RootLayout() {
                 <Stack.Screen name="(create)/apartments" options={{ headerShown: false }} />
                 <Stack.Screen name="(edit)/share/[id]" options={{ headerShown: false }} />
                 <Stack.Screen name="(edit)/apartment/[id]" options={{ headerShown: false }} />
-                <Stack.Screen name="(more_screens)/features" options={{ headerShown: false }} />
                 <Stack.Screen name="(more_screens)/support" options={{ headerShown: false }} />
                 <Stack.Screen name="(more_screens)/profile" options={{ headerShown: false }} />
-                <Stack.Screen name="(more_screens)/privacy" options={{ headerShown: false }} />
-                <Stack.Screen name="(more_screens)/terms" options={{ headerShown: false }} />
-                <Stack.Screen name="(more_screens)/premium" options={{ headerShown: false }} />
                 <Stack.Screen name="(more_screens)/information" options={{ headerShown: false }} />
                 <Stack.Screen name="(admin)/users_list" options={{ headerShown: false }} />
                 <Stack.Screen name="(admin)/bulk_messages" options={{ headerShown: false }} />

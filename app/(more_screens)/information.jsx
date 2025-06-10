@@ -4,8 +4,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import Feather from '@expo/vector-icons/Feather';
 import HomePageHeader from '@/components/HomePageHeader';
+import { useLocalSearchParams } from 'expo-router';
 
 const InformationScreen = () => {
+  const { url } = useLocalSearchParams();
   const [isLoading, setIsLoading] = useState(true);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const webViewRef = useRef(null);
@@ -30,6 +32,15 @@ const InformationScreen = () => {
 
   const injectedJavaScript = `
     (function() {
+      const meta = document.createElement('meta');
+      meta.setAttribute('name', 'viewport');
+      meta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+      document.head.appendChild(meta);
+
+      const style = document.createElement('style');
+      style.innerHTML = 'body { -webkit-user-select: none; -webkit-touch-callout: none; user-select: none; }';
+      document.head.appendChild(style);
+
       function sendScrollPosition() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const documentHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -50,7 +61,7 @@ const InformationScreen = () => {
     try {
       const data = JSON.parse(event.nativeEvent.data);
       if (data.type === 'scroll') {
-        setShowScrollButton(data.scrollPercentage >= 25);
+        setShowScrollButton(data.scrollPercentage >= 1);
       }
     } catch (error) {
       console.log('Error parsing message:', error);
@@ -63,10 +74,12 @@ const InformationScreen = () => {
       <View className="flex-1" style={{ backgroundColor: '#f2f2f2' }}>
         <WebView 
           ref={webViewRef}
-          source={{ uri: 'https://arrows-dev.versetech.net/info.html' }}
+          source={{ uri: url || 'https://arrows-dev.versetech.net/info.html' }}
           style={{ flex: 1, backgroundColor: '#f2f2f2' }}
           startInLoadingState={true}
-          scalesPageToFit={true}
+          scalesPageToFit={false}
+          textZoom={100}
+          setBuiltInZoomControls={false}
           javaScriptEnabled={true}
           domStorageEnabled={true}
           renderLoading={renderLoading}

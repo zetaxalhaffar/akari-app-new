@@ -235,6 +235,12 @@ const UnitDetails = ({
               {item?.price}  في منطقة {item?.region?.name}
             </Text>
           )}
+        </Text>       
+         <Text
+          className={`font-pregular mt-2 text-sm text-zinc-500 ${
+            I18nManager.isRTL ? 'text-left' : 'text-right'
+          }`}>
+          تم النشر {item?.since}
         </Text>
       </View>
       <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 flex-row gap-2`}>

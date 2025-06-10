@@ -62,17 +62,7 @@ const profile = () => {
               تفاصيل الحساب
             </Text>
           </TouchableOpacity>
-          <View>
-            <CustomBottomSheet
-              snapPoints={['25%']}
-              trigger={
-                <Text className={`text-right font-psemibold text-base text-red-500`}>
-                  تسجيل الخروج
-                </Text>
-              }>
-              <LogoutItem onDeleteConfirm={handleLogout} confirmLoading={false} />
-            </CustomBottomSheet>
-          </View>
+
         </View>
         <View className="flex-1 px-4">
           {userProfileSchemaLoading && (

@@ -1,7 +1,7 @@
 import { View, Text, Image, I18nManager, TouchableOpacity } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import images from '@/constants/images';
-import { router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 import { useNotificationsStore } from '@/store/notifications.store';
 
 const HomePageHeader = ({ hasActions = true, customActions = false, children }) => {
@@ -11,6 +11,7 @@ const HomePageHeader = ({ hasActions = true, customActions = false, children }) 
   };
 
   const { notificationCount } = useNotificationsStore();
+  const pathname = usePathname();
 
   return (
     <View
@@ -20,11 +21,13 @@ const HomePageHeader = ({ hasActions = true, customActions = false, children }) 
       </TouchableOpacity>
       {hasActions && !customActions && (
         <View className={`items-center gap-2 ${I18nManager.isRTL ? 'ltr-view' : 'rtl-view'}`}>
-          <TouchableOpacity
-            onPress={() => router.push({ pathname: '/(tabs)/more' })}
-            className="flex-row items-center gap-2 rounded-full border border-toast-200 bg-toast-100 p-2">
-            <Feather name="user" size={20} color="#a47764" />
-          </TouchableOpacity>
+          {pathname === '/' && (
+            <TouchableOpacity
+              onPress={() => router.push({ pathname: '/information' })}
+              className="flex-row items-center gap-2 rounded-full border border-toast-200 bg-toast-100 p-2">
+              <Feather name="help-circle" size={20} color="#a47764" />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             onPress={() =>
               router.push({
