@@ -71,6 +71,71 @@ const availableReactions = [
   { value: 'angry', icon: '😠', title: 'أغضبني' },
 ];
 
+const OwnersSection = ({ owners }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  if (!owners) return null;
+  
+  const ownersList = owners.split(', ');
+  const maxInitialOwners = 3;
+  const hasMoreOwners = ownersList.length > maxInitialOwners;
+  const displayedOwners = isExpanded ? ownersList : ownersList.slice(0, maxInitialOwners);
+  const remainingCount = ownersList.length - maxInitialOwners;
+
+  return (
+    <View className="mt-4 rounded-lg border border-toast-100 p-4">
+      <Text className="font-pmedium text-base text-zinc-600">المالكين</Text>
+      <View className="mt-2">
+        {displayedOwners.map((owner, index) => (
+          <View key={index} className="mb-1 flex-row items-center">
+            <View className="mr-2 h-1 w-1 rounded-full bg-zinc-400" />
+            <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-right' : 'text-left'}`}>
+              {owner.trim()}
+            </Text>
+          </View>
+        ))}
+        
+        {hasMoreOwners && !isExpanded && (
+          <TouchableOpacity 
+            onPress={() => setIsExpanded(true)}
+            className="mt-2"
+            activeOpacity={0.7}
+          >
+            <CustomLinear
+              title={`عرض جميع المالكين (${remainingCount} آخرين)`}
+              colors={['#bda28c', '#a47764', '#8d5e52', '#774b46', '#633e3d']}
+              positionOfGradient="leftToRight"
+              textStyles="text-white !text-sm font-pmedium"
+              buttonStyles="rounded-md py-2 px-3 flex-row items-center"
+              icon={<AntDesign name="down" size={14} color="white" style={{ marginLeft: 4 }} />}
+              iconPosition="right"
+            />
+          </TouchableOpacity>
+        )}
+        
+        {isExpanded && (
+          <TouchableOpacity 
+            onPress={() => setIsExpanded(false)}
+            className="mt-2"
+            activeOpacity={0.7}
+          >
+            <CustomLinear
+              title="إخفاء المالكين"
+              colors={['#f8f9fa', '#e9ecef', '#dee2e6', '#ced4da', '#adb5bd']}
+              positionOfGradient="leftToRight"
+              textStyles="!text-sm font-pmedium"
+              textColor="#633e3d"
+              buttonStyles="rounded-md py-2 px-3 flex-row items-center justify-center border border-gray-200"
+              icon={<AntDesign name="up" size={14} color="#633e3d" style={{ marginRight: 4 }} />}
+              iconPosition="left"
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+  );
+};
+
 const UnitDetails = ({
   item,
   displayedReaction,
@@ -273,6 +338,129 @@ const UnitDetails = ({
           </View>
         </View>
       )}
+
+      {/* Additional Sector Information */}
+      {item?.sector && (() => {
+        // Check if any sector details are available
+        const hasAnyDetails = 
+          item?.sector?.outer_area ||
+          item?.sector?.residential_area ||
+          (item?.sector?.commercial_area && item?.sector?.commercial_area !== '0') ||
+          item?.sector?.floors_number ||
+          item?.sector?.total_floor_area ||
+          item?.sector?.share_count ||
+          item?.sector?.contractor ||
+          item?.sector?.engineers ||
+          item?.sector?.description ||
+          item?.sector?.owners;
+        
+        if (!hasAnyDetails) return null;
+        
+        return (
+          <View className="mt-4">
+            <Text className="mb-2 font-psemibold text-lg text-black">تفاصيل المقسم {item?.sector?.code?.code}</Text>
+          
+          {/* Areas Row */}
+          <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-row gap-2`}>
+            {item?.sector?.outer_area && (
+              <View className="flex-1 rounded-lg border border-toast-100 p-4">
+                <Image source={icons.location} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                <Text className="font-pmedium text-base text-zinc-600">المساحة الخارجية</Text>
+                <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                  {item?.sector?.outer_area} م²
+                </Text>
+              </View>
+            )}
+            {item?.sector?.residential_area && (
+              <View className="flex-1 rounded-lg border border-toast-100 p-4">
+                <Image source={icons.location} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                <Text className="font-pmedium text-base text-zinc-600">المساحة السكنية</Text>
+                <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                  {item?.sector?.residential_area} م²
+                </Text>
+              </View>
+            )}
+            {item?.sector?.commercial_area && item?.sector?.commercial_area !== '0' && (
+              <View className="flex-1 rounded-lg border border-toast-100 p-4">
+                <Image source={icons.location} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                <Text className="font-pmedium text-base text-zinc-600">المساحة التجارية</Text>
+                <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                  {item?.sector?.commercial_area} م²
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {/* Building Details Row */}
+          <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 flex-row gap-2`}>
+            {item?.sector?.floors_number && (
+              <View className="flex-1 rounded-lg border border-toast-100 p-4">
+                <Image source={icons.sector} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                <Text className="font-pmedium text-base text-zinc-600">عدد الطوابق</Text>
+                <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                  {item?.sector?.floors_number} طابق
+                </Text>
+              </View>
+            )}
+            {item?.sector?.total_floor_area && (
+              <View className="flex-1 rounded-lg border border-toast-100 p-4">
+                <Image source={icons.location} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                <Text className="font-pmedium text-base text-zinc-600">إجمالي مساحة الطوابق</Text>
+                <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                  {item?.sector?.total_floor_area} م²
+                </Text>
+              </View>
+            )}
+            {item?.sector?.share_count && (
+              <View className="flex-1 rounded-lg border border-toast-100 p-4">
+                <Image source={icons.quantity} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                <Text className="font-pmedium text-base text-zinc-600">إجمالي عدد الأسهم</Text>
+                <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                  {item?.sector?.share_count}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {/* People Details Row */}
+          <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 flex-row gap-2`}>
+            {item?.sector?.contractor && (
+              <View className="flex-1 rounded-lg border border-toast-100 p-4">
+                <Image source={icons.owner} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                <Text className="font-pmedium text-base text-zinc-600">المقاول</Text>
+                <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                  {item?.sector?.contractor}
+                </Text>
+              </View>
+            )}
+            {item?.sector?.engineers && (
+              <View className="flex-1 rounded-lg border border-toast-100 p-4">
+                <Image source={icons.owner} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                <Text className="font-pmedium text-base text-zinc-600">المهندسين</Text>
+                <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                  {item?.sector?.engineers}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {/* Description */}
+          {item?.sector?.description && (
+            <View className="mt-4 rounded-lg border border-toast-100 p-4">
+              <Text className="font-pmedium text-base text-zinc-600">وصف المقسم</Text>
+              <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                {item?.sector?.description}
+              </Text>
+            </View>
+          )}
+
+          {/* Owners */}
+          {item?.sector?.owners && (
+            <OwnersSection owners={item?.sector?.owners} />
+          )}
+        </View>
+        );
+      })()}
     </View>
   );
 };

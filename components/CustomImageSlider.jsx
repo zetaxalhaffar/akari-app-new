@@ -138,7 +138,7 @@ const ImageSlider = ({ images, height, resizeMode = 'cover', newImages }) => {
           className={`absolute w-screen items-start  justify-center gap-2 ${I18nManager.isRTL ? 'flex-row-reverse' : 'flex-row-reverse'}`}
           style={{ bottom: -28 }}>
           {imageSlider.length ? (
-            imageSlider?.map((i, k) => (
+            imageSlider?.slice(0, 10).map((i, k) => (
               <TouchableOpacity
                 key={k}
                 onPress={() => scrollToImage(k)}

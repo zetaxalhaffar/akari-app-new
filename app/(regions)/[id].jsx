@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { I18nManager, Text, TouchableOpacity, View, Modal, ScrollView, Animated, Dimensions } from 'react-native';
+import { I18nManager, Text, TouchableOpacity, View, Modal, ScrollView, Animated, Dimensions, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomePageHeader from '@/components/HomePageHeader';
 import { router, useGlobalSearchParams } from 'expo-router';
 import CustomTopTabs from '../../components/CustomTopTabs';
 import { useUnitsStore } from '../../store/units.store';
+import { useRegionsStore } from '../../store/regions.store';
 import CustomButton from '@/components/CustomButton';
 import { FlashList } from '@shopify/flash-list';
 import UnitShareCard from '../../components/UnitCardShare';
 import UnitApartmentCard from '../../components/UnitCardApartment';
 import EmptyScreen from '@/components/EmptyScreen';
-import { ActivityIndicator } from 'react-native-web';
 import { Feather } from '@expo/vector-icons';
 
 // Top Tab Items
@@ -32,6 +32,9 @@ const RegionWithId = () => {
   
   console.log('Region ID from params:', id); // Debug log
 
+  // Get Regions Store
+  const { regionResponse, getRegions } = useRegionsStore();
+
   // Get All Shares and Apartments For Region
   const {
     getAllSharesForRegion,
@@ -47,6 +50,10 @@ const RegionWithId = () => {
     clearSharesRecords,
     clearApartmentsRecords,
   } = useUnitsStore();
+
+  // Find current region name
+  const currentRegion = regionResponse?.find(region => region.id.toString() === id?.toString());
+  const regionName = currentRegion?.name || '';
 
   // Get Shares Based On Region
   const filtersParams = useRef({
@@ -125,11 +132,8 @@ const RegionWithId = () => {
   const handleTabChange = (newTabId) => {
     const isSameTab = tabId === newTabId;
     
+    // Reset page and filters for both scenarios
     filtersParams.current.page = 1;
-    // Clear content when switching tabs
-    clearSharesRecords();
-    clearApartmentsRecords();
-    // Clear sorting parameters
     filtersParams.current.sort_by = '';
     filtersParams.current.sort_direction = '';
     filtersParams.current.transaction_type = '';
@@ -138,10 +142,23 @@ const RegionWithId = () => {
     setSortDirection('');
     setTransactionType('');
     setMyPostsFirst('0');
-    setTabId(newTabId);
     
-    // If it's the same tab (double tap), reload content immediately
+    // Clear data and reload for both double-tap and tab switch
     if (isSameTab) {
+      // Double-tap: Clear current tab data and reload
+      if (newTabId === 'shares') {
+        clearSharesRecords();
+        getSharesBasedOnRegion(true);
+      } else {
+        clearApartmentsRecords();
+        getApartmentsBasedOnRegion(true);
+      }
+    } else {
+      // Tab switch: Clear both tabs data, set new tab, and load its data
+      clearSharesRecords();
+      clearApartmentsRecords();
+      setTabId(newTabId);
+      
       if (newTabId === 'shares') {
         getSharesBasedOnRegion(true);
       } else {
@@ -200,8 +217,8 @@ const RegionWithId = () => {
     { label: 'الأقل سعراً', sortBy: 'price', sortDirection: 'asc', transactionType: '' },
     { label: 'الأكثر مشاهدة', sortBy: 'views', sortDirection: 'desc', transactionType: '' },
     { label: 'الأقل مشاهدة', sortBy: 'views', sortDirection: 'asc', transactionType: '' },
-    { label: 'الأكثر شعبية', sortBy: 'reactions', sortDirection: 'desc', transactionType: '' },
-    { label: 'الأقل شعبية', sortBy: 'reactions', sortDirection: 'asc', transactionType: '' },
+    { label: 'الأكثر تفاعل', sortBy: 'reactions', sortDirection: 'desc', transactionType: '' },
+    { label: 'الأقل تفاعل', sortBy: 'reactions', sortDirection: 'asc', transactionType: '' },
     { label: 'عروض البيع أولاً', sortBy: '', sortDirection: '', transactionType: '1' },
     { label: 'إعلانات الشراء أولاً', sortBy: '', sortDirection: '', transactionType: '2' },
     { label: 'العروض الحديثة أولاً', sortBy: 'created_date', sortDirection: 'desc', transactionType: '' },
@@ -282,28 +299,38 @@ const RegionWithId = () => {
 
   // Get Shares and Apartments Based On Region UseEffect
   useEffect(() => {
+    // Load regions if not already loaded
+    if (!regionResponse) {
+      getRegions();
+    }
+    
     // Only proceed if we have a valid numeric ID
     if (!id || id === 'myfavorites' || isNaN(parseInt(id))) {
       console.log('Skipping API calls for invalid region ID:', id);
       return;
     }
     
-    // Only load data if we don't already have records loaded
-    const hasSharesData = sharesRecords && sharesRecords.length > 0;
-    const hasApartmentsData = apartmentsRecords && apartmentsRecords.length > 0;
+    // Clear existing data when region ID changes
+    clearSharesRecords();
+    clearApartmentsRecords();
     
+    // Reset filter parameters
     filtersParams.current.page = 1;
+    filtersParams.current.sort_by = '';
+    filtersParams.current.sort_direction = '';
+    filtersParams.current.transaction_type = '';
+    filtersParams.current.my_posts_first = '0';
     
-    // Only load shares if we don't have data already
-    if (!hasSharesData) {
-      getSharesBasedOnRegion(true);
-    }
+    // Reset sorting state
+    setSortBy('');
+    setSortDirection('');
+    setTransactionType('');
+    setMyPostsFirst('0');
     
-    // Only load apartments if we don't have data already
-    if (!hasApartmentsData) {
-      getApartmentsBasedOnRegion(true);
-    }
-  }, [tabId, id]); // Add id as dependency
+    // Always load fresh data for the new region
+    getSharesBasedOnRegion(true);
+    getApartmentsBasedOnRegion(true);
+  }, [id, regionResponse]); // Depend on both id and regionResponse
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -339,13 +366,22 @@ const RegionWithId = () => {
         </View>
       </HomePageHeader>
       <View className="flex-1">
+        {/* Region Name Display */}
+        {regionName && (
+          <View className="px-4 pb-2 bg-white border-b border-gray-200">
+            <Text className={`${I18nManager.isRTL ? 'text-center' : 'text-center'} text-base font-psemibold text-gray-800`}>
+              {regionName}
+            </Text>
+          </View>
+        )}
+        
         <CustomTopTabs topTabItems={topTabItems} onTabChange={handleTabChange}>
           <View className="flex-1 px-4 pt-4">
             <FlashList
               ref={flashListRef}
               data={tabId == 'shares' ? sharesRecords : apartmentsRecords}
               estimatedItemSize={350}
-              refreshing={sharesLoading}
+              refreshing={tabId == 'shares' ? sharesLoading : apartmentsLoading}
               onRefresh={handleRefresh}
               renderItem={({ item }) =>
                 tabId == 'shares' ? (
