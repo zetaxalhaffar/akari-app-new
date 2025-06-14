@@ -65,7 +65,7 @@ const UnitShareCard = ({ item }) => {
   const { setReactions, removeReaction, reactionSchemaResponse } = useReactionStore();
   const { toggleFavorite } = useFavoriteStore();
 
-  const { sharesRecords, updateShareReactions } = useUnitsStore();
+  const { sharesRecords, updateShareReactions, updateSearchResultUserReaction, updateSearchResultUserFavorite } = useUnitsStore();
   const reactionTimerRef = useRef(null);
   const availableReactions = [
     {
@@ -164,6 +164,8 @@ const UnitShareCard = ({ item }) => {
     });
     if (response) {
       updateShareReactions(item.id, response.reaction_summary);
+      // Update user reaction in search results as well
+      updateSearchResultUserReaction(item.id, 'share', reaction);
     } else {
       // Optional: revert on error
       // setDisplayedReaction(previousReaction);
@@ -191,6 +193,8 @@ const UnitShareCard = ({ item }) => {
         .then((response) => {
           if (response) {
             updateShareReactions(item.id, response.reaction_summary);
+            // Update user reaction in search results as well
+            updateSearchResultUserReaction(item.id, 'share', null);
           } else {
             // Revert optimistic update on failure
             setDisplayedReaction(previousReaction);
@@ -212,6 +216,8 @@ const UnitShareCard = ({ item }) => {
         .then((response) => {
           if (response) {
             updateShareReactions(item.id, response.reaction_summary);
+            // Update user reaction in search results as well
+            updateSearchResultUserReaction(item.id, 'share', 'like');
           } else {
             // Revert optimistic update on failure
             setDisplayedReaction(null);
@@ -257,7 +263,10 @@ const UnitShareCard = ({ item }) => {
       if (response && response.data) {
         // Update with actual response from server
         console.log('UnitCardShare - Server response is_favorited:', response.data.is_favorited, 'type:', typeof response.data.is_favorited);
-        setDisplayedFavorite(Boolean(response.data.is_favorited));
+        const isFavorited = Boolean(response.data.is_favorited);
+        setDisplayedFavorite(isFavorited);
+        // Update favorite state in search results as well
+        updateSearchResultUserFavorite(item.id, 'share', isFavorited);
       } else {
         // Revert optimistic update on failure
         console.log('UnitCardShare - No response data, reverting to:', previousFavorite);

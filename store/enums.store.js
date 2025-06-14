@@ -111,6 +111,24 @@ export const useEnumsStore = create((set) => ({
       set({ directionsSchema: { loading: false } });
     }
   },
+  //https://arrows-dev.versetech.net/api/payment-methods
+  paymentMethodsSchema: {
+    loading: false,
+    error: null,
+    response: null,
+  },
+  getPaymentMethods: async () => {
+    try {
+      set({ paymentMethodsSchema: { loading: true } });
+      const response = await axiosInstance.get('/payment-methods');
+      set({ paymentMethodsSchema: { response } });
+      return response;
+    } catch (error) {
+      set({ paymentMethodsSchema: { error } });
+    } finally {
+      set({ paymentMethodsSchema: { loading: false } });
+    }
+  },
   // https://arrows-dev.versetech.net/api/statistics
   statisticsSchemaLoading: true,
   statisticsSchemaError: null,

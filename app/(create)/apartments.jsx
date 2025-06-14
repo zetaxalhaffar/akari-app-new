@@ -22,6 +22,8 @@ const CreateApartmentScreen = () => {
     directionsSchema,
     getApartmentStatus,
     apartmentStatusSchema,
+    getPaymentMethods,
+    paymentMethodsSchema,
   } = useEnumsStore();
 
   const { createApartmentRequest, createApartmentRequestLoading } = useUnitsStore();
@@ -33,6 +35,7 @@ const CreateApartmentScreen = () => {
     equity: '',
     price: '',
     direction_id: '',
+    payment_method_id: '',
     area: '',
     floor: '',
     rooms_count: '',
@@ -49,16 +52,19 @@ const CreateApartmentScreen = () => {
   const [apartmentTypes, setApartmentTypes] = useState([]);
   const [directions, setDirections] = useState([]);
   const [apartmentStatus, setApartmentStatus] = useState([]);
+  const [paymentMethods, setPaymentMethods] = useState([]);
   const [fieldsToShow, setFieldsToShow] = useState([]);
   const getEnumsList = async () => {
     const regionsResponse = await getRegions();
     const apartmentTypesResponse = await getApartmentTypes();
     const apartmentStatusResponse = await getApartmentStatus();
     const directionsResponse = await getDirections();
+    const paymentMethodsResponse = await getPaymentMethods();
     setRegions(regionsResponse);
     setApartmentTypes(apartmentTypesResponse);
     setDirections(directionsResponse);
     setApartmentStatus(apartmentStatusResponse);
+    setPaymentMethods(paymentMethodsResponse);
   };
 
   const [sectoreType, setSectoreType] = useState('');
@@ -298,6 +304,16 @@ const CreateApartmentScreen = () => {
             value={form.price}
             type="numeric"
             onChangeText={(text) => setForm({ ...form, price: text })}
+          />
+        </View>
+        <View className="my-4">
+          <CustomSelecteBox
+            value={form.payment_method_id}
+            setValue={(value) => setForm({ ...form, payment_method_id: value })}
+            arrayOfValues={paymentMethods ?? []}
+            disabled={paymentMethodsSchema?.loading}
+            valueKey="id"
+            placeholder="طريقة الدفع"
           />
         </View>
         {fieldsToShow.length > 0 && fieldsToShow.includes('is_taras') && (

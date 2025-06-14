@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { I18nManager, Text, TouchableOpacity, View, Modal, ScrollView, Animated, Dimensions, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomePageHeader from '@/components/HomePageHeader';
-import { router, useGlobalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import CustomTopTabs from '../../components/CustomTopTabs';
 import { useUnitsStore } from '../../store/units.store';
 import { useRegionsStore } from '../../store/regions.store';
@@ -28,7 +28,7 @@ const topTabItems = [
 // Region With Id
 const RegionWithId = () => {
   // Get Region Id
-  const { id } = useGlobalSearchParams();
+  const { id } = useLocalSearchParams();
   
   console.log('Region ID from params:', id); // Debug log
 

@@ -23,6 +23,8 @@ const EditApartmentScreen = () => {
     directionsSchema,
     getApartmentStatus,
     apartmentStatusSchema,
+    getPaymentMethods,
+    paymentMethodsSchema,
   } = useEnumsStore();
 
   const {
@@ -39,6 +41,7 @@ const EditApartmentScreen = () => {
     equity: '',
     price: '',
     direction_id: '',
+    payment_method_id: '',
     area: '',
     floor: '',
     rooms_count: '',
@@ -54,20 +57,23 @@ const EditApartmentScreen = () => {
   const [apartmentTypes, setApartmentTypes] = useState([]);
   const [directions, setDirections] = useState([]);
   const [apartmentStatus, setApartmentStatus] = useState([]);
+  const [paymentMethods, setPaymentMethods] = useState([]);
   const [fieldsToShow, setFieldsToShow] = useState([]);
   const getEnumsList = async () => {
     try {
-      const [regionsResponse, apartmentTypesResponse, directionsResponse, apartmentStatusResponse] =
+      const [regionsResponse, apartmentTypesResponse, directionsResponse, apartmentStatusResponse, paymentMethodsResponse] =
         await Promise.all([
           getRegions(),
           getApartmentTypes(),
           getDirections(),
           getApartmentStatus(),
+          getPaymentMethods(),
         ]);
       setRegions(regionsResponse);
       setApartmentTypes(apartmentTypesResponse);
       setDirections(directionsResponse);
       setApartmentStatus(apartmentStatusResponse);
+      setPaymentMethods(paymentMethodsResponse);
     } catch (error) {
       console.error('Error fetching enums:', error);
     }
@@ -193,6 +199,7 @@ const EditApartmentScreen = () => {
       equity: String(response.equity_key),
       price: String(response.price_key),
       direction_id: response.direction_id,
+      payment_method_id: response.payment_method_id || '',
       area: String(response.area),
       floor: String(response.floor),
       rooms_count: String(response.rooms_count),
@@ -357,6 +364,16 @@ const EditApartmentScreen = () => {
                 value={form.price}
                 type="numeric"
                 onChangeText={(text) => setForm({ ...form, price: text })}
+              />
+            </View>
+            <View className="my-4">
+              <CustomSelecteBox
+                value={form.payment_method_id}
+                setValue={(value) => setForm({ ...form, payment_method_id: value })}
+                arrayOfValues={paymentMethods ?? []}
+                disabled={paymentMethodsSchema?.loading}
+                valueKey="id"
+                placeholder="طريقة الدفع"
               />
             </View>
             {fieldsToShow.length > 0 && fieldsToShow.includes('is_taras') && (

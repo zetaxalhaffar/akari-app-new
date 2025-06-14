@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUnitsStore } from '../../store/units.store';
 import CustomHeadWithBackButton from '../../components/CustomHeadWithBackButton';
@@ -317,6 +318,16 @@ const UnitDetails = ({
             {item?.price} 
           </Text>
         </View>
+        {item?.payment_method_id !== 0 && item?.payment_method && (
+          <View className="flex-1 rounded-lg border border-toast-100 p-4">
+            <Image source={icons.price} className="mb-1 h-7 w-7" tintColor="#a47764" />
+            <Text className="font-pmedium text-base text-zinc-600">طريقة الدفع</Text>
+            <Text
+              className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+              {item?.payment_method?.name}
+            </Text>
+          </View>
+        )}
         <View className="flex-1 rounded-lg border border-toast-100 p-4">
           <Image source={icons.quantity} className="mb-1 h-7 w-7" tintColor="#a47764" />
           <Text className="font-pmedium text-base text-zinc-600">اسهم العقار</Text>
@@ -371,6 +382,7 @@ const UnitDetails = ({
             {item?.direction?.name}
           </Text>
         </View>
+
       </View>
       {/* owner details */}
       {(user?.privilege == 'admin' || user?.user_id == item?.user?.id) && (
@@ -513,7 +525,7 @@ const UnitDetails = ({
             {item?.sector?.outer_area && (
               <View className="flex-1 rounded-lg border border-toast-100 p-4">
                 <Image source={icons.location} className="mb-1 h-7 w-7" tintColor="#a47764" />
-                <Text className="font-pmedium text-base text-zinc-600">المساحة الخارجية</Text>
+                <Text className="font-pmedium text-base text-zinc-600">مساحة أرض المقسم</Text>
                 <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
                   {item?.sector?.outer_area} م²
                 </Text>
@@ -575,7 +587,7 @@ const UnitDetails = ({
             {item?.sector?.contractor && (
               <View className="flex-1 rounded-lg border border-toast-100 p-4">
                 <Image source={icons.owner} className="mb-1 h-7 w-7" tintColor="#a47764" />
-                <Text className="font-pmedium text-base text-zinc-600">المقاول</Text>
+                <Text className="font-pmedium text-base text-zinc-600">المتعهد</Text>
                 <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
                   {item?.sector?.contractor}
                 </Text>
@@ -872,6 +884,15 @@ const ApartmentDetails = () => {
   useEffect(() => {
     getApartmentDetailsHandler();
   }, [id]);
+
+  // Reload data when screen comes into focus (e.g., when returning from edit screen)
+  useFocusEffect(
+    React.useCallback(() => {
+      if (id) {
+        getApartmentDetailsHandler();
+      }
+    }, [id])
+  );
 
   return (
     <>

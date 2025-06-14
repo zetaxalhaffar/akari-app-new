@@ -31,6 +31,8 @@ const SearchScreen = () => {
     directionsSchema,
     getApartmentStatus,
     apartmentStatusSchema,
+    getPaymentMethods,
+    paymentMethodsSchema,
   } = useEnumsStore();
 
   const [form, setForm] = useState({
@@ -43,6 +45,7 @@ const SearchScreen = () => {
     apartment_type_id: '',
     direction_id: '',
     apartment_status_id: '',
+    payment_method_id: '',
     area: '',
     floor: '',
     rooms_count: '',
@@ -59,6 +62,7 @@ const SearchScreen = () => {
   const [apartmentTypesList, setApartmentTypesList] = useState([]);
   const [directionsList, setDirectionsList] = useState([]);
   const [apartmentStatusList, setApartmentStatusList] = useState([]);
+  const [paymentMethodsList, setPaymentMethodsList] = useState([]);
   const [fieldsToShowForApartment, setFieldsToShowForApartment] = useState([]);
 
   const unitTypeRadioButtons = useMemo(
@@ -70,7 +74,7 @@ const SearchScreen = () => {
   );
 
   const handleChangeRegion = async (value) => {
-    setForm({ ...form, region_id: value, sector_id: '', apartment_type_id: '', direction_id: '', apartment_status_id: '', area: '', floor: '', rooms_count: '', salons_count: '', balcony_count: '', is_taras: '0' });
+    setForm({ ...form, region_id: value, sector_id: '', apartment_type_id: '', direction_id: '', apartment_status_id: '', payment_method_id: '', area: '', floor: '', rooms_count: '', salons_count: '', balcony_count: '', is_taras: '0' });
     setSectoreType('');
     setSectors([]);
     const sectorsResponse = await getSectorsBasedOnRegion(value);
@@ -100,9 +104,11 @@ const SearchScreen = () => {
     const aptTypes = await getApartmentTypes();
     const dirs = await getDirections();
     const aptStatus = await getApartmentStatus();
+    const paymentMethods = await getPaymentMethods();
     setApartmentTypesList(aptTypes || []);
     setDirectionsList(dirs || []);
     setApartmentStatusList(aptStatus || []);
+    setPaymentMethodsList(paymentMethods || []);
   };
 
   const handleSearch = async () => {
@@ -144,6 +150,7 @@ const SearchScreen = () => {
       apartment_type_id: '',
       direction_id: '',
       apartment_status_id: '',
+      payment_method_id: '',
       area: '',
       floor: '',
       rooms_count: '',
@@ -352,6 +359,19 @@ const SearchScreen = () => {
               </View>
             </View>
           </View>
+          {currentType === 'apartment' && !form.id && (
+          <View className="my-4">
+                <CustomSelecteBox
+                  value={form.payment_method_id}
+                  setValue={(value) => setForm({ ...form, payment_method_id: value })}
+                  arrayOfValues={paymentMethodsList}
+                  valueKey="id"
+                  placeholder="طريقة الدفع"
+                  disabled={form.id.length > 0 || paymentMethodsSchema?.loading}
+                  hideLoading={paymentMethodsSchema?.loading ? false : true}
+                />
+              </View>
+              )}
         </ScrollView>
         <View className="my-4">
           <CustomButton

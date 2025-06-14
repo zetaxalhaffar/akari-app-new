@@ -63,7 +63,7 @@ const UnitApartmentCard = ({ item }) => {
   const { setReactions, removeReaction } = useReactionStore();
   const { toggleFavorite } = useFavoriteStore();
   const bottomSheetModalRef = useRef(null);
-  const { updateApartmentReactions } = useUnitsStore();
+  const { updateApartmentReactions, updateSearchResultUserReaction, updateSearchResultUserFavorite } = useUnitsStore();
   const reactionTimerRef = useRef(null);
 
   const availableReactions = [
@@ -172,6 +172,8 @@ const UnitApartmentCard = ({ item }) => {
     }).then(response => {
       if (response) {
         updateApartmentReactions(item.id, response.reaction_summary);
+        // Update user reaction in search results as well
+        updateSearchResultUserReaction(item.id, 'apartment', reaction);
       } else {
         // Revert optimistic update on failure
         setDisplayedReaction(previousReaction);
@@ -202,6 +204,8 @@ const UnitApartmentCard = ({ item }) => {
       }).then(response => {
         if (response) {
           updateApartmentReactions(item.id, response.reaction_summary);
+          // Update user reaction in search results as well
+          updateSearchResultUserReaction(item.id, 'apartment', null);
         } else {
            // Revert optimistic update on failure
            setDisplayedReaction(previousReaction);
@@ -221,6 +225,8 @@ const UnitApartmentCard = ({ item }) => {
       }).then(response => {
         if (response) {
           updateApartmentReactions(item.id, response.reaction_summary);
+          // Update user reaction in search results as well
+          updateSearchResultUserReaction(item.id, 'apartment', 'like');
         } else {
           // Revert optimistic update on failure
           setDisplayedReaction(null);
@@ -265,7 +271,10 @@ const UnitApartmentCard = ({ item }) => {
       if (response && response.data) {
         // Update with actual response from server
         console.log('UnitCardApartment - Server response is_favorited:', response.data.is_favorited, 'type:', typeof response.data.is_favorited);
-        setDisplayedFavorite(Boolean(response.data.is_favorited));
+        const isFavorited = Boolean(response.data.is_favorited);
+        setDisplayedFavorite(isFavorited);
+        // Update favorite state in search results as well
+        updateSearchResultUserFavorite(item.id, 'apartment', isFavorited);
       } else {
         // Revert optimistic update on failure
         console.log('UnitCardApartment - No response data, reverting to:', previousFavorite);
@@ -295,12 +304,13 @@ const UnitApartmentCard = ({ item }) => {
               const count = item?.reaction_counts?.[countKey] || 0;
               if (count > 0) {
                 return (
-                  <View
-                    key={reaction.value}
-                    className={`flex ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-2 rounded-lg bg-gray-100 p-2`}>
-                    <Text className="text-2xl">{reaction.icon}</Text>
-                    <Text className="mt-1 font-pmedium text-sm text-gray-700">{reaction.title}</Text>
-                  </View>
+                                <View
+                key={reaction.value}
+                className={`flex ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-2 rounded-lg bg-gray-100 p-2`}>
+                <Text className="text-2xl">{count}</Text>
+                <Text className="text-2xl">{reaction.icon}</Text>
+                <Text className="mt-1 font-pmedium text-sm text-gray-700">{reaction.title}</Text>
+              </View>
                 );
               }
               return null;
@@ -387,9 +397,9 @@ const UnitApartmentCard = ({ item }) => {
                   {item.transaction_type == 'sell' ? 'رغبة في البيع' : 'رغبة في الشراء'}
                 </Text>
               </View>
-            </View><View
-              className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-wrap items-center gap-1`}>
-              
+            </View>
+            <View
+              className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
               <View className="flex-row items-center gap-1">
                 <Image
                   source={icons.price}
@@ -399,6 +409,25 @@ const UnitApartmentCard = ({ item }) => {
                 />
                 <Text className="font-pmedium text-sm text-white">سعر العقار : {item.price}</Text>
               </View>
+            </View>
+            {item?.payment_method_id !== 0 && item?.payment_method && (
+              <View
+                className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
+                <View className="flex-row items-center gap-1">
+                  <Image
+                    source={icons.price}
+                    className={'h-6 w-6'}
+                    tintColor={'#FFF'}
+                    resizeMode="contain"
+                  />
+                  <Text className="font-pmedium text-sm text-white">
+                    طريقة الدفع : {item?.payment_method?.name}
+                  </Text>
+                </View>
+              </View>
+            )}
+            <View
+              className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
               <View className="flex-row items-center gap-1">
                 <Image
                   source={icons.direction}

@@ -13,6 +13,7 @@ import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
 import CustomButton from '@/components/CustomButton';
 import { router, useFocusEffect } from 'expo-router';
 import { BackHandler } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 const InfoRow = ({ label, value, unit = '' }) => {
   if (!value || value === 0 || value === '0' || String(value).trim().length === 0) return null;
@@ -182,7 +183,7 @@ const SectorDropdown = ({ options, selectedValue, onSelect, placeholder }) => {
   }, [selectedValue]);
 
   return (
-    <View className="mb-4">
+    <View className="mb-4 pt-2">
       <View className="relative">
         <TextInput
           ref={inputRef}
@@ -190,20 +191,30 @@ const SectorDropdown = ({ options, selectedValue, onSelect, placeholder }) => {
           onChangeText={setSearchText}
           onFocus={handleInputFocus}
           placeholder={placeholder}
-          className="rounded-lg border border-toast-300 bg-white px-4 py-3 pr-12 font-pmedium text-toast-900 text-right"
+          className={`rounded-lg border border-toast-300 bg-white py-3 pl-12 font-pmedium text-toast-900 text-right ${selectedValue ? 'pr-20' : 'pr-4'}`}
           style={{ textAlign: 'right' }}
           placeholderTextColor="#9CA3AF"
         />
+        
+        {/* Clear button - only show when there's a selected value */}
+        {selectedValue && selectedValue.trim() !== '' && (
+          <TouchableOpacity
+            onPress={handleClearFilter}
+            className="absolute right-3 top-4 p-1"
+            style={{ paddingTop: 3 }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <AntDesign name="close" size={16} color="#a47764" />
+          </TouchableOpacity>
+        )}
+        
+        {/* Dropdown triangle indicator */}
         <TouchableOpacity
           onPress={() => setIsOpen(!isOpen)}
-          className="absolute left-3 top-3 h-6 w-6 items-center justify-center"
+          className="absolute left-3 top-4 h-6 w-6 items-center justify-center"
+          style={{ transform: [{ rotate: isOpen ? '180deg' : '0deg' }] }}
         >
-          <Image
-            source={icons.chevron_down}
-            className={`h-5 w-5 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-            tintColor="#8d5e52"
-            resizeMode="contain"
-          />
+          <AntDesign name="caretdown" size={14} color="#a47764" />
         </TouchableOpacity>
       </View>
       
@@ -229,7 +240,7 @@ const SectorDropdown = ({ options, selectedValue, onSelect, placeholder }) => {
           
           {(searchText !== '' || filteredOptions.length > 0) && (
             <View className="absolute top-full left-0 right-0 mt-1 max-h-48 rounded-lg border border-toast-300 bg-white shadow-lg" style={{ zIndex: 1000 }}>
-              <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
                 <TouchableOpacity
                   onPress={handleClearFilter}
                   className="border-b border-gray-100 px-4 py-3"
@@ -247,7 +258,7 @@ const SectorDropdown = ({ options, selectedValue, onSelect, placeholder }) => {
                 ))}
                 {filteredOptions.length === 0 && searchText !== '' && (
                   <View className="px-4 py-3">
-                    <Text className="font-pmedium text-gray-500 text-right">لا توجد نتائج</Text>
+                    <Text className={`font-pmedium text-gray-500 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>لا توجد نتائج</Text>
                   </View>
                 )}
               </ScrollView>
@@ -271,6 +282,7 @@ const SectorsScreen = () => {
   const [sectoreSection, setSectoreSection] = useState([]);
   const [selectedSector, setSelectedSector] = useState(null);
   const [selectedSectorCode, setSelectedSectorCode] = useState(''); // New state for dropdown filter
+  const [localLoading, setLocalLoading] = useState(true); // Start with loading true to prevent initial flicker
   const bottomSheetModalRef = useRef(null);
   const infoBottomSheetModalRef = useRef(null);
   const [mainSheetIndex, setMainSheetIndex] = useState(-1);
@@ -309,20 +321,27 @@ const SectorsScreen = () => {
   };
 
   const getSectorsList = async (region_id, firstLoad = false) => {
-    const sectoreList = await getSectors(region_id, filtersParams.current, firstLoad);
-    if (firstLoad && sectoreList?.data) {
-      const sectorsTypesSelection = [];
-      sectoreList.data.forEach((sector, index) => {
-        sectorsTypesSelection.push({
-          id: index.toString(),
-          name: sector.key,
+    try {
+      setLocalLoading(true); // Set local loading immediately
+      const sectoreList = await getSectors(region_id, filtersParams.current, firstLoad);
+      if (firstLoad && sectoreList?.data) {
+        const sectorsTypesSelection = [];
+        sectoreList.data.forEach((sector, index) => {
+          sectorsTypesSelection.push({
+            id: index.toString(),
+            name: sector.key,
+          });
         });
-      });
-      setSectoreSection(sectorsTypesSelection);
-      // Reset sector tab to first tab when loading new region data
-      setSectorTabId('0');
-      // Reset sector code filter when loading new region data
-      setSelectedSectorCode('');
+        setSectoreSection(sectorsTypesSelection);
+        // Reset sector tab to first tab when loading new region data
+        setSectorTabId('0');
+        // Reset sector code filter when loading new region data
+        setSelectedSectorCode('');
+      }
+    } catch (error) {
+      console.error('Error fetching sectors:', error);
+    } finally {
+      setLocalLoading(false); // Clear local loading
     }
   };
 
@@ -504,19 +523,21 @@ const SectorsScreen = () => {
                 defaultActiveTab={sectorTabId}
                 itemTitle="name">
                 <View className="flex-1 px-4 pt-4">
-                  {/* Sector Code Dropdown */}
-                  <SectorDropdown
-                    options={getAvailableSectorCodes()}
-                    selectedValue={selectedSectorCode}
-                    onSelect={handleSectorCodeChange}
-                    placeholder="اختر مقسم معين"
-                  />
+                  {/* Sector Code Dropdown - Only show when we have data and not loading */}
+                  {!sectorsLoading && !localLoading && sectoreSection.length > 0 && getAvailableSectorCodes().length > 0 && (
+                    <SectorDropdown
+                      options={getAvailableSectorCodes()}
+                      selectedValue={selectedSectorCode}
+                      onSelect={handleSectorCodeChange}
+                      placeholder="اختر مقسم معين"
+                    />
+                  )}
                   
                   <FlashList
                     ref={flashListRef}
                     data={getCurrentSectorData()}
                     estimatedItemSize={350}
-                    refreshing={sectorsLoading}
+                    refreshing={sectorsLoading || localLoading}
                     onRefresh={handleRefresh}
                     contentContainerStyle={{ paddingBottom: 30 }}
                     renderItem={({ item }) => (
@@ -642,7 +663,7 @@ const SectorsScreen = () => {
               معلومات إضافية للمقسم {selectedSector?.code}
             </Text>
             <DescriptionRow label="الوصف" value={selectedSector?.description} />
-            <InfoRow label="المساحة الخارجية" value={selectedSector?.outer_area} unit=" م²" />
+            <InfoRow label="مساحة أرض المقسم" value={selectedSector?.outer_area} unit=" م²" />
             <InfoRow label="المساحة السكنية" value={selectedSector?.residential_area} unit=" م²" />
             <InfoRow label="المساحة التجارية" value={selectedSector?.commercial_area} unit=" م²" />
             <InfoRow label="مساحة الطوابق الإجمالية" value={selectedSector?.total_floor_area} unit=" م²" />

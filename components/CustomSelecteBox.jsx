@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useFonts } from 'expo-font';
+import { AntDesign } from '@expo/vector-icons';
 
 const CustomDropdown = ({
   value,
@@ -21,7 +22,9 @@ const CustomDropdown = ({
   disabled = false,
   keyName = 'name',
   hideLoading = false,
-  label
+  label,
+  showClear = true,
+  onClear = null,
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -33,23 +36,48 @@ const CustomDropdown = ({
     return null;
   }
 
+  const handleClear = () => {
+    if (onClear) {
+      onClear();
+    } else {
+      setValue('');
+    }
+  };
+
+  const hasValue = value && value !== '';
+
   return (
     <>
       {placeholder && <Text className="mb-2 font-pmedium text-gray-700">{placeholder}</Text>}
       {label && <Text className="mb-2 font-pmedium text-gray-700">{label}</Text>}
       <View
         className={`h-[48px] w-full justify-center rounded-lg border ${disabled ? 'border-gray-300 opacity-50' : 'border-toast-500'}`}>
-        <TouchableOpacity
-          disabled={disabled}
-          className={`flex justify-between p-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}
-          onPress={() => setVisible(true)}>
-          <Text
-            className={`px-2 font-pmedium text-base ${value ? 'text-gray-700' : 'text-gray-400'} ${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'}`}>
-            {(arrayOfValues && arrayOfValues.find((item) => item.id === value)?.[keyName]) ||
-              `يرجى إختيار ${placeholder}`}
-          </Text>
+        <View className={`flex-row items-center justify-between p-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
+          <TouchableOpacity
+            disabled={disabled}
+            className="flex-1"
+            onPress={() => setVisible(true)}>
+            <Text
+              className={`px-2 font-pmedium text-base ${hasValue ? 'text-gray-700' : 'text-gray-400'} ${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'}`}>
+              {(arrayOfValues && arrayOfValues.find((item) => item.id === value)?.[keyName]) ||
+                `يرجى إختيار ${placeholder}`}
+            </Text>
+          </TouchableOpacity>
+          
+          {/* Clear button */}
+          {showClear && hasValue && !disabled && (
+            <TouchableOpacity
+              onPress={handleClear}
+              className="ml-2 p-1"
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <AntDesign name="close" size={16} color="#a47764" />
+            </TouchableOpacity>
+          )}
+          
+          {/* Loading indicator */}
           {disabled && !hideLoading && <ActivityIndicator color="#a47764" />}
-        </TouchableOpacity>
+        </View>
+        
         <Modal
           statusBarTranslucent
           transparent

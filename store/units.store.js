@@ -390,6 +390,23 @@ export const useUnitsStore = create((set, get) => ({
       return share;
     });
     set({ sharesRecords: updatedShares });
+    
+    // Also update search results if they exist
+    const searchResults = get().searchForUnitsResponse;
+    if (searchResults && searchResults.data) {
+      const updatedSearchResults = searchResults.data.map(item => {
+        if (item.id === shareId && item.post_type === 'share') {
+          return { ...item, reaction_counts: reactionSummary };
+        }
+        return item;
+      });
+      set({ 
+        searchForUnitsResponse: { 
+          ...searchResults, 
+          data: updatedSearchResults 
+        } 
+      });
+    }
   },
   // Update reaction counts for an apartment
   updateApartmentReactions: (apartmentId, reactionSummary) => {
@@ -401,6 +418,95 @@ export const useUnitsStore = create((set, get) => ({
       return apartment;
     });
     set({ apartmentsRecords: updatedApartments });
+    
+    // Also update search results if they exist
+    const searchResults = get().searchForUnitsResponse;
+    if (searchResults && searchResults.data) {
+      const updatedSearchResults = searchResults.data.map(item => {
+        if (item.id === apartmentId && (item.post_type === 'apartment' || !item.post_type)) {
+          return { ...item, reaction_counts: reactionSummary };
+        }
+        return item;
+      });
+      set({ 
+        searchForUnitsResponse: { 
+          ...searchResults, 
+          data: updatedSearchResults 
+        } 
+      });
+    }
+  },
+  // Update search results reaction counts for shares
+  updateSearchResultShareReactions: (shareId, reactionSummary) => {
+    const searchResults = get().searchForUnitsResponse;
+    if (searchResults && searchResults.data) {
+      const updatedSearchResults = searchResults.data.map(item => {
+        if (item.id === shareId && item.post_type === 'share') {
+          return { ...item, reaction_counts: reactionSummary };
+        }
+        return item;
+      });
+      set({ 
+        searchForUnitsResponse: { 
+          ...searchResults, 
+          data: updatedSearchResults 
+        } 
+      });
+    }
+  },
+  // Update search results reaction counts for apartments
+  updateSearchResultApartmentReactions: (apartmentId, reactionSummary) => {
+    const searchResults = get().searchForUnitsResponse;
+    if (searchResults && searchResults.data) {
+      const updatedSearchResults = searchResults.data.map(item => {
+        if (item.id === apartmentId && (item.post_type === 'apartment' || !item.post_type)) {
+          return { ...item, reaction_counts: reactionSummary };
+        }
+        return item;
+      });
+      set({ 
+        searchForUnitsResponse: { 
+          ...searchResults, 
+          data: updatedSearchResults 
+        } 
+      });
+    }
+  },
+  // Update user's reaction state in search results
+  updateSearchResultUserReaction: (itemId, postType, userReaction) => {
+    const searchResults = get().searchForUnitsResponse;
+    if (searchResults && searchResults.data) {
+      const updatedSearchResults = searchResults.data.map(item => {
+        if (item.id === itemId && item.post_type === postType) {
+          return { ...item, current_user_reaction: userReaction };
+        }
+        return item;
+      });
+      set({ 
+        searchForUnitsResponse: { 
+          ...searchResults, 
+          data: updatedSearchResults 
+        } 
+      });
+    }
+  },
+  // Update user's favorite state in search results
+  updateSearchResultUserFavorite: (itemId, postType, isFavorited) => {
+    const searchResults = get().searchForUnitsResponse;
+    if (searchResults && searchResults.data) {
+      const updatedSearchResults = searchResults.data.map(item => {
+        if (item.id === itemId && item.post_type === postType) {
+          return { ...item, is_favorited: isFavorited };
+        }
+        return item;
+      });
+      set({ 
+        searchForUnitsResponse: { 
+          ...searchResults, 
+          data: updatedSearchResults 
+        } 
+      });
+    }
   },
   // https://arrows-dev.versetech.net/api/apartment/sort
   getAllSortedApartmentsForRegion: async (regionId, params, firstLoad = false) => {
