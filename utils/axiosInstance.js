@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { router } from 'expo-router';
+import { Platform } from 'react-native';
 
 const mode = process.env.NODE_ENV;
 
@@ -8,10 +9,8 @@ const getToken = async () => {
   return await SecureStore.getItemAsync('token');
 };
 
-const createPullRequest = async (errorDetails, phone) => {
-  const branchName = `http-report-${new Date().toISOString()}`;
-
-  // You can add logic to push crash logs to the repo (optional)
+const createPullRequest = async (errorDetails, phone, errorType = 'HTTP_ERROR') => {
+  const branchName = `${errorType.toLowerCase()}-report-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}`;
 
   // Create a pull request
   const response = await fetch(
@@ -24,19 +23,88 @@ const createPullRequest = async (errorDetails, phone) => {
         'X-GitHub-Api-Version': '2022-11-28',
       },
       body: JSON.stringify({
-        title: `HTTP ERROR Report on ${new Date().toLocaleString()}`,
+        title: `${errorType} Report on ${new Date().toLocaleString()}`,
         body: JSON.stringify({
+          errorType,
           error: errorDetails,
           phone: phone ?? '',
+          timestamp: new Date().toISOString(),
+          device: {
+            platform: Platform.OS,
+            version: Platform.Version,
+          },
         }),
-        head: branchName, // Use the branch that has the crash report or fix (optional)
-        base: 'main', // Or your default branch
+        head: branchName,
+        base: 'main',
       }),
     }
   );
 
   const data = await response.json();
+  console.log('Error report sent to GitHub:', data);
 };
+
+// Crash logging function
+const logCrash = async (error, errorInfo = {}) => {
+  try {
+    let user = {};
+    try {
+      const userData = await SecureStore.getItemAsync('user');
+      user = userData ? JSON.parse(userData) : {};
+    } catch (e) {
+      console.log('Could not retrieve user data for crash report');
+    }
+
+    const crashDetails = {
+      message: error.message || 'Unknown error',
+      stack: error.stack || 'No stack trace available',
+      name: error.name || 'Error',
+      timestamp: new Date().toISOString(),
+      errorInfo,
+      url: global.location?.href || 'Unknown location',
+    };
+
+    await createPullRequest(crashDetails, user?.phone, 'APP_CRASH');
+  } catch (reportError) {
+    console.error('Failed to report crash:', reportError);
+  }
+};
+
+// Global error handler setup
+const setupGlobalErrorHandlers = () => {
+  // Handle JavaScript errors
+  const originalConsoleError = console.error;
+  console.error = (...args) => {
+    // Check if this looks like an unhandled error
+    if (args[0] && args[0].toString().includes('Error:')) {
+      const error = new Error(args.join(' '));
+      logCrash(error, { source: 'console.error' });
+    }
+    originalConsoleError(...args);
+  };
+
+  // Handle unhandled promise rejections
+  if (global.addEventListener) {
+    global.addEventListener('unhandledrejection', (event) => {
+      const error = event.reason || event.error || new Error('Unhandled Promise Rejection');
+      logCrash(error, { source: 'unhandledrejection', event: event.type });
+    });
+  }
+
+  // React Native specific error handling
+  if (global.ErrorUtils) {
+    const originalGlobalHandler = global.ErrorUtils.getGlobalHandler();
+    global.ErrorUtils.setGlobalHandler((error, isFatal) => {
+      logCrash(error, { source: 'ErrorUtils', isFatal });
+      if (originalGlobalHandler) {
+        originalGlobalHandler(error, isFatal);
+      }
+    });
+  }
+};
+
+// Export the setup function
+export { setupGlobalErrorHandlers, logCrash };
 
 // Create a default Axios instance
 const axiosInstance = axios.create({
@@ -112,7 +180,7 @@ axiosInstance.interceptors.response.use(
           // Handle server error
           const user = JSON.parse(SecureStore.getItem('user'));
 
-          createPullRequest(errorResponse, user?.phone);
+          createPullRequest(errorResponse, user?.phone, 'HTTP_ERROR');
           break;
         default:
           break;

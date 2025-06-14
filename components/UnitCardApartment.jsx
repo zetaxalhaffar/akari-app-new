@@ -382,22 +382,10 @@ const UnitApartmentCard = ({ item }) => {
               )}
             </View>
             <Text className="mb-1 font-pregular text-base text-white">
-              {item.region?.name} - {item.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'}
+              {item.region?.name} - {item.post_type == 'share' ? 'أسهم تنظيمية' : 'عقارات'} /  {item.transaction_type == 'sell' ? 'رغبة في البيع' : 'رغبة في الشراء'}
+
             </Text>
-            <View
-              className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
-              <View className="flex-row items-center gap-1">
-                <Image
-                  source={icons.price}
-                  className={'h-6 w-6'}
-                  tintColor={'#FFF'}
-                  resizeMode="contain"
-                />
-                <Text className="font-pmedium text-sm text-white">
-                  {item.transaction_type == 'sell' ? 'رغبة في البيع' : 'رغبة في الشراء'}
-                </Text>
-              </View>
-            </View>
+
             <View
               className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-1 flex-wrap items-center gap-1`}>
               <View className="flex-row items-center gap-1">
@@ -596,7 +584,7 @@ const UnitApartmentCard = ({ item }) => {
             <Text className="text-md font-psemibold text-gray-700">مفضلة</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={handleShareToOtherPress}
+           
             className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-1 items-center justify-center gap-3 rounded-md p-2 hover:bg-gray-100 active:bg-gray-200`}>
             {/* Placeholder for Share Icon */}
             <Image

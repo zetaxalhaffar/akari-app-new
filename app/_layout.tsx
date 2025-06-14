@@ -23,6 +23,8 @@ import { useVersionsStore } from '@/store/versions.store';
 /* ======================= handle notifications ======================= */
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FAB, MD3LightTheme as DefaultTheme, PaperProvider } from 'react-native-paper';
+import { setupGlobalErrorHandlers } from '@/utils/axiosInstance';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Create notification permission context
 export const NotificationPermissionContext = createContext({
@@ -117,6 +119,9 @@ export default function RootLayout() {
 
   useEffect(() => {
     const initialize = async () => {
+      // Setup global error handlers for crash reporting
+      setupGlobalErrorHandlers();
+      
       SplashScreen.hideAsync();
       I18nManager.allowRTL(true);
       I18nManager.forceRTL(true);
@@ -361,15 +366,16 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <PaperProvider theme={theme}>
-        <NotificationPermissionContext.Provider 
-          value={{ 
-            requestNotificationPermission, 
-            disableNotificationPermission,
-            hasPermission: hasNotificationPermission 
-          }}>
-          <NotificationsProvider>
+    <ErrorBoundary>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <PaperProvider theme={theme}>
+          <NotificationPermissionContext.Provider 
+            value={{ 
+              requestNotificationPermission, 
+              disableNotificationPermission,
+              hasPermission: hasNotificationPermission 
+            }}>
+            <NotificationsProvider>
             <BottomSheetModalProvider>
               <CustomBottomModalSheet
                 bottomSheetModalRef={bottomSheetModalRef}
@@ -538,5 +544,6 @@ export default function RootLayout() {
         </NotificationPermissionContext.Provider>
       </PaperProvider>
     </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 }
