@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HomePageHeader from '@/components/HomePageHeader';
 import { useRegionsStore } from '@/store/regions.store';
@@ -288,6 +288,91 @@ const SectorsScreen = () => {
   const [mainSheetIndex, setMainSheetIndex] = useState(-1);
   const [infoSheetIndex, setInfoSheetIndex] = useState(-1);
 
+  // Memoize the hasAdditionalInfo function to prevent repeated calculations
+  const hasAdditionalInfo = useCallback((sector) => {
+    if (!sector) return false;
+    const fields = ['description', 'outer_area', 'residential_area', 'commercial_area', 'building_area', 'floors_number', 'total_floor_area', 'owners', 'contractor', 'engineers'];
+    return fields.some(field => {
+      const value = sector[field];
+      return value !== null && value !== undefined && value !== 0 && value !== '0' && String(value).trim().length > 0;
+    });
+  }, []);
+
+  // Memoize bottom sheet heights to prevent recalculation on every render
+  const bottomSheetSnapPoints = useMemo(() => {
+    if (!selectedSector) return ['25%'];
+    
+    const { height: screenHeight } = Dimensions.get('window');
+    let buttonCount = 0;
+    
+    if (selectedSector?.apartment_count > 0) buttonCount++;
+    if (selectedSector?.share_count > 0) buttonCount++;
+    if (hasAdditionalInfo(selectedSector)) buttonCount++;
+    
+    // Base height for title, padding, etc.
+    const baseHeight = 130;
+    // Height per button, including margin
+    const buttonHeight = 66; 
+
+    let totalHeight;
+
+    if (buttonCount > 0) {
+      totalHeight = baseHeight + (buttonCount * buttonHeight);
+    } else {
+      // Height for title and the "no items" message
+      totalHeight = 160;
+    }
+    
+    const heightPercentage = Math.min(Math.ceil((totalHeight / screenHeight) * 100), 90);
+    
+    return [`${Math.max(heightPercentage, 20)}%`];
+  }, [selectedSector, hasAdditionalInfo]);
+
+  // Memoize info bottom sheet snap points
+  const infoBottomSheetSnapPoints = useMemo(() => {
+    if (!selectedSector) return ['25%'];
+
+    const fields = [
+      'description', 'outer_area', 'residential_area', 'commercial_area', 
+      'building_area', 'total_floor_area', 'floors_number', 
+      'contractor', 'engineers'
+    ];
+    
+    const visibleFields = fields.reduce((acc, field) => {
+      const value = selectedSector[field];
+      if (value !== null && value !== undefined && value !== 0 && value !== '0' && String(value).trim().length > 0) {
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
+
+    // If no fields are visible, provide a compact height for the "no info" message
+    if (visibleFields === 0) {
+      return ['25%'];
+    }
+
+    // Dynamic height calculation based on actual content
+    const baseHeight = 120; // base height for title and padding
+    const heightPerField = 60; // average height per field
+    const estimatedContentHeight = baseHeight + (visibleFields * heightPerField);
+
+    const { height: screenHeight } = Dimensions.get('window');
+    
+    // Calculate the ideal height percentage, but cap it at 75% max
+    const idealHeightPercentage = Math.ceil((estimatedContentHeight / screenHeight) * 100);
+    const cappedHeightPercentage = Math.min(idealHeightPercentage, 75);
+    
+    // Ensure minimum of 30% for readability, but let it be smaller if content is minimal
+    const finalHeightPercentage = Math.max(cappedHeightPercentage, Math.min(30, idealHeightPercentage));
+    
+    // Provide two snap points: compact view and expanded view for longer content
+    if (idealHeightPercentage > 60) {
+      return [`${Math.min(50, finalHeightPercentage)}%`, `${finalHeightPercentage}%`];
+    }
+    
+    return [`${finalHeightPercentage}%`];
+  }, [selectedSector]);
+
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -310,15 +395,6 @@ const SectorsScreen = () => {
       return () => subscription.remove();
     }, [mainSheetIndex, infoSheetIndex])
   );
-
-  const hasAdditionalInfo = (sector) => {
-    if (!sector) return false;
-    const fields = ['description', 'outer_area', 'residential_area', 'commercial_area', 'floors_number', 'total_floor_area', 'owners', 'contractor', 'engineers'];
-    return fields.some(field => {
-      const value = sector[field];
-      return value !== null && value !== undefined && value !== 0 && value !== '0' && String(value).trim().length > 0;
-    });
-  };
 
   const getSectorsList = async (region_id, firstLoad = false) => {
     try {
@@ -358,7 +434,7 @@ const SectorsScreen = () => {
 
   // Handle Tab Change
   const [tabId, setTabId] = useState(null);
-  const handleTabChange = (tabId) => {
+  const handleTabChange = useCallback((tabId) => {
     setTabId(tabId);
     filtersParams.current.page = 1;
     // Clear sector section when changing region (sector tab will be reset in getSectorsList)
@@ -368,10 +444,10 @@ const SectorsScreen = () => {
     setTimeout(() => {
       flashListRef.current?.scrollToOffset({ offset: 0, animated: true });
     }, 100);
-  };
+  }, []);
 
   const [sectorTabId, setSectorTabId] = useState('0');
-  const handleTabChangeForSector = (tabId) => {
+  const handleTabChangeForSector = useCallback((tabId) => {
     setSectorTabId(tabId);
     // Clear selected sector when changing sector tabs
     setSelectedSector(null);
@@ -381,28 +457,28 @@ const SectorsScreen = () => {
     setTimeout(() => {
       flashListRef.current?.scrollToOffset({ offset: 0, animated: true });
     }, 100);
-  };
+  }, []);
 
   // Handle End Reached for pagination
-  const handleEndReached = () => {
+  const handleEndReached = useCallback(() => {
     if (sectorsResponse.next_page_url) {
       filtersParams.current.page++;
       getSectorsList(tabId, false);
     }
-  };
+  }, [sectorsResponse.next_page_url, tabId]);
 
   // Handle Refresh
-  const handleRefresh = () => {
+  const handleRefresh = useCallback(() => {
     filtersParams.current.page = 1;
     getSectorsList(tabId, true);
-  };
+  }, [tabId]);
 
   useEffect(() => {
     getRegionsList();
   }, []);
 
-  // Get current sector data based on selected tab
-  const getCurrentSectorData = () => {
+  // Memoize current sector data to prevent recalculation
+  const currentSectorData = useMemo(() => {
     if (!sectorsRecords || !sectorsRecords[parseInt(sectorTabId)]) {
       return [];
     }
@@ -414,10 +490,10 @@ const SectorsScreen = () => {
     }
     
     return allData;
-  };
+  }, [sectorsRecords, sectorTabId, selectedSectorCode]);
 
-  // Get available sector codes for dropdown
-  const getAvailableSectorCodes = () => {
+  // Memoize available sector codes
+  const availableSectorCodes = useMemo(() => {
     if (!sectorsRecords || !sectorsRecords[parseInt(sectorTabId)]) {
       return [];
     }
@@ -425,48 +501,28 @@ const SectorsScreen = () => {
     const codes = allData.map(item => item.code).filter(Boolean);
     // Remove duplicates and sort
     return [...new Set(codes)].sort((a, b) => a.localeCompare(b, 'ar', { numeric: true }));
-  };
+  }, [sectorsRecords, sectorTabId]);
 
   // Handle sector code filter change
-  const handleSectorCodeChange = (code) => {
+  const handleSectorCodeChange = useCallback((code) => {
     setSelectedSectorCode(code);
     // Scroll to top when filter changes
     setTimeout(() => {
       flashListRef.current?.scrollToOffset({ offset: 0, animated: true });
     }, 100);
-  };
+  }, []);
 
-  // Calculate number of visible buttons and corresponding height
-  const getBottomSheetHeight = (sector) => {
-    let buttonCount = 0;
-    
-    if (sector?.apartment_count > 0) buttonCount++;
-    if (sector?.share_count > 0) buttonCount++;
-    if (hasAdditionalInfo(sector)) buttonCount++;
-    
-    // Base height + height per button + padding
-    // Base: 120px for title and padding
-    // Each button: 50px height + 16px gap
-    // Additional padding: 32px bottom
-    const baseHeight = 120;
-    const buttonHeight = 66; // 50px + 16px gap
-    const bottomPadding = 32;
-    const totalHeight = baseHeight + (buttonCount * buttonHeight) + bottomPadding;
-    
-    // Convert to percentage of screen height (assuming ~800px screen height)
-    const heightPercentage = Math.min(Math.max((totalHeight / 800) * 100, 25), 60);
-    
-    return [`${heightPercentage}%`];
-  };
-
-  // Handle sector card press
-  const handleSectorPress = (item) => {
+  // Optimize sector press handler
+  const handleSectorPress = useCallback((item) => {
     setSelectedSector(item);
-    bottomSheetModalRef.current?.present();
-  };
+    // Use requestAnimationFrame to ensure the state update happens before presenting
+    requestAnimationFrame(() => {
+      bottomSheetModalRef.current?.present();
+    });
+  }, []);
 
   // Handle navigation to search results
-  const handleNavigateToSearch = (type) => {
+  const handleNavigateToSearch = useCallback((type) => {
     if (!selectedSector) return;
     
     console.log('Selected sector data:', JSON.stringify(selectedSector, null, 2));
@@ -499,12 +555,59 @@ const SectorsScreen = () => {
     });
     
     bottomSheetModalRef.current?.dismiss();
-  };
+  }, [selectedSector, tabId, sectorTabId]);
 
-  const handleShowMoreInfo = () => {
+  const handleShowMoreInfo = useCallback(() => {
     bottomSheetModalRef.current?.dismiss();
-    infoBottomSheetModalRef.current?.present();
-  };
+    // Use a small delay to ensure the first sheet is dismissed before presenting the second
+    setTimeout(() => {
+      infoBottomSheetModalRef.current?.present();
+    }, 150);
+  }, []);
+
+  // Memoize the renderItem function to prevent unnecessary re-renders
+  const renderSectorItem = useCallback(({ item }) => (
+    <View className="my-2 mb-8 rounded-lg border border-toast-200">
+      <View className="relative">
+        <SectorImageCarousel
+          photos={item.sector_photos?.map(photo => photo) || []}
+          onImagePress={() => handleSectorPress(item)}
+        />
+      </View>
+      <TouchableOpacity 
+        onPress={() => handleSectorPress(item)}
+        activeOpacity={0.8}
+        className="absolute inset-0 bottom-0 w-full rounded-lg bg-toast-900/90 p-4 backdrop-blur-sm">
+        <Text className="font-psemibold text-xl text-white">
+          المقسم رقم {item?.code}
+        </Text>
+        <View className="flex-row flex-wrap items-center gap-1">
+          <View className="flex-row items-center gap-1">
+            <Image
+              source={icons.building_1}
+              className={'h-6 w-6'}
+              tintColor={'#FFF'}
+              resizeMode="contain"
+            />
+            <Text className="font-pmedium text-sm text-white">
+              العقارات المتاحة ضمن القسم : {item.apartment_count}
+            </Text>
+          </View>
+          <View className="flex-row items-center gap-1">
+            <Image
+              source={icons.quantity}
+              className={'h-6 w-6'}
+              tintColor={'#FFF'}
+              resizeMode="contain"
+            />
+            <Text className="font-pmedium text-sm text-white">
+              الأسهم التنظيمية المتاحة ضمن المقسم : {item?.share_count}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </View>
+  ), [handleSectorPress]);
 
   return (
     <SafeAreaView className="flex-1 ">
@@ -524,9 +627,9 @@ const SectorsScreen = () => {
                 itemTitle="name">
                 <View className="flex-1 px-4 pt-4">
                   {/* Sector Code Dropdown - Only show when we have data and not loading */}
-                  {!sectorsLoading && !localLoading && sectoreSection.length > 0 && getAvailableSectorCodes().length > 0 && (
+                  {!sectorsLoading && !localLoading && sectoreSection.length > 0 && availableSectorCodes.length > 0 && (
                     <SectorDropdown
-                      options={getAvailableSectorCodes()}
+                      options={availableSectorCodes}
                       selectedValue={selectedSectorCode}
                       onSelect={handleSectorCodeChange}
                       placeholder="اختر مقسم معين"
@@ -535,55 +638,15 @@ const SectorsScreen = () => {
                   
                   <FlashList
                     ref={flashListRef}
-                    data={getCurrentSectorData()}
+                    data={currentSectorData}
                     estimatedItemSize={350}
                     refreshing={sectorsLoading || localLoading}
                     onRefresh={handleRefresh}
                     contentContainerStyle={{ paddingBottom: 30 }}
-                    renderItem={({ item }) => (
-                      <View className="my-2 mb-8 rounded-lg border border-toast-200">
-                        <View className="relative">
-                          <SectorImageCarousel
-                            photos={item.sector_photos?.map(photo => photo) || []}
-                            onImagePress={() => handleSectorPress(item)}
-                          />
-                        </View>
-                        <TouchableOpacity 
-                          onPress={() => handleSectorPress(item)}
-                          activeOpacity={0.8}
-                          className="absolute inset-0 bottom-0 w-full rounded-lg bg-toast-900/90 p-4 backdrop-blur-sm">
-                          <Text className="font-psemibold text-xl text-white">
-                            المقسم رقم {item?.code}
-                          </Text>
-                          <View className="flex-row flex-wrap items-center gap-1">
-                            <View className="flex-row items-center gap-1">
-                              <Image
-                                source={icons.building_1}
-                                className={'h-6 w-6'}
-                                tintColor={'#FFF'}
-                                resizeMode="contain"
-                              />
-                              <Text className="font-pmedium text-sm text-white">
-                                العقارات المتاحة ضمن القسم : {item.apartment_count}
-                              </Text>
-                            </View>
-                            <View className="flex-row items-center gap-1">
-                              <Image
-                                source={icons.quantity}
-                                className={'h-6 w-6'}
-                                tintColor={'#FFF'}
-                                resizeMode="contain"
-                              />
-                              <Text className="font-pmedium text-sm text-white">
-                                الأسهم التنظيمية المتاحة ضمن المقسم : {item?.share_count}
-                              </Text>
-                            </View>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    )}
+                    renderItem={renderSectorItem}
                     onEndReached={handleEndReached}
                     onEndReachedThreshold={0.5}
+                    showsVerticalScrollIndicator={false}
                   />
                 </View>
               </CustomTopTabs>
@@ -597,7 +660,7 @@ const SectorsScreen = () => {
         enablePanDownToClose={true}
         bottomSheetModalRef={bottomSheetModalRef}
         handleSheetChanges={setMainSheetIndex}
-        snapPoints={getBottomSheetHeight(selectedSector)}
+        snapPoints={bottomSheetSnapPoints}
         handleDismissModalPress={() => {}}>
         <View className="p-6 pb-8">
           <Text className="mb-6 text-center font-psemibold text-lg">
@@ -620,7 +683,7 @@ const SectorsScreen = () => {
             {selectedSector?.share_count > 0 && (
               <CustomButton
                 hasGradient={true}
-                colors={['#314158', '#62748E', '#90A1B9', '#90A1B9', '#90A1B9']}
+                colors={['#A88B67', '#A88B67', '#C9B390']}
                 title={`عرض الأسهم المتاحة في المقسم (${selectedSector?.share_count})`}
                 containerStyles={'w-full'}
                 positionOfGradient={'leftToRight'}
@@ -654,22 +717,34 @@ const SectorsScreen = () => {
 
       <CustomBottomModalSheet
         bottomSheetModalRef={infoBottomSheetModalRef}
-        snapPoints={['60%', '90%']}
+        snapPoints={infoBottomSheetSnapPoints}
         handleSheetChanges={setInfoSheetIndex}
         backdropBehave="close"
         enablePanDownToClose={true}>
-          <BottomSheetScrollView contentContainerStyle={{ padding: 24, paddingBottom: 48 }}>
+          <BottomSheetScrollView 
+            contentContainerStyle={{ padding: 24, paddingBottom: 48 }}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled">
             <Text className="mb-6 text-center font-psemibold text-lg text-gray-800">
               معلومات إضافية للمقسم {selectedSector?.code}
             </Text>
-            <DescriptionRow label="الوصف" value={selectedSector?.description} />
-            <InfoRow label="مساحة أرض المقسم" value={selectedSector?.outer_area} unit=" م²" />
-            <InfoRow label="المساحة السكنية" value={selectedSector?.residential_area} unit=" م²" />
-            <InfoRow label="المساحة التجارية" value={selectedSector?.commercial_area} unit=" م²" />
-            <InfoRow label="مساحة الطوابق الإجمالية" value={selectedSector?.total_floor_area} unit=" م²" />
-            <InfoRow label="عدد الطوابق" value={selectedSector?.floors_number} />
-            <InfoListRow label="المتعهد" items={selectedSector?.contractor?.split(',')} listKey="contractors" />
-            <InfoListRow label="المهندسين" items={selectedSector?.engineers?.split(',')} listKey="engineers" />
+            {hasAdditionalInfo(selectedSector) ? (
+              <>
+                <DescriptionRow label="الوصف" value={selectedSector?.description} />
+                <InfoRow label="مساحة أرض المقسم" value={selectedSector?.outer_area} unit=" م²" />
+                <InfoRow label="المساحة السكنية" value={selectedSector?.residential_area} unit=" م²" />
+                <InfoRow label="المساحة التجارية" value={selectedSector?.commercial_area} unit=" م²" />
+                <InfoRow label="مساحة رقعة البناء" value={selectedSector?.building_area} unit=" م²" />
+                <InfoRow label="مساحة الطوابق الإجمالية" value={selectedSector?.total_floor_area} unit=" م²" />
+                <InfoRow label="عدد الطوابق" value={selectedSector?.floors_number} />
+                <InfoListRow label="المتعهد" items={selectedSector?.contractor?.split(',')} listKey="contractors" />
+                <InfoListRow label="المهندسين" items={selectedSector?.engineers?.split(',')} listKey="engineers" />
+              </>
+            ) : (
+              <Text className="py-10 text-center font-pmedium text-gray-500">
+                لا توجد معلومات إضافية لعرضها
+              </Text>
+            )}
           </BottomSheetScrollView>
       </CustomBottomModalSheet>
     </SafeAreaView>

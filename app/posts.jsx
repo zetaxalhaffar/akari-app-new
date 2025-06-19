@@ -143,6 +143,7 @@ const MyOrders = () => {
               }
               onEndReached={handleEndReached}
               onEndReachedThreshold={0.5}
+              showsVerticalScrollIndicator={false}
               ListEmptyComponent={() =>
                 isLoading ? (
                   <Text /> // Or a loading indicator

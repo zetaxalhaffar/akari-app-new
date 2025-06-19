@@ -1,0 +1,1858 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>دليل الاستثمار العقاري - ماروتا سيتي وباسيليا والقابون الصناعي</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f8f5f2 0%, #eae2db 100%);
+            min-height: 100vh;
+            color: #2d1b1b;
+            line-height: 1.8;
+            direction: rtl;
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Standard syntax */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #a47764 0%, #8d5e52 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(164, 119, 100, 0.2);
+        }
+        
+        .header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        
+        .section {
+            background: white;
+            margin-bottom: 30px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #d4c2b3 0%, #bda28c 100%);
+            padding: 25px;
+            border-bottom: 3px solid #a47764;
+        }
+        
+        .section-header h2 {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 700;
+            color: #2d1b1b;
+            margin-bottom: 8px;
+        }
+        
+        .section-header .subtitle {
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            color: #523535;
+            font-weight: 500;
+        }
+        
+        .section-content {
+            padding: 30px;
+        }
+        
+        .intro-text {
+            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+            color: #523535;
+            margin-bottom: 25px;
+            line-height: 1.9;
+            font-weight: 400;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #a47764 0%, #8d5e52 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(164, 119, 100, 0.3);
+            font-size: clamp(0.9rem, 2.2vw, 1rem);
+        }
+        
+        .investment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .option-card {
+            background: linear-gradient(135deg, #f8f5f2 0%, #eae2db 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #d4c2b3;
+            transition: all 0.3s ease;
+        }
+        
+        .option-card:hover {
+            border-color: #a47764;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(164, 119, 100, 0.2);
+        }
+        
+        .option-card h3 {
+            color: #a47764;
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+        }
+        
+        .option-card p {
+            color: #523535;
+            font-weight: 400;
+            line-height: 1.7;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .concept-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f5f2 100%);
+            padding: 30px;
+            border-radius: 16px;
+            border: 3px solid #d4c2b3;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .concept-card:hover {
+            border-color: #a47764;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(164, 119, 100, 0.15);
+        }
+        
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(135deg, #a47764 0%, #8d5e52 100%);
+            border-radius: 0 16px 0 10px;
+        }
+        
+        .concept-title {
+            color: #a47764;
+            font-weight: 800;
+            font-size: clamp(1rem, 2.8vw, 1.4rem);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .concept-icon {
+            background: linear-gradient(135deg, #a47764 0%, #8d5e52 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .concept-description {
+            color: #523535;
+            font-weight: 500;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .concept-example {
+            background: linear-gradient(135deg, #eae2db 0%, #d4c2b3 100%);
+            padding: 15px;
+            border-radius: 10px;
+            color: #2d1b1b;
+            font-weight: 600;
+            font-style: italic;
+            border-right: 4px solid #a47764;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #774b46 0%, #633e3d 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-right: 5px solid #a47764;
+            box-shadow: 0 6px 20px rgba(119, 75, 70, 0.3);
+        }
+        
+        .warning-title {
+            font-weight: 700;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .warning-icon {
+            font-size: 1.5rem;
+        }
+        
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .price-table thead {
+            background: linear-gradient(135deg, #a47764 0%, #8d5e52 100%);
+            color: white;
+        }
+        
+        .price-table th {
+            padding: 20px;
+            text-align: center;
+            font-weight: 700;
+            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+        }
+        
+        .price-table td {
+            padding: 18px;
+            text-align: center;
+            border-bottom: 1px solid #eae2db;
+            font-weight: 500;
+            color: #523535;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+        }
+        
+        .price-table tbody tr:hover {
+            background: #f8f5f2;
+        }
+        
+        .location-header {
+            background: linear-gradient(135deg, #bda28c 0%, #ae8971 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .check-mark {
+            color: #a47764;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+        
+        .note {
+            background: linear-gradient(135deg, #f8f5f2 0%, #eae2db 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-right: 5px solid #a47764;
+            margin: 25px 0;
+            font-style: italic;
+            color: #523535;
+            font-weight: 500;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #774b46;
+            font-weight: 500;
+            background: white;
+            border-radius: 16px;
+            margin-top: 30px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 25px 15px;
+                margin-bottom: 20px;
+            }
+            
+            .section-content {
+                padding: 20px;
+            }
+            
+            .concept-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .investment-options {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .concept-card {
+                padding: 20px;
+            }
+            
+            .option-card {
+                padding: 20px;
+            }
+            
+            .price-table th,
+            .price-table td {
+                padding: 10px 6px;
+                font-size: 0.8rem;
+            }
+            
+            .warning-box,
+            .highlight,
+            .note {
+                padding: 15px;
+                margin: 15px 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 8px;
+            }
+            
+            .header {
+                padding: 20px 10px;
+            }
+            
+            .section-content {
+                padding: 15px;
+            }
+            
+            .concept-card,
+            .option-card {
+                padding: 15px;
+            }
+            
+            .price-table th,
+            .price-table td {
+                padding: 8px 4px;
+                font-size: 0.75rem;
+            }
+            
+            .concept-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .header p {
+                font-size: 0.85rem;
+            }
+            
+            .section-header h2 {
+                font-size: 1.1rem;
+            }
+            
+            .price-table th,
+            .price-table td {
+                padding: 6px 2px;
+                font-size: 0.7rem;
+            }
+        }
+        
+        /* Media queries للشاشات الكبيرة */
+        @media (min-width: 1400px) {
+            .container {
+                max-width: 1400px;
+                padding: 30px;
+            }
+            
+            .concept-grid {
+                grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                gap: 30px;
+            }
+            
+            .investment-options {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 25px;
+            }
+            
+            .section-content {
+                padding: 40px;
+            }
+            
+            .header {
+                padding: 50px 30px;
+            }
+        }
+        
+        @media (min-width: 1600px) {
+            .container {
+                max-width: 1600px;
+                padding: 40px;
+            }
+            
+            .concept-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 35px;
+            }
+            
+            .investment-options {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 30px;
+            }
+            
+            .section-content {
+                padding: 50px;
+            }
+            
+            .header {
+                padding: 60px 40px;
+            }
+            
+            .header h1 {
+                font-size: 3rem;
+            }
+            
+            .header p {
+                font-size: 1.4rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+            
+            .intro-text {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (min-width: 1920px) {
+            .container {
+                max-width: 1800px;
+                padding: 50px;
+            }
+            
+            .concept-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 40px;
+            }
+            
+            .investment-options {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 35px;
+            }
+            
+            .section-content {
+                padding: 60px;
+            }
+            
+            .header {
+                padding: 70px 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>دليل الاستثمار العقاري الشامل</h1>
+            <p>ماروتا سيتي • باسيليا سيتي • القابون الصناعي</p>
+        </header>
+
+        <!-- فهرس المحتويات -->
+        <section class="section">
+            <div class="section-header">
+                <h2>فهرس المحتويات</h2>
+                <div class="subtitle">روابط سريعة للوصول لكافة الأقسام</div>
+            </div>
+            <div class="section-content">
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                    <a href="#basic-concepts" style="text-decoration: none; display: block;">
+                        <div class="option-card" style="text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <h3 style="color: #a47764;">المفاهيم الأساسية في الاستثمار العقاري</h3>
+                            <p>دليل للمبتدئين في عالم الأسهم العقارية</p>
+                        </div>
+                    </a>
+                    <a href="#shares-distribution" style="text-decoration: none; display: block;">
+                        <div class="option-card" style="text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <h3 style="color: #a47764;">جدول توزيع الأسهم والمساحات</h3>
+                            <p>مقارنة شاملة بين المناطق الاستثمارية</p>
+                        </div>
+                    </a>
+                    <a href="#marota-city" style="text-decoration: none; display: block;">
+                        <div class="option-card" style="text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <h3 style="color: #a47764;">ماروتا سيتي</h3>
+                            <p>المنطقة التنظيمية الأولى في دمشق الحديثة</p>
+                        </div>
+                    </a>
+                    <a href="#basilia-city" style="text-decoration: none; display: block;">
+                        <div class="option-card" style="text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <h3 style="color: #a47764;">باسيليا سيتي</h3>
+                            <p>مشروع تنظيم جنوبي المتحلق الجنوبي</p>
+                        </div>
+                    </a>
+                    <a href="#qaboun-industrial" style="text-decoration: none; display: block;">
+                        <div class="option-card" style="text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <h3 style="color: #a47764;">حي القابون الصناعي</h3>
+                            <p>الحي التاريخي والمنطقة الاستثمارية الكبرى</p>
+                        </div>
+                    </a>
+                    <a href="#investment-security" style="text-decoration: none; display: block;">
+                        <div class="option-card" style="text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <h3 style="color: #a47764;">أمان الاستثمار والضمانات القانونية</h3>
+                            <p>الحماية القانونية لاستثماراتك العقارية</p>
+                        </div>
+                    </a>
+                    <a href="#legal-status" style="text-decoration: none; display: block;">
+                        <div class="option-card" style="text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <h3 style="color: #a47764;">الوضع القانوني الحالي</h3>
+                            <p>إجراءات التمليك في الظروف الراهنة</p>
+                        </div>
+                    </a>
+                    <a href="#development-timeline" style="text-decoration: none; display: block;">
+                        <div class="option-card" style="text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <h3 style="color: #a47764;">الجدول الزمني المتوقع للتطوير</h3>
+                            <p>مواعيد التسليم والتطوير المتوقعة</p>
+                        </div>
+                    </a>
+                    <a href="#expat-services" style="text-decoration: none; display: block;">
+                        <div class="option-card" style="text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <h3 style="color: #a47764;">خدمة المغتربين والمستثمرين عن بُعد</h3>
+                            <p>حلول متكاملة للاستثمار من خارج سوريا</p>
+                        </div>
+                    </a>
+                    <a href="#minimum-investment" style="text-decoration: none; display: block;">
+                        <div class="option-card" style="text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <h3 style="color: #a47764;">الحد الأدنى للاستثمار</h3>
+                            <p>أقل مبلغ يمكن استثماره في كل منطقة</p>
+                        </div>
+                    </a>
+                    <a href="#app-fees" style="text-decoration: none; display: block;">
+                        <div class="option-card" style="text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                            <h3 style="color: #a47764;">أجور تطبيق عقاري دمشق</h3>
+                            <p>تفاصيل عمولة التطبيق عند إتمام الصفقات</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="note">
+                    <strong>💡 نصيحة للتصفح:</strong> انقر على أي بطاقة للانتقال مباشرة إلى ذلك القسم، واستخدم زر الرجوع في المتصفح للعودة إلى الفهرس.
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم تعريف المفاهيم الأساسية -->
+        <section class="section" id="basic-concepts">
+            <div class="section-header">
+                <h2>المفاهيم الأساسية في الاستثمار العقاري</h2>
+                <div class="subtitle">دليل للمبتدئين في عالم الأسهم العقارية</div>
+            </div>
+            <div class="section-content">
+                <p class="intro-text">
+                    قبل الخوض في تفاصيل الاستثمار، من المهم فهم المصطلحات والمفاهيم الأساسية التي تحكم سوق الأسهم العقارية في سوريا. هذا القسم سيوضح لك كل ما تحتاج معرفته كمستثمر مبتدئ.
+                </p>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">1</span>
+                            ما هو السهم العقاري؟
+                        </div>
+                        <div class="concept-description">
+                            <strong>السهم العقاري:</strong> يُستخدم للتعبير عن جزء من العقارات الموجودة مثل الأراضي والشقق والمحلات والمكاتب والمصانع ..... وكذلك العقارات غير الموجودة والتي هي قيد التنفيذ. <strong>كل عقار موجود او غير موجود (سواء أرض، شقة، مكتب، أو محل) يتكون من 2400 سهم بالضبط.</strong> هذا النظام ثابت لا يتغير.
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال:</strong> شقة مُسلمة ومرخصة = 2400 سهم عقاري. إذا اشتريت 1200 سهم عقاري، فأنت تملك نصف الشقة (50%).
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏗️</span>
+                            ما هو السهم التنظيمي؟
+                        </div>
+                        <div class="concept-description">
+                            <strong>السهم التنظيمي:</strong> يُستخدم للمشاريع التنظيمية قيد البناء أو التطوير. يتم حساب عدد الأسهم المطلوبة للمتر المربع وتحدده المحافظة حسب تقييم كل مقسم من حيث الموقع والإطلالة والمنطقة.
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال ماروتا:</strong> المتر السكني هواء يتطلب من 85 الى 110 ألف سهم، المتر الاستثماري هواء يتطلب 170 ألف سهم.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🌬️</span>
+                            أمتار الهواء vs على الهيكل
+                        </div>
+                        <div class="concept-description">
+                            <strong>أمتار الهواء:</strong> هي الأمتار التي ستنفذ مستقبلاً على أرض المقسم وهو تعبير تجاري للدلالة على الأمتار الطابقية للبناء قبل البدء بالتشييد. <strong>البيع يكون بنظام الأسهم</strong>.<br><br>
+                            <strong>على الهيكل:</strong> بعد تنفيذ البناء قبل الإكساء عندما يكون هناك مطور يبني. ويتم البيع بإحدى طريقتين:<br>
+                            1- <strong>بنظام الأسهم:</strong> حيث يجب ضرب القيمة بـ1.5 لأخذ حصة المطور في الحسبان، لأن المطور يأخذ جزءاً من الأمتار مقابل البناء.<br>
+                            2- <strong>بالمتر المربع بالدولار:</strong> البيع يكون مباشرة بسعر المتر المربع بالدولار (وتكون هذه الطريقة هي الأكثر شيوعاً حالياً).
+                            <br><br>
+                            <em><strong>ملاحظة هامة:</strong> البيع "على الهيكل" متوفر حالياً فقط في ماروتا سيتي. باسيليا سيتي والقابون الصناعي لا يوجد فيهما بيع على الهيكل في الوقت الحالي.</em>
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال 1 (بنظام الأسهم):</strong> إذا كان متر الهواء = 100 ألف سهم، فمتر على الهيكل = 150 ألف سهم تقريباً.<br>
+                            <strong>مثال 2 (بالدولار):</strong> مكتب تجاري على الهيكل في ماروتا يُباع بسعر 3,500$ للمتر المربع.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">2</span>
+                            السهم على الشيوع
+                        </div>
+                        <div class="concept-description">
+                            الشيوع يعني الملكية المشتركة غير المقسمة. عندما تشتري أسهماً على الشيوع، فأنت تمتلك حصة من إجمالي المشروع، لكن بدون تحديد موقع محدد أو قطعة أرض معينة.
+                        </div>
+                        <div class="concept-example">
+                            مثال: تمتلك 5% من إجمالي المشروع، لكن ليس لديك قطعة أرض محددة المعالم.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">3</span>
+                            السهم التنظيمي والعقاري المخصص 
+                        </div>
+                        <div class="concept-description">
+                            <strong>السهم التنظيمي المخصص</strong> يعني تحول السهم التنظيمي من سهم على الشيوع بكامل المنطقة التنظيمية لسهم تنظيمي مخصص في مقسم محدد معروف الموقع وعدد الطوابق وعدد أمتاره الطابقية<br><br>
+                            وبالتالي يكون له أسهم عقارية بأرض العقار الذي خصص به محددة بالسجل العقاري تتناسب مع الأسهم التنظيمية<br><br>
+                            <strong>الأسهم التنظيمية والعقارية المخصصة بوحدة عقارية:</strong><br>
+                            عند صدور رخصة مقسم ما تتم عملية التخصيص بين المالكين والمتعهد كل حسب نسبة المشاركة<br>
+                            عندها تتحول الأسهم التنظيمية والعقارية في هذا المقسم من حالة الشيوع لحالة التخصيص
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال:</strong> لدينا 30 مليون سهم تنظيمي من أصل مليار و400 مليون سهم تنظيمي بالمقسم S163، تقابل 60 سهم عقاري من 2400 سهم عقاري من هذا المقسم. ستخصص هذه الأسهم بشقة مساحتها 200 م² بالطابق الرابع والجهة الشمالية الشرقية والتي رقمها 30 بالسجل المؤقت بأسهم عقارية كاملة قدرها 2400 سهم عقاري.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">4</span>
+                            هل شراء السهم التنظيمي المخصص أو العقاري يعني شراء جزء من الأرض؟
+                        </div>
+                        <div class="concept-description">
+                            نعم أنت تملك حصة من الأرض تتناسب مع عدد الأسهم.
+                        </div>
+                        <div class="concept-example">
+                            الملكية مضمونة قانونياً ومحددة النسبة حسب عدد الأسهم التي تملكها.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">💡</span>
+                            كيف تحسب حصتك بنظام 2400 سهم؟
+                        </div>
+                        <div class="concept-description">
+                            <strong>نظام السهم العقاري الثابت يجعل الحسابات بسيطة:</strong>
+                            <br>• <strong>600 سهم =</strong> ربع العقار (25%)
+                            <br>• <strong>1200 سهم =</strong> نصف العقار (50%)
+                            <br>• <strong>1800 سهم =</strong> ثلاثة أرباع العقار (75%)
+                            <br>• <strong>2400 سهم =</strong> العقار كاملاً (100%)
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال عملي:</strong> إذا كنت تريد شراء ثلث شقة مع شريكين، فكل واحد منكم يشتري 800 سهم (2400 ÷ 3 = 800).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">⚠️</span>
+                        نصائح مهمة للمستثمرين الجدد
+                    </div>
+                    <ul style="margin-right: 20px; line-height: 1.8;">
+                        <li><strong>تأكد من نوع السهم:</strong> هل هو على الشيوع أم مخصص قبل الشراء</li>
+                        <li><strong>اقرأ العقد بعناية:</strong> تأكد من فهم حقوقك والتزاماتك</li>
+                        <li><strong>استشر خبير قانوني:</strong> خاصة في الصفقات الكبيرة</li>
+                        <li><strong>تحقق من سمعة المطور:</strong> ابحث عن مشاريعه السابقة</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="shares-distribution">
+            <div class="section-header">
+                <h2>جدول توزيع الأسهم والمساحات</h2>
+                <div class="subtitle">مقارنة شاملة بين المناطق الاستثمارية الثلاث</div>
+            </div>
+            <div class="section-content">
+                <p class="intro-text">
+                    يوضح الجدول التالي التوزيع التفصيلي لعدد الأسهم المطلوبة لكل متر مربع في المناطق الاستثمارية الرئيسية:
+                </p>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">📋</span>
+                        فهم الفرق بين أنواع الأسهم
+                    </div>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        <strong>هناك نوعان من الأسهم في السوق العقاري السوري:</strong><br><br>
+                        <strong>1. السهم العقاري الثابت:</strong> كل عقار واحد (شقة، مكتب، محل، أرض) = 2400 سهم بالضبط<br>
+                        <strong>2. أسهم المشاريع الكبيرة:</strong> تُحسب بالمتر المربع كما هو موضح في الجدول أدناه، وتختلف حسب المنطقة ونوع الاستثمار
+                    </p>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">🔍</span>
+                        الفرق بين السهم العقاري والسهم التنظيمي
+                    </div>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        <strong>السهم العقاري:</strong> للعقارات المنتهية والمُسلمة (2400 سهم للعقار الواحد)<br><br>
+                        <strong>السهم التنظيمي:</strong> للمشاريع قيد البناء والتطوير (يُحسب بالمتر المربع حسب المنطقة كما في الجدول أدناه)
+                    </p>
+                </div>
+
+                <table class="price-table">
+                    <thead>
+                        <tr>
+                            <th>المنطقة</th>
+                            <th>نوع الاستثمار</th>
+                            <th>عدد الأسهم لكل متر مربع هواء</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2" class="location-header">ماروتا سيتي</td>
+                            <td>سكني</td>
+                            <td>من 85,000 - الى 110,000 سهم</td>
+                        </tr>
+                        <tr>
+                            <td>استثماري</td>
+                            <td>170,000 سهم</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" class="location-header">باسيليا سيتي</td>
+                            <td>سكني</td>
+                            <td>من 250,000 - الى 350,000 سهم</td>
+                        </tr>
+                        <tr>
+                            <td>استثماري</td>
+                            <td>من 300,000 - الى 350,000 سهم</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" class="location-header">القابون الصناعي</td>
+                            <td>سكني</td>
+                            <td>من 5,000,000 - الى 6,000,000 سهم</td>
+                        </tr>
+                        <tr>
+                            <td>استثماري</td>
+                            <td>من 15,000,000 - الى 16,000,000 سهم</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="note">
+                    <strong>ملاحظة هامة حول الأسعار:</strong> لا يوجد سعر موحد محدد للأسهم، حيث أن كل منطقة لها أسعارها الخاصة. يمكنكم الاطلاع على العروض والأسعار المحدثة من خلال تطبيق "عقاري دمشق" لمتابعة السوق العقاري بشكل مستمر.
+                </div>
+
+                <div class="highlight">
+                    <strong>💡 مقارنة سريعة - شقة سكنية 100 متر مربع هواء:</strong><br>
+                    • ماروتا سيتي: 8.5 - 11 مليون سهم<br>
+                    • باسيليا سيتي: 25 - 35 مليون سهم<br>
+                    • القابون الصناعي: 500 - 600 مليون سهم
+                </div>
+
+                <div class="note">
+                    <strong>⚠️ ملاحظة مهمة - أمتار الهواء vs على الهيكل:</strong><br><br>
+                    <strong>الأرقام أعلاه تُمثّل قيمة "أمتار الهواء".</strong><br><br>
+                    • <strong>عند التعامل بنظام الأسهم:</strong> في حال البناء على الهيكل، يجب ضرب القيمة بـ1.5 لأخذ حصة المطور في الحسبان.<br>
+                    • <strong>عند البيع "على الهيكل":</strong> غالباً ما يتم الانتقال من نظام الأسهم إلى البيع المباشر بالمتر المربع بالدولار الأمريكي، وتختلف الأسعار حسب المنطقة ونوع العقار.
+                </div>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏗️</span>
+                            مثال حسابي - ماروتا سيتي
+                        </div>
+                        <div class="concept-description">
+                            <strong>آلية عمل المطور:</strong>
+                            <br>• المتعهد يبني 10 أمتار
+                            <br>• يأخذ منها 4 أمتار لنفسه
+                            <br>• يُعطي المالك 6 أمتار
+                            <br><br><strong>الحساب:</strong> إذا كانت قيمة 10 أمتار هواء = مليون سهم
+                            <br>التكلفة للمتر على الهيكل = مليون ÷ 6 = 166 ألف سهم/متر
+                        </div>
+                        <div class="concept-example">
+                            <strong>متوسط ماروتا السكني على الهيكل:</strong> 150 ألف سهم/متر
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏢</span>
+                            الاستثمارية والتجارية
+                        </div>
+                        <div class="concept-description">
+                            <strong>في ماروتا سيتي:</strong>
+                            <br>• متر الهواء = 170 ألف سهم
+                            <br>• نسبة المشاركة مع المتعهد = 50%
+                            <br>• متر على الهيكل = 340 ألف سهم (متوسط)
+                        </div>
+                        <div class="concept-example">
+                            <strong>الخلاصة:</strong> الاستثماري أغلى من السكني بسبب الموقع والعائد المتوقع
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="marota-city">
+            <div class="section-header">
+                <h2>ماروتا سيتي</h2>
+                <div class="subtitle">المنطقة التنظيمية الأولى في دمشق الحديثة</div>
+            </div>
+            <div class="section-content">
+                <div class="highlight">
+                    <strong>نبذة تاريخية:</strong> المنطقة التنظيمية الأولى التي أُحدثت في مدينة دمشق بموجب المرسوم التشريعي رقم /66/ (المعروف بتنظيم خلف الرازي). تُعرف بالتسمية السريانية "ماروتا" التي تعني "السيادة والوطن".
+                </div>
+
+                <p class="intro-text">
+                    <strong>الرؤية والمستقبل:</strong> ستعكس ماروتا سيتي وجه سوريا المعاصر وترقى بها لمستوى العالمية من خلال أبراج سكنية حديثة، مراكز تجارية متطورة، أسواق عصرية، منشآت سياحية وخدمية متميزة، بالإضافة إلى بنية تحتية متطورة تواكب أحدث المعايير العالمية.
+                </p>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">📍</span>
+                            الموقع الاستراتيجي
+                        </div>
+                        <div class="concept-description">
+                            تقع ماروتا سيتي في موقع متميز يحدها:
+                            <br>• <strong>تنظيم كفرسوسة</strong> من جهة
+                            <br>• <strong>المتحلق الجنوبي</strong> من جهة أخرى
+                            <br>• <strong>الفيلات الشرقية (خلف الرازي)</strong>
+                            <br>• <strong>المقر الجديد لرئاسة مجلس الوزراء ووزارة الخارجية</strong>
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏗️</span>
+                            آلية الشراء
+                        </div>
+                        <div class="concept-description">
+                            يمكن شراء العقارات في ماروتا سيتي بـ3 طرق:
+                            <br><br><strong>1. شراء الأسهم التنظيمية:</strong> تمثل حصة عقارية من مقسم معين، حيث يحصل المشتري على حصة من الأمتار الترخيصية المسموح بها حسب المخطط التنظيمي.
+                            <br><br><strong>2. الشراء لوحدة عقارية موجودة بالواقع:</strong> مع إمكانية الاستلام والفراغ بالسجل المؤقت.
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="color: #a47764; font-weight: 700; margin: 25px 0 15px 0; font-size: 1.5rem;">الخيارات الاستثمارية المتاحة:</h3>
+                
+                <div class="investment-options">
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> الشقق السكنية</h3>
+                        <p>وحدات سكنية بمساحات متنوعة تتراوح من 100 إلى 600 متر مربع، مناسبة للسكن الشخصي أو الاستثمار الإيجاري طويل المدى.</p>
+                    </div>
+                    
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> المحلات التجارية</h3>
+                        <p>مساحات تتراوح من 30 إلى 700 متر مربع يمكن استخدامها لكافة النشاطات التجارية.</p>
+                    </div>
+                    
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> المكاتب التجارية</h3>
+                        <p>مساحات تتراوح من 30 إلى 700 متر مربع، مناسبة للشركات والمكاتب المهنية والعيادات الطبية.</p>
+                    </div>
+                    
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> الوحدات الفندقية بالمقاسم الاستثمارية</h3>
+                        <p>تقع في الطوابق العليا وتوفر فرصة استثمارية ممتازة في القطاع السياحي والضيافة.</p>
+                    </div>
+                    
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> المطاعم والتراسات بالمقاسم الاستثمارية</h3>
+                        <p>تقع في الطابق الأول بمساحات كبيرة وجذابة، مناسبة لقطاع المطاعم والمقاهي.</p>
+                    </div>
+                </div>
+
+                <div class="note">
+                    <strong>توصية للمستثمرين الجدد:</strong> إذا كنت تبحث عن استثمار بحجم أصغر، يُنصح بالتركيز على المكاتب أو العيادات، حيث أن مكتب بمساحة 60 متر مربع بماروتا يتطلب حوالي 21 مليون سهم فقط.
+                </div>
+
+                <div class="note">
+                    <strong>💡 توضيح هام لطريقة الشراء في ماروتا:</strong>
+                    <ul style="margin-right: 20px; line-height: 1.8; margin-top: 10px;">
+                        <li><strong>شراء أسهم "هواء":</strong> عند شراء أسهم "هواء" استثمارية (170 ألف سهم للمتر)، فأنت تشتري حصة من الأرض والمشروع قبل البناء. ستحتاج لاحقاً للدخول في عقد مع مطور للبناء، والذي سيأخذ حصة من الأمتار المبنية.</li>
+                        <li><strong>الشراء "على الهيكل":</strong> في هذه المرحلة، يتم البيع بالمتر المربع بالدولار الأمريكي وليس بنظام الأسهم. فمثلاً، سعر المتر المربع للمكتب التجاري "على الهيكل" يبدأ من 3,500 دولار أمريكي، وسعر المتر المربع للشقة السكنية يبدأ من 1,500 دولار أمريكي.</li>
+                        <li><strong>مثال:</strong> لشراء مكتب تجاري بمساحة 30 متر مربع "على الهيكل"، ستدفع بدءاً من 105,000 دولار أمريكي (30م × 3,500 دولار للمتر). بينما لشراء شقة سكنية بمساحة 100 متر مربع "على الهيكل"، ستدفع بدءاً من 150,000 دولار أمريكي (100م × 1,500 دولار للمتر).</li>
+                    </ul>
+                </div>
+
+                <h3 style="color: #a47764; font-weight: 700; margin: 35px 0 20px 0; font-size: 1.6rem;">📊 دليل الأسعار والتمويل في ماروتا سيتي</h3>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏠</span>
+                            أسعار الشقق على الهيكل
+                        </div>
+                        <div class="concept-description">
+                            <strong>شقق على الهيكل مع المرافق العامة:</strong>
+                            <br>• نطاق السعر: <strong>1,200 - 2,000 دولار أمريكي</strong> للمتر المربع
+                            <br>• متوفر بخيارات الدفع: <strong>كاش أو تقسيط</strong>
+                            <br>• تشمل البنية التحتية والمرافق الأساسية
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال:</strong> شقة 120 متر = 156,000 - 169,000 دولار أمريكي
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏪</span>
+                            أسعار المحلات التجارية
+                        </div>
+                        <div class="concept-description">
+                            <strong>محلات تجارية في مواقع حيوية:</strong>
+                            <br>• نطاق السعر: <strong>3,500 - 5,000 دولار أمريكي</strong> للمتر المربع
+                            <br>• مواقع استراتيجية في الطوابق الأرضية
+                            <br>• عائد استثماري مرتفع متوقع
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال:</strong> محل 50 متر = 175,000 - 250,000 دولار أمريكي
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏢</span>
+                            أسعار المكاتب الإدارية
+                        </div>
+                        <div class="concept-description">
+                            <strong>مكاتب بمواصفات عصرية:</strong>
+                            <br>• نطاق السعر: <strong>يبدأ من 3,500 دولار أمريكي</strong> للمتر المربع
+                            <br>• مناسبة للشركات والعيادات
+                            <br>• بيئة عمل احترافية ومتطورة
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال:</strong> مكتب 80 متر = بدءاً من 280,000 دولار أمريكي
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>🏦 خيارات التمويل والتقسيط:</strong><br>
+                    • <strong>الدفع المؤجل:</strong> دفع 50% من قيمة العقار مقدماً<br>
+                    • <strong>المدة:</strong> تقسيط الباقي على 3-4 سنوات<br>
+                    • <strong>ميزة خاصة:</strong> سعر الكاش = سعر التقسيط (بدون فوائد إضافية)<br>
+                    • <strong>مرونة في السداد:</strong> جدولة مريحة للأقساط
+                </div>
+
+                <h4 style="color: #a47764; font-weight: 700; margin: 25px 0 15px 0; font-size: 1.3rem;">💰 أسعار الأسهم التنظيمية</h4>
+
+                <div class="investment-options" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                    <div class="option-card">
+                        <h3><span class="check-mark">💼</span> الأسهم السكنية بماروتا سيتي</h3>
+                        <p><strong>النطاق السعري:</strong> 45 - 60 ليرة سورية للسهم الواحد<br>
+                        <strong>مناسب للـ:</strong> المشاريع السكنية والاستثمارات طويلة المدى</p>
+                    </div>
+                    
+                    <div class="option-card">
+                        <h3><span class="check-mark">🏢</span> الأسهم الاستثمارية بماروتا سيتي</h3>
+                        <p><strong>النطاق السعري:</strong> 10 - 15 ليرة سورية للسهم الواحد<br>
+                        <strong>مناسب للـ:</strong> المكاتب والمحلات التجارية والمشاريع الاستثمارية</p>
+                    </div>
+                </div>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🌬️</span>
+                            أمتار الهواء (الأساسية)
+                        </div>
+                        <div class="concept-description">
+                            <strong>السكني:</strong> من 85,000 - الى 110,000 سهم للمتر الواحد
+                            <br><strong>الاستثماري والتجاري:</strong> 170,000 سهم للمتر الواحد
+                            <br><br><em>هذه أسعار الأرض قبل البناء</em>
+                        </div>
+                        <div class="concept-example">
+                            <strong>للاستثمار المباشر</strong> في الأرض أو للبناء الذاتي
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏗️</span>
+                            على الهيكل (السعر بالمتر المربع)
+                        </div>
+                        <div class="concept-description">
+                            <strong>عند البيع "على الهيكل":</strong> ننتقل من نظام الأسهم إلى البيع المباشر بالمتر المربع بالدولار
+                            <br><strong>السكني:</strong> يبدأ من 1,500 دولار للمتر المربع
+                            <br><strong>التجاري والاستثماري:</strong> يبدأ من 3,500 دولار للمتر المربع
+                            <br><br><em>هذه الأسعار تشمل حصة المطور وتكاليف البناء الأولية</em>
+                        </div>
+                        <div class="concept-example">
+                            <strong>الخيار الأنسب</strong> لمن يريد عقاراً جاهزاً دون التعامل بنظام الأسهم
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>🧮 مثال حسابي لشقة 100 متر في ماروتا:</strong><br>
+                    • <strong>بنظام أسهم الهواء:</strong> 100 × 85,000 = 8.5 مليون سهم سكني (أقل تقدير)<br>
+                    • <strong>شقة سكنية على الهيكل (بالدولار):</strong> 100 × 1,500$ = 150,000 دولار أمريكي<br>
+                    • <strong>مكتب تجاري على الهيكل (بالدولار):</strong> 100 × 3,500$ = 350,000 دولار أمريكي
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">💡</span>
+                        ملاحظة مهمة حول الأسهم
+                    </div>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        <strong>الأسهم التنظيمية تُدفع كاشاً بالكامل فقط - لا يوجد تقسيط.</strong><br><br>
+                        <strong>السبب:</strong> الأسهم يتم تسجيلها فوراً باسم المشتري في السجل العقاري (الطابو)، مما يتطلب الدفع الكامل عند التوقيع لضمان إتمام إجراءات التمليك القانونية بشكل فوري.
+                    </p>
+                </div>
+
+                <div class="note">
+                    <strong>💡 نصيحة للمستثمرين:</strong> إذا كنت تفضل المرونة في السداد، اختر الشقق على الخريطة مع خيار التقسيط. أما إذا كنت تريد ملكية فورية ومضمونة، فالأسهم التنظيمية هي الخيار الأمثل رغم ضرورة الدفع الكامل.
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="basilia-city">
+            <div class="section-header">
+                <h2>باسيليا سيتي (مشروع الـ 66)</h2>
+                <div class="subtitle">مشروع تنظيم جنوبي المتحلق الجنوبي</div>
+            </div>
+            <div class="section-content">
+                <div class="highlight">
+                    <strong>الموقع الجغرافي:</strong> تقع باسيليا سيتي ضمن مشروع تنظيم جنوبي المتحلق الجنوبي في دمشق، وتضم المناطق العقارية التالية: مزة، كفرسوسة، قنوات، بساتين، داريا، وقدم.
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">⚠️</span>
+                        ملاحظة مهمة حول الوضع الحالي
+                    </div>
+                    <p><strong>مشروع باسيليا سيتي حالياً وبعد التحرير:</strong> المشروع قيد إعادة الدراسة، وربما ينتج عن ذلك إعادة تقسيم المساحات على المالكين. المشروع يتضمن مشاريع مخصصة بالإضافة إلى وجود أسهم على الشيوع.</p>
+                </div>
+
+                <p class="intro-text">
+                    تُعتبر باسيليا سيتي من المشاريع العقارية المتميزة التي تقدم فرصاً استثمارية متنوعة للمستثمرين. تتميز بموقعها الاستراتيجي وتصاميمها العصرية التي تلبي احتياجات السوق العقاري الحديث.
+                </p>
+
+                <div class="highlight">
+                    <strong>متطلبات الأسهم في باسيليا سيتي:</strong><br>
+                    • السكني: 250,000 - 350,000 سهم لكل متر مربع هواء<br>
+                    • الاستثماري: 300,000 - 350,000 سهم لكل متر مربع هواء
+                </div>
+
+                <h3 style="color: #a47764; font-weight: 700; margin: 25px 0 15px 0; font-size: 1.5rem;">الخيارات الاستثمارية المتاحة:</h3>
+                
+                <div class="investment-options">
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> الشقق السكنية الفاخرة</h3>
+                        <p>وحدات سكنية عصرية بتشطيبات راقية، مساحات متنوعة تناسب العائلات الصغيرة والكبيرة.</p>
+                    </div>
+                    
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> المحلات التجارية</h3>
+                        <p>مساحات تجارية في مواقع حيوية، مناسبة للأنشطة التجارية المختلفة والمشاريع الصغيرة.</p>
+                    </div>
+                    
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> المكاتب الإدارية</h3>
+                        <p>مساحات مكتبية حديثة بمواصفات عالية، مناسبة للشركات والمؤسسات التجارية.</p>
+                    </div>
+                    
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> الوحدات الخدمية</h3>
+                        <p>مساحات مخصصة للخدمات المختلفة مثل المراكز الطبية والتعليمية والخدمات العامة.</p>
+                    </div>
+                </div>
+
+                <div class="note">
+                    <strong>نصيحة للمستثمرين:</strong> باسيليا سيتي تقدم توازناً ممتازاً بين التكلفة والجودة، مما يجعلها خياراً مناسباً للمستثمرين الذين يبحثون عن عائد استثماري مستقر.
+                </div>
+
+                <h3 style="color: #a47764; font-weight: 700; margin: 35px 0 20px 0; font-size: 1.6rem;">📊 الوضع الحالي والأسعار في باسيليا سيتي</h3>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">📋</span>
+                        الوضع الحالي للمشروع
+                    </div>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        <strong>حالياً لا تتوفر شقق أو محلات جاهزة في باسيليا سيتي.</strong><br><br>
+                        المتوفر حالياً هو <strong>الأسهم المخصصة فقط</strong>، والاستثمار السكني والتجاري متاح بنفس الأسعار (السكني بسعر التجاري).
+                    </p>
+                </div>
+
+                <div class="note">
+                    <strong>💡 توضيح هام لطريقة الشراء:</strong>
+                    <ul style="margin-right: 20px; line-height: 1.8; margin-top: 10px;">
+                        <li><strong>شراء الأسهم التنظيمية (هواء):</strong> عند شرائك للأسهم، فأنت تشتري فعلياً <strong>"أسهم هواء مع حصة المطور"</strong>. لهذا السبب يتم مضاعفة عدد الأسهم المطلوبة للمتر الواحد في الحسابات لضمان حصولك على صافي المساحة بعد أن يأخذ المطور حصته.</li>
+                        <li><strong>الشراء على الهيكل:</strong> في هذه المرحلة، لا يتم شراء أسهم. البيع يكون <strong>بالمتر المربع مباشرةً</strong>. على سبيل المثال، يتراوح سعر المتر المربع للمكتب التجاري "على الهيكل" في باسيليا سيتي بين <strong>1,500 و 3,000 دولار أمريكي</strong>.</li>
+                    </ul>
+                </div>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🎯</span>
+                            الأسهم المخصصة (المفرزة)
+                        </div>
+                        <div class="concept-description">
+                            <strong>أسهم بقطع أراضي محددة:</strong>
+                            <br>• متوسط السعر: <strong>1.5 - 2 ليرة سورية</strong> للسهم الواحد
+                            <br>• ملكية واضحة ومحددة الموقع
+                            <br>• مناسبة للمشاريع طويلة المدى
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال:</strong> لشراء حصة تعادل 100 متر مربع هواء تحتاج تقريباً 25-35 مليون سهم بتكلفة 37.5-70 مليون ليرة
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🔄</span>
+                            الأسهم على الشيوع
+                        </div>
+                        <div class="concept-description">
+                            <strong>أسهم بملكية مشتركة:</strong>
+                            <br>• متوسط السعر: <strong>1.25 ليرة سورية</strong> للسهم الواحد
+                            <br>• ملكية مشتركة غير مقسمة
+                            <br>• سعر أقل نسبياً من المخصصة
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال:</strong> نفس الحصة السابقة بتكلفة حوالي 31.25-43.75 مليون ليرة
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>📈 نقاط مهمة للاستثمار في باسيليا:</strong><br>
+                    • <strong>المرونة:</strong> نوعان من الأسهم (مخصصة وعلى الشيوع)<br>
+                    • <strong>التكلفة:</strong> أقل من ماروتا سيتي نسبياً<br>
+                    • <strong>الموقع:</strong> مشروع استراتيجي جنوب العاصمة<br>
+                    • <strong>النمو:</strong> إمكانيات نمو عالية مع تطوير المنطقة
+                </div>
+
+                <div class="note">
+                    <strong>💡 استراتيجية الاستثمار:</strong> إذا كنت تبحث عن استثمار متوسط التكلفة مع إمكانيات نمو جيدة، فباسيليا سيتي خيار ممتاز. الأسهم المخصصة توفر أماناً أكبر، بينما أسهم الشيوع تتيح دخولاً بتكلفة أقل.
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="qaboun-industrial">
+            <div class="section-header">
+                <h2>حي القابون الصناعي</h2>
+                <div class="subtitle">الحي التاريخي والمنطقة الاستثمارية الكبرى</div>
+            </div>
+            <div class="section-content">
+                <div class="highlight">
+                    <strong>نبذة تاريخية:</strong> حي القابون هو أحد الأحياء التاريخية في العاصمة السورية دمشق، تأسس في الأصل كمنطقة زراعية تحتوي على بساتين ومزارع عديدة، ثم تحول مع مرور الوقت إلى منطقة سكنية مكتظة بالسكان.
+                </div>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🗺️</span>
+                            الموقع الاستراتيجي
+                        </div>
+                        <div class="concept-description">
+                            يقع في الجزء الشمالي الشرقي من دمشق، ويُعتبر نقطة وصل مهمة بين دمشق والمناطق الريفية المحيطة:
+                            <br>• <strong>من الجنوب:</strong> حي جوبر التاريخي
+                            <br>• <strong>من الغرب:</strong> حي برزة النشط
+                            <br>• <strong>من الشمال:</strong> مدينة حرستا (ريف دمشق)
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🛣️</span>
+                            شبكة المواصلات
+                        </div>
+                        <div class="concept-description">
+                            يمتد على شبكة من الطرق الرئيسية التي تربط دمشق بالمدن والبلدات المجاورة:
+                            <br>• <strong>الطريق الدولي السريع</strong> المؤدي إلى حلب وحمص ودرعا
+                            <br>• <strong>شبكة الطرق المحلية</strong> التي تسهل التنقل داخل الحي والأحياء المجاورة
+                        </div>
+                    </div>
+                </div>
+
+                <p class="intro-text">
+                    يُعتبر القابون الصناعي من أهم المناطق الاستثمارية للمشاريع الكبرى والاستثمارات التجارية. هذه المنطقة مخصصة للمستثمرين الذين يملكون رؤوس أموال كبيرة ويسعون لمشاريع استثمارية .
+                </p>
+
+                <div class="highlight">
+                    <strong>متطلبات الأسهم في القابون الصناعي:</strong><br>
+                    • السكني: 5,000,000 - 6,000,000 سهم لكل متر مربع هواء<br>
+                    • الاستثماري: 15,000,000 - 16,000,000 سهم لكل متر مربع هواء
+                </div>
+
+                <h3 style="color: #a47764; font-weight: 700; margin: 25px 0 15px 0; font-size: 1.5rem;">الخيارات الاستثمارية المتاحة:</h3>
+                
+                <div class="investment-options">
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> المجمعات السكنية الكبيرة</h3>
+                        <p>مشاريع سكنية ضخمة بمئات الوحدات، مناسبة للاستثمار طويل المدى وتطوير المجتمعات السكنية.</p>
+                    </div>
+                
+                    
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> المراكز التجارية الضخمة</h3>
+                        <p>مساحات كبيرة للمولات التجارية والمراكز التسويقية الكبرى التي تخدم مناطق واسعة.</p>
+                    </div>
+                    
+                    <div class="option-card">
+                        <h3><span class="check-mark">✓</span> المناطق اللوجستية</h3>
+                        <p>مساحات مخصصة للمستودعات ومراكز التوزيع والخدمات اللوجستية الحديثة.</p>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">⚠️</span>
+                        تنبيه مهم حول متطلبات الأسهم في القابون الصناعي
+                    </div>
+                    <p>المنطقة متاحة لجميع أنواع الاستثمارات بما في ذلك الشقق السكنية، ولكن <strong>كمية الأسهم المطلوبة أكبر بكثير</strong> من المناطق الأخرى.</p>
+                    
+                    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <h4 style="color: white; margin-bottom: 10px;">💡 مقارنة عملية:</h4>
+                        <p style="color: white; line-height: 1.6;">
+                            <strong>شقة سكنية 100 متر مربع هواء:</strong><br>
+                            • في ماروتا سيتي: 8.5 - 11 مليون سهم<br>
+                            • في باسيليا سيتي: 25 - 35 مليون سهم<br>
+                            • في القابون الصناعي: 500 - 600 مليون سهم
+                        </p>
+                    </div>
+                    
+                    <p style="margin-top: 15px;"><strong>الخلاصة:</strong> يمكن للجميع الاستثمار في القابون، لكن تكلفة الأسهم ستكون أعلى نسبياً. تأكد من مقارنة أسعار الأسهم قبل اتخاذ القرار.</p>
+                </div>
+
+                <div class="note">
+                    <strong>نصيحة للمستثمرين:</strong> القابون الصناعي يقدم فرصاً استثمارية ضخمة للمشاريع الكبيرة. إذا كنت تملك رأس مال كبير وتبحث عن مشروع استثماري طويل المدى، فهذه المنطقة مناسبة جداً لك.
+                </div>
+
+                <h3 style="color: #a47764; font-weight: 700; margin: 35px 0 20px 0; font-size: 1.6rem;">📊 أسعار الأسهم في القابون الصناعي</h3>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">💰</span>
+                            الأسعار العامة للأسهم
+                        </div>
+                        <div class="concept-description">
+                            <strong>أسهم على الشيوع (غير مخصصة):</strong>
+                            <br>• النطاق العام: <strong>0.25 - 1 ليرة سورية</strong> للسهم الواحد
+                            <br>• متوسط السوق: حوالي 0.5 ليرة سورية
+                            <br>• جميع الأسهم ملكية مشتركة (شيوع)
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال:</strong> لحصة 100 متر هواء سكني تحتاج 500-600 مليون سهم بتكلفة 125-600 مليون ليرة
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">⚡</span>
+                            الحالات الاستثنائية
+                        </div>
+                        <div class="concept-description">
+                            <strong>أسعار في المواقع المميزة:</strong>
+                            <br>• نطاق استثنائي: <strong>2 - 3 ليرات سورية</strong> للسهم
+                            <br>• يحدث في حالات نادرة
+                            <br>• عادة لمواقع استراتيجية مميزة
+                        </div>
+                        <div class="concept-example">
+                            <strong>ملاحظة:</strong> هذه الأسعار نادرة ولمواقع خاصة جداً في المشروع
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">📋</span>
+                        خصائص الاستثمار في القابون
+                    </div>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        <strong>جميع الأسهم في القابون الصناعي هي أسهم على الشيوع (غير مخصصة).</strong><br><br>
+                        • <strong>لا توجد قطع أراضي محددة</strong> - الملكية مشتركة في إجمالي المشروع<br>
+                        • <strong>مناسب للاستثمار الكبير</strong> نظراً لارتفاع عدد الأسهم المطلوبة<br>
+                        • <strong>عائد استثماري محتمل مرتفع</strong> مع تطوير المنطقة.
+                    </p>
+                </div>
+
+                <div class="highlight">
+                    <strong>🏭 مقارنة التكلفة - مثال عملي لشقة 100 متر هواء:</strong><br>
+                    • <strong>عدد الأسهم المطلوبة:</strong> 500-600 مليون سهم<br>
+                    • <strong>بسعر 0.25 ليرة:</strong> 125-150 مليون ليرة سورية<br>
+                    • <strong>بسعر 1 ليرة:</strong> 500-600 مليون ليرة سورية<br>
+                    • <strong>بسعر استثنائي (3 ليرات):</strong> 1.5-1.8 مليار ليرة سورية
+                </div>
+
+                <div class="note">
+                    <strong>💡 استراتيجية الاستثمار:</strong> القابون الصناعي مناسب للمستثمرين أصحاب رؤوس الأموال الكبيرة الذين يبحثون عن مشاريع صناعية أو سكنية ضخمة. رغم ارتفاع عدد الأسهم المطلوبة، إلا أن أسعار الأسهم منخفضة نسبياً مما يجعل التكلفة الإجمالية معقولة للمشاريع الكبيرة.
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="investment-security">
+            <div class="section-header">
+                <h2>أمان الاستثمار والضمانات القانونية</h2>
+                <div class="subtitle">الحماية القانونية لاستثماراتك العقارية</div>
+            </div>
+            <div class="section-content">
+                <p class="intro-text">
+                    يُعتبر الاستثمار في الأسهم العقارية في دمشق آمناً ومحمياً قانونياً، حيث تخضع جميع المعاملات للقوانين السورية والإجراءات الرسمية المعتمدة.
+                </p>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏛️</span>
+                            ماروتا سيتي - حماية كاملة
+                        </div>
+                        <div class="concept-description">
+                            <strong>التسجيل الرسمي:</strong> جميع مقاسم ماروتا سيتي مسجلة بشكل أسهم تنظيمية في السجل العقاري في مدينة دمشق.
+                            <br><br><strong>الإجراءات القانونية:</strong>
+                            • توقيع عقد البيع والشراء أصولاً
+                            • تسجيل الملكية في السجل العقاري (الطابو)
+                            • ملكية حقيقية لأسهم تنظيمية مضمونة قانونياً
+                        </div>
+                        <div class="concept-example">
+                            <strong>شرط أساسي:</strong> يجب أن يُبرز المالك سند ملكيته للأسهم المُباعة مصدقاً من السجل العقاري في دمشق.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">⚖️</span>
+                            باسيليا سيتي - وضع مختلط
+                        </div>
+                        <div class="concept-description">
+                            <strong>الجزء المخصص:</strong> يتبع نفس نظام ماروتا (عبر المحكمة حالياً بدلاً من الطابو).
+                            <br><br><strong>الجزء على الشيوع:</strong> يتبع نفس نظام القابون (عبر قرارات المحكمة كما هو معتاد).
+                        </div>
+                        <div class="concept-example">
+                            <strong>المرونة:</strong> تنوع الخيارات القانونية حسب طبيعة كل قسم في المشروع.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏭</span>
+                            القابون الصناعي - استمرارية الوضع
+                        </div>
+                        <div class="concept-description">
+                            هذه المنطقة كانت تعتمد أصلاً على قرارات المحكمة للأسهم على الشيوع، لذلك لم يطرأ تغيير كبير على آلية التعامل.
+                        </div>
+                        <div class="concept-example">
+                            <strong>الاستقرار:</strong> نفس الإجراءات المعتادة مع ضمانات قانونية كاملة.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">📋</span>
+                        نصائح للاستثمار الآمن
+                    </div>
+                    <ul style="margin-right: 20px; line-height: 1.8;">
+                        <li><strong>التحقق من المستندات:</strong> تأكد من صحة جميع الأوراق الرسمية</li>
+                        <li><strong>استشارة قانونية:</strong> اطلب مساعدة محامي مختص في العقارات</li>
+                        <li><strong>التسجيل الرسمي:</strong> لا تكتفِ بالوعود، اطلب التسجيل الرسمي</li>
+                        <li><strong>معرفة الإجراءات:</strong> تعلم الخطوات القانونية المطلوبة لكل منطقة</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="legal-status">
+            <div class="section-header">
+                <h2>الوضع القانوني الحالي</h2>
+                <div class="subtitle">إجراءات التمليك في الظروف الراهنة</div>
+            </div>
+            <div class="section-content">
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">📢</span>
+                        إعلان مهم للمستثمرين - الوضع الحالي
+                    </div>
+                    <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px;">
+                        <strong>بسبب الظروف الراهنة وتوقف عمل دوائر الطابو (السجل العقاري) مؤقتاً، فإن كافة عمليات التمليك في جميع المشاريع العقارية (ماروتا سيتي، باسيليا سيتي، والقابون الصناعي) تتم حالياً عبر قرار من المحكمة المختصة.</strong>
+                    </p>
+                    
+                    <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h4 style="color: white; margin-bottom: 15px; font-size: 1.2rem;">📋 الإجراءات المطلوبة حالياً:</h4>
+                        <ul style="margin-right: 20px; line-height: 1.8; color: white;">
+                            <li><strong>التوثيق القانوني:</strong> جميع عمليات البيع والشراء تتم بحكم محكمة</li>
+                            <li><strong>الاستعانة بمحامي:</strong> ضرورة وجود محامي مختص في العقارات</li>
+                            <li><strong>التوثيق المؤقت:</strong> الاعتماد على قرارات المحكمة كسند ملكية مؤقت</li>
+                            <li><strong>الحفظ الآمن:</strong> الاحتفاظ بجميع المستندات القانونية بعناية</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 8px; border-right: 4px solid white;">
+                        <p style="color: white; font-weight: 600;">
+                            <strong>💡 ملاحظة مهمة:</strong> هذا الوضع مؤقت وسيتم العودة للإجراءات الطبيعية عبر دوائر الطابو بمجرد استقرار الوضع العام. جميع المعاملات المؤقتة الحالية ستكون قابلة للتحويل للنظام العادي لاحقاً.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">⚖️</span>
+                            ماروتا سيتي - الوضع الحالي
+                        </div>
+                        <div class="concept-description">
+                            رغم أن ماروتا سيتي لديها أسهم تنظيمية مسجلة في السجل العقاري، إلا أن المعاملات الجديدة تتم حالياً عبر المحكمة مثل باقي المشاريع.
+                        </div>
+                        <div class="concept-example">
+                            <strong>الضمان:</strong> الملكية محفوظة ومسجلة، والانتقال سيكون سهلاً عند عودة العمل الطبيعي.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏛️</span>
+                            باسيليا والقابون - استمرارية الوضع
+                        </div>
+                        <div class="concept-description">
+                            هذه المناطق كانت تعتمد أصلاً على قرارات المحكمة للأسهم على الشيوع، لذلك لم يطرأ تغيير كبير على آلية التعامل.
+                        </div>
+                        <div class="concept-example">
+                            <strong>الاستقرار:</strong> نفس الإجراءات المعتادة مع ضمانات قانونية كاملة.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🔮</span>
+                            التوقعات المستقبلية
+                        </div>
+                        <div class="concept-description">
+                            بعد استقرار الوضع العام، ستعود دوائر الطابو للعمل الطبيعي، وسيمكن تحويل جميع المعاملات المؤقتة إلى التسجيل الرسمي المعتاد.
+                        </div>
+                        <div class="concept-example">
+                            <strong>الثقة:</strong> لا تأثير على الملكية الفعلية، فقط تغيير في آلية التوثيق.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="note">
+                    <strong>نصيحة للمستثمرين:</strong> لا تتردد في الاستثمار بسبب الوضع الحالي. جميع المعاملات محمية قانونياً ومعترف بها رسمياً. فقط تأكد من العمل مع محامي مختص وموثوق.
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="development-timeline">
+            <div class="section-header">
+                <h2>الجدول الزمني المتوقع للتطوير</h2>
+                <div class="subtitle">مواعيد التسليم والتطوير المتوقعة</div>
+            </div>
+            <div class="section-content">
+                <p class="intro-text">
+                    يختلف الجدول الزمني للتطوير والتسليم حسب نوع المشروع وطبيعة الأسهم. فيما يلي التوقعات الزمنية الحالية لكل منطقة:
+                </p>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">📅</span>
+                            المقاسم المخصصة (المفرزة)
+                        </div>
+                        <div class="concept-description">
+                            <strong>ماروتا سيتي وباسيليا سيتي (الأسهم المخصصة):</strong>
+                            <br>• المدة المتوقعة: <strong>2 - 5 سنوات</strong>
+                            <br>• تعتمد على حجم المشروع ومرحلة التطوير
+                            <br>• أولوية في التطوير للمشاريع المخصصة
+                        </div>
+                        <div class="concept-example">
+                            <strong>تقدير واقعي:</strong> معظم المشاريع المخصصة ستبدأ التسليم خلال 3-4 سنوات من الآن.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🔄</span>
+                            مشاريع الشيوع
+                        </div>
+                        <div class="concept-description">
+                            <strong>القابون الصناعي والمناطق الأخرى على الشيوع:</strong>
+                            <br>• <strong>لا توجد مدة محددة حالياً</strong>
+                            <br>• تعتمد على خطط إعادة الإعمار الشاملة
+                            <br>• متوقع تسارع وتيرة التطوير قريباً
+                        </div>
+                        <div class="concept-example">
+                            <strong>التوقعات:</strong> بدء التطوير المكثف مع برامج إعادة الإعمار في السنوات القادمة.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>🚀 عوامل تسريع التطوير:</strong><br>
+                    • <strong>مخططات إعادة الإعمار:</strong> برامج حكومية شاملة قيد التحضير<br>
+                    • <strong>الاستثمارات الخارجية:</strong> دخول رؤوس أموال جديدة للسوق<br>
+                    • <strong>الاستقرار الأمني:</strong> تحسن الأوضاع يعني تسريع التطوير<br>
+                    • <strong>الطلب المتزايد:</strong> ارتفاع الطلب على السكن والمكاتب
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">⏰</span>
+                        نصائح حول التوقيت
+                    </div>
+                    <ul style="margin-right: 20px; line-height: 1.8; color: white;">
+                        <li><strong>للمستثمرين العاجلين:</strong> ركز على المشاريع المخصصة (ماروتا وباسيليا المخصصة)</li>
+                        <li><strong>للاستثمار طويل المدى:</strong> مشاريع الشيوع تقدم فرصاً ممتازة رغم التأخير المحتمل</li>
+                        <li><strong>تنويع المحفظة:</strong> استثمر في أكثر من منطقة لتوزيع المخاطر الزمنية</li>
+                        <li><strong>المتابعة المستمرة:</strong> راقب أخبار التطوير والمخططات الحكومية</li>
+                    </ul>
+                </div>
+
+                <div class="note">
+                    <strong>💡 نصيحة استثمارية:</strong> العقارات استثمار طويل المدى بطبيعتها. حتى لو كانت المدة أطول من المتوقع، فالعائد النهائي عادة ما يكون مجزياً جداً، خاصة مع نمو العاصمة وإعادة الإعمار.
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="expat-services">
+            <div class="section-header">
+                <h2>خدمة المغتربين والمستثمرين عن بُعد</h2>
+                <div class="subtitle">حلول متكاملة للاستثمار من خارج سوريا</div>
+            </div>
+            <div class="section-content">
+                <p class="intro-text">
+                    نقدم خدمة متخصصة للمغتربين السوريين والمستثمرين الذين لا يملكون وكيلاً قانونياً في سوريا، لتسهيل عملية الاستثمار العقاري عن بُعد.
+                </p>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🌍</span>
+                            لمن هذه الخدمة؟
+                        </div>
+                        <div class="concept-description">
+                            <strong>المستفيدون من الخدمة:</strong>
+                            <br>• المغتربون السوريون في دول العالم
+                            <br>• المستثمرون الأجانب المهتمون بالسوق السوري
+                            <br>• من لا يملك وكيلاً قانونياً في سوريا
+                            <br>• من يفضل الاستثمار عن بُعد بأمان
+                        </div>
+                        <div class="concept-example">
+                            <strong>هدفنا:</strong> جعل الاستثمار العقاري في سوريا متاحاً وآمناً للجميع من أي مكان في العالم.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">⚖️</span>
+                            الخدمات المقدمة
+                        </div>
+                        <div class="concept-description">
+                            <strong>ما نقوم به نيابة عنك:</strong>
+                            <br>• تمثيل قانوني كامل في جميع المعاملات
+                            <br>• البحث وتقييم الفرص الاستثمارية
+                            <br>• إجراءات التوقيع والتوثيق القانوني
+                            <br>• المتابعة مع الجهات الرسمية والمحاكم
+                            <br>• تسليم المستندات والسندات القانونية
+                        </div>
+                        <div class="concept-example">
+                            <strong>شراكة كاملة:</strong> نكون وكيلك القانوني المعتمد طوال رحلة الاستثمار.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">💳</span>
+                            التكلفة والدفع
+                        </div>
+                        <div class="concept-description">
+                            <strong>أتعاب الخدمة:</strong>
+                            <br>• رسم ثابت: <strong>2,000 دولار أمريكي</strong>
+                            <br>• يغطي جميع الإجراءات القانونية
+                            <br>• يتم الاتفاق على التفاصيل مسبقاً
+                            <br>• شفافية كاملة في التكاليف
+                        </div>
+                        <div class="concept-example">
+                            <strong>قيمة مضافة:</strong> توفر عليك عناء السفر وتضمن إجراءات قانونية سليمة.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">💰</span>
+                        مسؤولية تحويل الأموال
+                    </div>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        <strong>على العميل تأمين الطريقة القانونية لتحويل الأموال إلى داخل سوريا.</strong><br><br>
+                        نحن نقدم الخدمة القانونية والتمثيل، لكن ترتيب وسائل تحويل الأموال يبقى مسؤولية العميل وفقاً للقوانين المعمول بها في بلد إقامته وسوريا.
+                    </p>
+                </div>
+
+                <div class="highlight">
+                    <strong>📞 للتواصل والاستفسار:</strong><br>
+                    • تواصل مع فريق <strong>تطبيق عقاري دمشق</strong><br>
+                    • استشارة مجانية لتحديد أفضل خيار استثماري<br>
+                    • وضع خطة استثمارية مخصصة حسب ميزانيتك<br>
+                    • متابعة مستمرة حتى إتمام الاستثمار
+                </div>
+
+                <div class="note">
+                    <strong>💡 لماذا نحن؟</strong> خبرة محلية عميقة في السوق السوري، شبكة واسعة من العلاقات القانونية والتجارية، وسمعة موثوقة في خدمة المغتربين والمستثمرين. نحن نفهم تحديات الاستثمار عن بُعد ونوفر الحلول المناسبة.
+                </div>
+            </div>
+        </section>
+
+        <!-- إضافة قسم الحد الأدنى للاستثمار -->
+        <section class="section" id="minimum-investment">
+            <div class="section-header">
+                <h2>الحد الأدنى للاستثمار</h2>
+                <div class="subtitle">أقل مبلغ يمكن استثماره في كل منطقة (<u>القيم تقريبية</u>)</div>
+            </div>
+            <div class="section-content">
+                <p class="intro-text">
+                    يختلف الحد الأدنى للاستثمار في كل منطقة حسب عدد الأسهم المطلوبة وسعر السهم. فيما يلي تفصيل لأقل مبلغ يمكن استثماره في كل منطقة:
+                </p>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏢</span>
+                            ماروتا سيتي
+                        </div>
+                        <div class="concept-description">
+                            <strong>الحد الأدنى للاستثمار في مكتب تجاري بماروتا سيتي:</strong><br><br>
+                            <strong>الخيار الأول: شراء أسهم "هواء" + حصة المطور استثمارية (حصة من الأرض والمشروع قبل البناء):</strong>
+                            <br>• لمساحة مكتب 30 متر مربع : يتطلب حوالي 10.2 مليون سهم استثماري (30م × 340,000 سهم/م مع حصة المتعهد).
+                            <br>• سعر السهم الاستثماري: 10-15 ليرة سورية للسهم.
+                            <br>• التكلفة الإجمالية لأسهم الهواء: <strong>من 102 مليون إلى 153 مليون ليرة سورية</strong> (تقريباً).
+                            <br><br>
+                            <strong>الخيار الثاني: شراء وحدة مكتبية على الهيكل (بعد البناء الأولي):</strong>
+                            <br>• لمكتب 30 متر مربع "عالهيكل":
+                            <br>• سعر المتر المربع على الهيكل يبدأ من <strong>3,500 دولار أمريكي</strong>.
+                            <br>• التكلفة الإجمالية للمكتب: <strong>بدءاً من 105,000 دولار أمريكي</strong> (تقريباً).
+                            <br><br>
+                            <em>ملاحظة: للمشاركة في <strong>عقار سكني</strong> (وليس مكتب تجاري)، قد يبدأ أقل مبلغ بحساب شقة 120 متر مربع تحتاج 18 مليون سهم (120م × 150 ألف سهم/م مع حصة المتعهد)، ونظراً لسعر السهم السكني (45-60 ليرة).</em>
+                        </div>
+                        <div class="concept-example">
+                            <strong>أقل مبلغ للمشاركة في عقار سكني (مثال):</strong> يتراوح من 810 مليون إلى 1.08 مليار ليرة سورية
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏗️</span>
+                            باسيليا سيتي
+                        </div>
+                        <div class="concept-description">
+                            <strong>الحد الأدنى للاستثمار (أسهم تنظيمية):</strong>
+                            <br>• <strong>مساحة صغيرة (30 متر مربع):</strong> تتطلب حوالي <strong>18 مليون سهم</strong>.
+                            <br> &nbsp; <small><em>(الحساب: 30م × 300 ألف سهم/م × 2 حصة المطور)</em></small>
+                            <br>• <strong>سعر السهم:</strong> 1.5 - 2 ليرة سورية.
+                            <br>• <strong>التكلفة الإجمالية:</strong> <strong>من 27 مليون إلى 36 مليون ليرة سورية.</strong>
+                            <br><br><em>ملاحظة هامة: باسيليا سيتي ما زالت في طور التخصيص ولا يوجد فيها بيع على الهيكل حالياً. جميع المعاملات تتم بنظام الأسهم التنظيمية فقط.</em>
+                        </div>
+                        <div class="concept-example">
+                            <strong>أقل مبلغ للمشاركة:</strong> حوالي 5 مليون ليرة سورية (كشريك في عقار)
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">🏭</span>
+                            القابون الصناعي
+                        </div>
+                        <div class="concept-description">
+                            <strong>الحد الأدنى للاستثمار (أسهم تنظيمية لعقار تجاري):</strong>
+                            <br>• <strong>مساحة صغيرة (20 متر مربع):</strong> تتطلب حوالي <strong>600 مليون سهم</strong>.
+                            <br> &nbsp; <small><em>(الحساب: 20م × 15 مليون سهم/م × 2 حصة المطور)</em></small>
+                            <br>• <strong>متوسط سعر السهم:</strong> 0.5 ليرة سورية.
+                            <br>• <strong>التكلفة الإجمالية:</strong> حوالي <strong>300 مليون ليرة سورية</strong>.
+                            <br><br>
+                            <div style="border: 1px solid #c0392b; border-radius: 8px; padding: 10px; margin-top: 10px; background-color: #fffaf8; text-align: justify;">
+                                <strong style="color: #c0392b;">تنويه هام:</strong> نلاحظ أن عدد الأسهم المطلوبة لمكتب تجاري في القابون يبدو مبالغاً فيه. للمقارنة، يتطلب المتر المربع التجاري في باسيليا سيتي (مع حصة المطور) حوالي <strong>600 ألف سهم</strong>، بينما في القابون الصناعي يصل إلى <strong>30 مليون سهم</strong>. <b>هذا الفارق الكبير يستدعي إعادة النظر في تقييم أسهم القابون التجارية.</b>
+                            </div>
+                         </div>
+                        <div class="concept-example">
+                            <strong>أقل مبلغ للمشاركة:</strong> حوالي 10 مليون ليرة سورية (كشريك في مشروع)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight">
+                    <strong>💡 مقارنة سريعة للحد الأدنى للاستثمار:</strong><br>
+                    • <strong>ماروتا سيتي:</strong> 200 مليون ل.س (للمشاركة في عقار)<br>
+                    • <strong>باسيليا سيتي:</strong> 5 مليون ل.س (للمشاركة في عقار)<br>
+                    • <strong>القابون الصناعي:</strong> 10 مليون ل.س (للمشاركة في مشروع)
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">📢</span>
+                        ملاحظة هامة حول البيع "على الهيكل"
+                    </div>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        <strong>البيع "على الهيكل" (بالمتر المربع بالدولار) متوفر حالياً فقط في ماروتا سيتي.</strong><br><br>
+                        • <strong>باسيليا سيتي:</strong> ما زالت في طور التخصيص ولا يوجد فيها بيع على الهيكل حالياً<br>
+                        • <strong>القابون الصناعي:</strong> متوفر فقط بنظام الأسهم على الشيوع<br>
+                        • <strong>ماروتا سيتي:</strong> البيع متاح بالأسهم (هواء) أو على الهيكل (بالدولار)
+                    </p>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">⚠️</span>
+                        نصائح مهمة للمستثمرين المبتدئين
+                    </div>
+                    <ul style="margin-right: 20px; line-height: 1.8;">
+                        <li><strong>ابدأ صغيراً:</strong> يمكنك البدء بمبلغ صغير عبر المشاركة مع آخرين</li>
+                        <li><strong>اختر المنطقة المناسبة:</strong> باسيليا سيتي هي الأنسب للمبتدئين من حيث التكلفة</li>
+                        <li><strong>ادرس خيارات الشراكة:</strong> الشراكة تتيح لك الدخول بمبلغ أقل</li>
+                        <li><strong>استشر الخبراء:</strong> احصل على استشارة قبل اتخاذ القرار</li>
+                    </ul>
+                </div>
+
+                <div class="note">
+                    <strong>💡 نصيحة استثمارية:</strong> إذا كان لديك ميزانية محدودة، ابدأ بباسيليا سيتي حيث تكلفة الدخول أقل. يمكنك لاحقاً التوسع إلى المناطق الأخرى مع نمو استثماراتك.
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="app-fees">
+            <div class="section-header">
+                <h2>أجور تطبيق عقاري دمشق</h2>
+                <div class="subtitle">آلية احتساب العمولة والنسب المئوية</div>
+            </div>
+            <div class="section-content">
+                <p class="intro-text">
+                    في حال إتمام أي صفقة عقارية عبر تطبيق "عقاري دمشق"، سواء كانت عملية بيع أو شراء، يتم تحصيل عمولة محددة من الطرفين كأجور لخدمات التطبيق. هذه العمولة تساعدنا على الاستمرار في تقديم أفضل الخدمات والمعلومات المحدثة للسوق العقاري.
+                </p>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">💰</span>
+                            عمولة البائع
+                        </div>
+                        <div class="concept-description">
+                            <strong>النسبة: 2% من إجمالي قيمة الصفقة.</strong>
+                            <br>
+                            يتم احتساب هذه النسبة على السعر النهائي الذي يتم به بيع العقار أو الأسهم العقارية.
+                        </div>
+                        <div class="concept-example">
+                            <strong>مثال:</strong> إذا تم بيع عقار بقيمة 100 مليون ليرة، تكون عمولة التطبيق من البائع هي 2 مليون ليرة.
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-title">
+                            <span class="concept-icon">💳</span>
+                            عمولة المشتري
+                        </div>
+                        <div class="concept-description">
+                            <strong>النسبة: 1% من إجمالي قيمة الصفقة.</strong>
+                            <br>
+                            يتم احتساب هذه النسبة على السعر النهائي الذي يتم به شراء العقار أو الأسهم العقارية.
+                        </div>
+                        <div class="concept-example">
+                             <strong>مثال:</strong> إذا تم شراء عقار بقيمة 100 مليون ليرة، تكون عمولة التطبيق من المشتري هي 1 مليون ليرة.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <span class="warning-icon">⚠️</span>
+                        ملاحظة هامة جداً
+                    </div>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        <strong>هذه النسب ثابتة وغير قابلة للتفاوض نهائياً.</strong><br><br>
+                        نحن نؤمن بالشفافية والوضوح في جميع تعاملاتنا. يتم إعلام الطرفين بهذه النسب قبل إتمام الصفقة لضمان الرضا التام والوضوح الكامل.
+                    </p>
+                </div>
+
+                <div class="highlight">
+                    <strong> خدمة الإعلانات المجانية:</strong><br>
+                     <strong>✅ إضافة إعلانات البيع والشراء مجاناً:</strong> يمكن لجميع المستخدمين إضافة إعلانات بيع أو شراء العقارات بشكل مجاني تماماً<br>
+                     <strong>✅ لا توجد رسوم على نشر الإعلانات:</strong> العمولة تُحصل فقط عند إتمام الصفقة<br>
+                     <strong>✅ عدد غير محدود من الإعلانات:</strong> يمكنك نشر العديد من إعلانات البيع والشراء دون أي تكلفة
+                </div>
+
+                <div class="note">
+                    <strong>💡 توضيح هام:</strong> تطبيق عقاري دمشق يحصل على العمولة فقط عند إتمام عملية البيع والشراء بنجاح. أما خدمة نشر الإعلانات والبحث عن العقارات وعرض التفاصيل فهي متاحة مجاناً لجميع المستخدمين.
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>للمزيد من المعلومات والاستشارات العقارية، يرجى التواصل مع فريق الخبراء المختصين</p>
+        </footer>
+    </div>
+
+    <script>
+        // JavaScript animation removed for PDF compatibility
+        // All sections are now visible by default
+    </script>
+</body>
+</html> 

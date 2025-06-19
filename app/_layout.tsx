@@ -1,5 +1,5 @@
 import '../global.css';
-import { Redirect, router, Stack, usePathname } from 'expo-router';
+import { Redirect, router, Stack, usePathname, useSegments } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { getSecureStore } from '@/composables/secure.store';
 import { useEffect, useRef, useState, createContext } from 'react';
@@ -100,6 +100,7 @@ export default function RootLayout() {
   });
   const hasToken = useRef(false);
   const pathname = usePathname();
+  const segments = useSegments();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasNotificationPermission, setHasNotificationPermission] = useState(false);
 
@@ -112,7 +113,6 @@ export default function RootLayout() {
     checkAuth();
   }, [pathname]);
 
-  console.log(isAuthenticated, 'isAuthenticated', pathname);
   const { setNotificationCount } = useNotificationsStore();
   const { getAuthData } = useAuthStore();
   const { updateFirebase } = useAdminStore();
@@ -280,8 +280,13 @@ export default function RootLayout() {
 
   // FAB State
   const [fabOpen, setFabOpen] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const onStateChange = ({ open }: { open: boolean }) => setFabOpen(open);
   const insets = useSafeAreaInsets(); // Get safe area insets
+
+  // Calculate FAB visibility
+  const hasContactSegment = segments.some(segment => segment.includes('contact'));
+  const shouldShowFAB = isAuthenticated && pathname === '/' && !hasContactSegment && !isBottomSheetOpen;
 
   async function onFetchUpdateAsync() {
     console.log('onFetchUpdateAsync');
@@ -379,9 +384,11 @@ export default function RootLayout() {
             <BottomSheetModalProvider>
               <CustomBottomModalSheet
                 bottomSheetModalRef={bottomSheetModalRef}
-                handleSheetChanges={() => {}}
-                handleDismissModalPress={() => {}}>
-                <View className="h-full items-center justify-center">
+                snapPoints={['55%', '60%']}
+                enableDynamicSizing={false}
+                handleSheetChanges={(index: number) => setIsBottomSheetOpen(index >= 0)}
+                handleDismissModalPress={() => setIsBottomSheetOpen(false)}>
+                <View className="items-center px-4 pt-6 pb-2">
                   <Image
                     className="h-[200px] w-[200px]"
                     resizeMode="contain"
@@ -411,9 +418,11 @@ export default function RootLayout() {
               </CustomBottomModalSheet>
               <CustomBottomModalSheet
                 bottomSheetModalRef={updateVersionRef}
-                handleSheetChanges={() => {}}
-                handleDismissModalPress={() => {}}>
-                <View className="h-full items-center justify-center">
+                snapPoints={['55%', '70%']}
+                enableDynamicSizing={false}
+                handleSheetChanges={(index: number) => setIsBottomSheetOpen(index >= 0)}
+                handleDismissModalPress={() => setIsBottomSheetOpen(false)}>
+                <View className="items-center px-4 pt-6 pb-2">
                   <Image
                     className="h-[200px] w-[200px]"
                     resizeMode="contain"
@@ -424,7 +433,7 @@ export default function RootLayout() {
                   <Text className="text-md mt-4 font-psemibold text-zinc-400">
                     يرجى التحديث لأحدث إصدار
                   </Text>
-                  <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} gap-4 px-4 pb-4`}>
+                  <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} gap-4 px-4 mt-6 w-full`}>
                     <CustomButton
                       hasGradient={true}
                       colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
@@ -432,7 +441,7 @@ export default function RootLayout() {
                       containerStyles={'flex-grow'}
                       positionOfGradient={'leftToRight'}
                       textStyles={'text-white'}
-                      buttonStyles={'h-[45px] mt-4'}
+                      buttonStyles={'h-[45px]'}
                       onPress={() =>
                         Linking.openURL(
                           'https://play.google.com/store/apps/details?id=akari.versetech.net'
@@ -453,7 +462,7 @@ export default function RootLayout() {
                       containerStyles={'flex-grow'}
                       positionOfGradient={'leftToRight'}
                       textStyles={'text-white'}
-                      buttonStyles={'h-[45px] mt-4'}
+                      buttonStyles={'h-[45px]'}
                       onPress={() => {
                         if (updateVersionRef.current) {
                           updateVersionRef.current.dismiss();
@@ -497,46 +506,58 @@ export default function RootLayout() {
                 <Stack.Screen name="(more_screens)/information" options={{ headerShown: false }} />
                 <Stack.Screen name="(admin)/users_list" options={{ headerShown: false }} />
                 <Stack.Screen name="(admin)/bulk_messages" options={{ headerShown: false }} />
+                <Stack.Screen name="chat" options={{ headerShown: false }} />
                 <Stack.Screen name="SearchResults" options={{ headerShown: false }} />
               </Stack>
               {/* FAB Group */}
               <FAB.Group
                 open={fabOpen}
-                visible={isAuthenticated && pathname == '/'} // Show FAB only when authenticated
+                visible={shouldShowFAB} // Use the calculated visibility
                 icon={fabOpen ? 'close' : 'plus'}
                 color="#FFF"
                 label={'أضف إعلانك الأن'}
-                theme={{ fonts: { ...theme.fonts, labelLarge: { ...theme.fonts.labelLarge, fontSize: 14 } } }}
-                rippleColor={'#00000060'}
+                theme={{ 
+                  fonts: { 
+                    ...theme.fonts, 
+                    labelLarge: { 
+                      ...theme.fonts.labelLarge, 
+                      fontSize: 14,
+                      textShadowColor: 'rgba(0, 0, 0, 0.59)',
+                      textShadowOffset: { width: 0, height: 2 },
+                      textShadowRadius: 15,
+                    } 
+                  } 
+                }}
+                rippleColor={'#000000A0'}
                 actions={[
                   {
                     icon: 'home-plus-outline', // Or choose another appropriate icon
                     label: 'إضافة إعلان عن عقار',
                     onPress: () => router.push('/(create)/apartments'),
-                    style: { backgroundColor: '#a47764' }, // Optional: Style the action button
+                    style: { backgroundColor: '#8E6756' }, // Using CustomAlert موافق button color
                     labelTextColor: 'white', // Optional: Style the label
                     color: 'white', // Optional: Style the icon color
                   },
                   {
                     icon: 'trending-up', // Or choose another appropriate icon
-                    label: 'إضافة إعلان عن أسهم تنظيمية',
+                    label: 'إضافة إعلان عن أسهم تنظيمية', 
                     onPress: () => router.push('/(create)/shares'),
-                    style: { backgroundColor: '#a47764' }, // Optional: Style the action button
+                    style: { backgroundColor: '#8E6756' }, // A88B67 Using CustomAlert موافق button color
                     labelTextColor: 'white', // Optional: Style the label
                     color: 'white', // Optional: Style the icon color
                   },
                 ]}
                 onStateChange={onStateChange}
                 fabStyle={{
-                  backgroundColor: '#8E6756',
+                  backgroundColor: '#8E6756', // Using CustomAlert موافق button color
                   marginBottom: (insets.bottom || 0) + 90,
                   marginRight: I18nManager.isRTL ? undefined : 16,
                   marginLeft: I18nManager.isRTL ? 16 : undefined,
                   
                   borderWidth: 5,
-                  borderColor: '#a4776450',
+                  borderColor: '#a4776450', // Using same color with transparency
                 }}
-                backdropColor="#00000080" // Kept transparent backdrop
+                backdropColor="#000000C0" // Kept transparent backdrop
                 style={{}}
               />
             </BottomSheetModalProvider>

@@ -9,6 +9,7 @@ import empty_notifications from '../assets/images/empty_notifications.png';
 import connection_lost from '../assets/images/connection_lost.png';
 import no_data from '../assets/images/no_data.png';
 import update from '../assets/images/update.png';
+import akari_ai from '../assets/images/akari_ai.png';
 export default {
   only_word,
   top,
@@ -21,4 +22,5 @@ export default {
   connection_lost,
   no_data,
   update,
+  akari_ai,
 };

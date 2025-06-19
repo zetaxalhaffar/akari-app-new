@@ -157,7 +157,7 @@ const MyOrders = () => {
       <CustomBottomModalSheet
         backdropBehave="close"
         enablePanDownToClose={true}
-        snapPoints={['20%']}
+        snapPoints={['30%']}
         bottomSheetModalRef={bottomSheetModalRef}
         handleSheetChanges={() => {}}
         handleDismissModalPress={() => {}}>

@@ -12,6 +12,7 @@ import {
   Alert,
   TouchableOpacity,
   Pressable,
+  Linking,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -506,6 +507,7 @@ const UnitDetails = ({
           item?.sector?.outer_area ||
           item?.sector?.residential_area ||
           (item?.sector?.commercial_area && item?.sector?.commercial_area !== '0') ||
+          item?.sector?.building_area ||
           item?.sector?.floors_number ||
           item?.sector?.total_floor_area ||
           item?.sector?.share_count ||
@@ -520,10 +522,10 @@ const UnitDetails = ({
           <View className="mt-4">
             <Text className="mb-2 font-psemibold text-lg text-black">تفاصيل المقسم {item?.sector?.code?.code}</Text>
           
-          {/* Areas Row */}
-          <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-row gap-2`}>
-            {item?.sector?.outer_area && (
-              <View className="flex-1 rounded-lg border border-toast-100 p-4">
+          {/* Areas Section */}
+          <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} flex-row flex-wrap gap-2`}>
+            {item?.sector?.outer_area && item?.sector?.outer_area !== '0' && (
+              <View className="flex-1 min-w-[45%] rounded-lg border border-toast-100 p-4">
                 <Image source={icons.location} className="mb-1 h-7 w-7" tintColor="#a47764" />
                 <Text className="font-pmedium text-base text-zinc-600">مساحة أرض المقسم</Text>
                 <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
@@ -531,8 +533,8 @@ const UnitDetails = ({
                 </Text>
               </View>
             )}
-            {item?.sector?.residential_area && (
-              <View className="flex-1 rounded-lg border border-toast-100 p-4">
+            {item?.sector?.residential_area && item?.sector?.residential_area !== '0' && (
+              <View className="flex-1 min-w-[45%] rounded-lg border border-toast-100 p-4">
                 <Image source={icons.location} className="mb-1 h-7 w-7" tintColor="#a47764" />
                 <Text className="font-pmedium text-base text-zinc-600">المساحة السكنية</Text>
                 <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
@@ -541,7 +543,7 @@ const UnitDetails = ({
               </View>
             )}
             {item?.sector?.commercial_area && item?.sector?.commercial_area !== '0' && (
-              <View className="flex-1 rounded-lg border border-toast-100 p-4">
+              <View className="flex-1 min-w-[45%] rounded-lg border border-toast-100 p-4">
                 <Image source={icons.location} className="mb-1 h-7 w-7" tintColor="#a47764" />
                 <Text className="font-pmedium text-base text-zinc-600">المساحة التجارية</Text>
                 <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
@@ -549,11 +551,20 @@ const UnitDetails = ({
                 </Text>
               </View>
             )}
+            {item?.sector?.building_area && item?.sector?.building_area !== '0' && (
+              <View className="flex-1 min-w-[45%] rounded-lg border border-toast-100 p-4">
+                <Image source={icons.location} className="mb-1 h-7 w-7" tintColor="#a47764" />
+                <Text className="font-pmedium text-base text-zinc-600">مساحة رقعة البناء</Text>
+                <Text className={`font-pregular text-sm text-zinc-600 ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>
+                  {item?.sector?.building_area} م²
+                </Text>
+              </View>
+            )}
           </View>
 
           {/* Building Details Row */}
           <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4 flex-row gap-2`}>
-            {item?.sector?.floors_number && (
+            {item?.sector?.floors_number && item?.sector?.floors_number !== '0' && (
               <View className="flex-1 rounded-lg border border-toast-100 p-4">
                 <Image source={icons.sector} className="mb-1 h-7 w-7" tintColor="#a47764" />
                 <Text className="font-pmedium text-base text-zinc-600">عدد الطوابق</Text>
@@ -571,7 +582,7 @@ const UnitDetails = ({
                 </Text>
               </View>
             )}
-            {item?.sector?.share_count && (
+            {item?.sector?.share_count && item?.sector?.share_count !== '0' && (
               <View className="flex-1 rounded-lg border border-toast-100 p-4">
                 <Image source={icons.quantity} className="mb-1 h-7 w-7" tintColor="#a47764" />
                 <Text className="font-pmedium text-base text-zinc-600">إجمالي عدد الأسهم</Text>
@@ -881,6 +892,28 @@ const ApartmentDetails = () => {
     }
   };
 
+  const handleContactOwner = async () => {
+    const ownerPhone = apartmentDetailsResponse?.user?.phone;
+    const ownerName = `${apartmentDetailsResponse?.user?.name || ''} ${apartmentDetailsResponse?.user?.surname || ''}`.trim();
+    
+    if (ownerPhone) {
+      const whatsappUrl = `whatsapp://send?phone=${ownerPhone}&text=${encodeURIComponent(apartmentDetailsResponse?.admin_message || `مرحبا ${ownerName}, أود الاستفسار عن العقار المعروض`)}`;
+      
+      try {
+        const supported = await Linking.canOpenURL(whatsappUrl);
+        if (supported) {
+          await Linking.openURL(whatsappUrl);
+        } else {
+          Alert.alert('خطأ', 'تطبيق واتساب غير مثبت على هذا الجهاز');
+        }
+      } catch (error) {
+        Alert.alert('خطأ', 'حدث خطأ أثناء فتح واتساب');
+      }
+    } else {
+      Alert.alert('خطأ', 'رقم الهاتف غير متوفر');
+    }
+  };
+
   useEffect(() => {
     getApartmentDetailsHandler();
   }, [id]);
@@ -1071,7 +1104,7 @@ const ApartmentDetails = () => {
               user?.privilege !== 'admin' ? (
                 <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
                   <CustomBottomSheet
-                    snapPoints={['25%']}
+                    snapPoints={['30%']}
                     trigger={
                       <CustomButton
                         hasGradient={true}
@@ -1130,6 +1163,23 @@ const ApartmentDetails = () => {
                           />
                         </View>
                       )}
+                      <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4`}>
+                        <TouchableOpacity
+                          onPress={handleContactOwner}
+                          className="flex-1 h-[45px] bg-[#128C7E] rounded-md flex-row items-center justify-center"
+                          activeOpacity={0.8}
+                        >
+                          <AntDesign 
+                            name="message1" 
+                            size={20} 
+                            color="white" 
+                            style={{ marginRight: 8 }} 
+                          />
+                          <Text className="text-white font-psemibold text-base">
+                            {`تواصل مع ${apartmentDetailsResponse?.user?.name || 'المالك'}`}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
                       <View className={`gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-4`}>
                         <CustomButton
                           hasGradient={true}

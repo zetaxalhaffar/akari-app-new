@@ -47,6 +47,42 @@ export default function Home() {
   const { remove } = useNotifications();
 
   const [backPressCount, setBackPressCount] = useState(0);
+
+  // Optimized navigation handlers using requestAnimationFrame
+  const handleRegionPress = useCallback((regionId) => {
+    requestAnimationFrame(() => {
+      router.push({
+        pathname: `/(regions)/${regionId}`,
+      });
+    });
+  }, []);
+
+  const handleShareStatisticsPress = useCallback((itemId) => {
+    requestAnimationFrame(() => {
+      router.push({
+        pathname: `/(regions)/${itemId}`,
+      });
+    });
+  }, []);
+
+  const handleApartmentStatisticsPress = useCallback((apartmentTypeId) => {
+    requestAnimationFrame(() => {
+      router.push({
+        pathname: '/SearchResults',
+        params: {
+          currentType: 'apartment',
+          apartment_type_id: apartmentTypeId,
+        },
+      });
+    });
+  }, []);
+
+  const handleChatPress = useCallback(() => {
+    requestAnimationFrame(() => {
+      router.push('/chat');
+    });
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
       const backAction = () => {
@@ -83,6 +119,12 @@ export default function Home() {
         <Text className="font-psemibold text-lg">لا تضيع فرصة الاستثمار</Text>
         <Text className="font-pregular text-base">كل الوحدات متاحة, اختر الوحدة التي تناسبك</Text>
       </View>
+      <TouchableOpacity
+        className="mx-4 mt-4"
+        onPress={handleChatPress}
+        activeOpacity={0.8}>
+        <Image source={images.akari_ai} className="h-24 w-full" resizeMode="contain" />
+      </TouchableOpacity>
       {statisticsSchemaLoading ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#a47764" />
@@ -97,11 +139,8 @@ export default function Home() {
                   key={item?.id}
                   className="relative h-[200px] rounded-lg bg-toast-500"
                   style={{ width: '48%' }}
-                  onPress={() =>
-                    router.push({
-                      pathname: `/(regions)/${item?.id}`,
-                    })
-                  }>
+                  onPress={() => handleRegionPress(item?.id)}
+                  activeOpacity={0.8}>
                   <Image
                     source={images.city_1}
                     resizeMode="cover"
@@ -133,11 +172,8 @@ export default function Home() {
                   <TouchableOpacity
                     key={index}
                     style={{ width: '47%' }}
-                    onPress={() =>
-                      router.push({
-                        pathname: `/(regions)/${item?.id}`,
-                      })
-                    }>
+                    onPress={() => handleShareStatisticsPress(item?.id)}
+                    activeOpacity={0.8}>
                     <LinearGradient
                       style={{ borderRadius: 6 }}
                       colors={colors}
@@ -167,15 +203,8 @@ export default function Home() {
                   <TouchableOpacity
                     key={index}
                     style={{ width: '47%' }}
-                    onPress={() =>
-                      router.push({
-                        pathname: '/SearchResults',
-                        params: {
-                          currentType: 'apartment',
-                          apartment_type_id: item?.id,
-                        },
-                      })
-                    }>
+                    onPress={() => handleApartmentStatisticsPress(item?.id)}
+                    activeOpacity={0.8}>
                     <LinearGradient
                       style={{ borderRadius: 6 }}
                       colors={colors}

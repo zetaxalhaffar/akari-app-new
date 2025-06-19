@@ -1,13 +1,37 @@
-import { View, Text, Image, I18nManager, TouchableOpacity } from 'react-native';
+import { View, Text, Image, I18nManager, TouchableOpacity, BackHandler } from 'react-native';
+import { useState } from 'react';
 import Feather from '@expo/vector-icons/Feather';
+import Entypo from '@expo/vector-icons/Entypo';
 import images from '@/constants/images';
 import { router, usePathname } from 'expo-router';
 import { useNotificationsStore } from '@/store/notifications.store';
+import CustomIcon from './CustomIcon';
+import CustomAlert from './CustomAlert';
 
 const HomePageHeader = ({ hasActions = true, customActions = false, children }) => {
+  const [showExitAlert, setShowExitAlert] = useState(false);
+  
   const handleLogoPress = () => {
     router.dismissAll();
     router.push('(tabs)');
+  };
+
+  const handleBackPress = () => {
+    if (pathname === '/') {
+      // Show exit app confirmation on home page
+      setShowExitAlert(true);
+    } else {
+      router.back();
+    }
+  };
+
+  const handleExitConfirm = () => {
+    setShowExitAlert(false);
+    BackHandler.exitApp();
+  };
+
+  const handleExitCancel = () => {
+    setShowExitAlert(false);
   };
 
   const { notificationCount } = useNotificationsStore();
@@ -16,9 +40,18 @@ const HomePageHeader = ({ hasActions = true, customActions = false, children }) 
   return (
     <View
       className={` flex-row items-center justify-between px-4 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
-      <TouchableOpacity onPress={handleLogoPress} className={`flex-row items-center`}>
-        <Image source={images.only_word} className="h-24 w-24" resizeMode="contain" />
-      </TouchableOpacity>
+      <View className="flex-row items-center">
+        <TouchableOpacity
+          onPress={handleBackPress}
+          className={`flex-row items-center -ml-2 -mr-1 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
+          <CustomIcon handleOnIconPress={handleBackPress} containerStyles="border-[0] p-1">
+            <Entypo name="chevron-right" size={24} color="#a47764" />
+          </CustomIcon>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleLogoPress} className={`flex-row items-center`}>
+          <Image source={images.only_word} className="h-24 w-24" resizeMode="contain" />
+        </TouchableOpacity>
+      </View>
       {hasActions && !customActions && (
         <View className={`items-center gap-2 ${I18nManager.isRTL ? 'ltr-view' : 'rtl-view'}`}>
           {pathname === '/' && (
@@ -59,9 +92,20 @@ const HomePageHeader = ({ hasActions = true, customActions = false, children }) 
               className="flex-row items-center rounded-full p-2">
               <Feather name="star" size={20} color="#a47764" />
             </TouchableOpacity>
+
+
+
         </View>
       )}
       {hasActions && customActions && children}
+      
+      <CustomAlert
+        visible={showExitAlert}
+        title="الخروج من التطبيق"
+        message="هل أنت متأكد من أنك تريد الخروج؟"
+        onConfirm={handleExitConfirm}
+        onCancel={handleExitCancel}
+      />
     </View>
   );
 };

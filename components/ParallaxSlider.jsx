@@ -57,55 +57,58 @@ const ParallaxSlider = () => {
         style={{ width }}
         data={onBoardingData}
         renderItem={({ index, item }) => (
-          <>
-            <View className="relative flex-1 items-center justify-center overflow-hidden">
+          <View className="flex-1 justify-between">
+            <View className="flex-1 items-center justify-center overflow-hidden">
               <Image
                 resizeMode="contain"
                 source={images.only_word}
                 className={'z-10 max-w-[150px]'}
               />
             </View>
-            <View className="items-center justify-center">
-              <Text className={`word-wrap text-wrap pt-12 ${I18nManager.isRTL ? 'text-left' : 'text-right'} font-pmedium text-3xl`}>
+            
+            {/* Pagination dots positioned between logo and text */}
+            <View className={`flex-row items-center justify-center py-6 ${I18nManager.isRTL ? 'scale-[-1]' : ''}`}>
+              <Pagination.Basic
+                progress={progress}
+                data={onBoardingData.map((color) => ({ color }))}
+                size={20}
+                dotStyle={{
+                  backgroundColor: '#774b46',
+                  borderRadius: 8,
+                  width: 20,
+                  height: 20,
+                  overflow: 'hidden',
+                }}
+                activeDotStyle={{
+                  borderRadius: 8,
+                  overflow: 'hidden',
+                  width: 20,
+                  height: 20,
+                  backgroundColor: '#d4c2b3',
+                }}
+                containerStyle={[
+                  {
+                    gap: 5,
+                    marginBottom: 10,
+                  },
+                ]}
+                horizontal
+                onPress={onPressPagination}
+              />
+            </View>
+            
+            <View className="items-center justify-center pb-8">
+              <Text className={`word-wrap text-wrap pt-4 ${I18nManager.isRTL ? 'text-left' : 'text-right'} font-pmedium text-3xl`}>
                 {item.title}
               </Text>
               <Text className={`text-md px-4 ${I18nManager.isRTL ? 'text-left' : 'text-right'} font-pmedium text-gray-500`}>
                 {item.subtitle}
               </Text>
             </View>
-          </>
+          </View>
         )}
       />
-      <View
-        className={`absolute bottom-[26rem] left-0 right-0 h-12 flex-row items-center justify-center ${I18nManager.isRTL ? 'scale-[-1]' : ''}`}>
-        <Pagination.Basic
-          progress={progress}
-          data={onBoardingData.map((color) => ({ color }))}
-          size={20}
-          dotStyle={{
-            backgroundColor: '#774b46',
-            borderRadius: 8,
-            width: 20,
-            height: 20,
-            overflow: 'hidden',
-          }}
-          activeDotStyle={{
-            borderRadius: 8,
-            overflow: 'hidden',
-            width: 20,
-            height: 20,
-            backgroundColor: '#d4c2b3',
-          }}
-          containerStyle={[
-            {
-              gap: 5,
-              marginBottom: 10,
-            },
-          ]}
-          horizontal
-          onPress={onPressPagination}
-        />
-      </View>
+
     </>
   );
 };

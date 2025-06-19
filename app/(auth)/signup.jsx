@@ -140,6 +140,7 @@ const LoginScreen = () => {
               arrayOfValues={jobTitlesSchemaResponse}
               valueKey="id"
               placeholder="المسمى الوظيفي"
+              label="المسمى الوظيفي"
             />
           </View>
         </View>

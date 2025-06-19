@@ -381,6 +381,8 @@ const RegionWithId = () => {
               ref={flashListRef}
               data={tabId == 'shares' ? sharesRecords : apartmentsRecords}
               estimatedItemSize={350}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingBottom: 40 }}
               refreshing={tabId == 'shares' ? sharesLoading : apartmentsLoading}
               onRefresh={handleRefresh}
               renderItem={({ item }) =>
@@ -446,6 +448,7 @@ const RegionWithId = () => {
               <ScrollView 
                 className="mb-4" 
                 style={{ maxHeight: screenHeight * 0.5 }}
+                contentContainerStyle={{ paddingBottom: 30 }}
                 showsVerticalScrollIndicator={false}>
                 {getCurrentSortingOptions().map((option, index) => (
                   <TouchableOpacity

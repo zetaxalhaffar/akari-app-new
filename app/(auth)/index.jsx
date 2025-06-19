@@ -11,9 +11,9 @@ const BOTTOM_NAVIGATION_HEIGHT = 78;
 const AuthMainStack = () => {
   console.log(I18nManager.isRTL, "isRTL")
   return (
-    <SafeAreaView>
-      <View className={'relative'}>
-        <View className={'relative h-screen'}>
+    <SafeAreaView className="flex-1">
+      <View className={'relative flex-1'}>
+        <View className={'absolute inset-0'}>
           <ParallaxSlider />
         </View>
         <View className={styles.bottom_navigation} style={{ height: BOTTOM_NAVIGATION_HEIGHT }}>

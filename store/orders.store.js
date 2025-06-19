@@ -93,6 +93,7 @@ export const useOrdersStore = create((set, get) => ({
       console.log('response', response);
       return response;
     } catch (error) {
+      console.log('error', error);
       set({ deleteOrderError: error });
     } finally {
       set({ deleteOrderLoading: false });

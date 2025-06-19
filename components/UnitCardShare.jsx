@@ -13,7 +13,7 @@ import CustomLinear from './CustomLinear';
 import icons from '@/constants/icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as SecureStore from 'expo-secure-store';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -99,7 +99,15 @@ const UnitShareCard = ({ item }) => {
     },
   ];
 
-  const user = JSON.parse(SecureStore.getItem('user'));
+  const user = useMemo(() => {
+    try {
+      const userData = SecureStore.getItem('user');
+      return userData ? JSON.parse(userData) : null;
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      return null;
+    }
+  }, []);
 
   const [showReactions, setShowReactions] = useState(false);
   const [displayedReaction, setDisplayedReaction] = useState(item?.current_user_reaction);
@@ -126,7 +134,9 @@ const UnitShareCard = ({ item }) => {
   };
 
   const handleSharePress = () => {
-    router.push(`/(shares)/${item.id}`);
+    requestAnimationFrame(() => {
+      router.push(`/(shares)/${item.id}`);
+    });
   };
 
   useEffect(() => {
@@ -148,7 +158,7 @@ const UnitShareCard = ({ item }) => {
   }, []);
 
   // Handles selecting a reaction from the popup
-  const handleReactionSelect = async (reaction) => {
+  const handleReactionSelect = (reaction) => {
     // Clear the auto-hide timer when user selects a reaction
     if (reactionTimerRef.current) {
       clearTimeout(reactionTimerRef.current);
@@ -157,19 +167,22 @@ const UnitShareCard = ({ item }) => {
     const previousReaction = displayedReaction;
     setDisplayedReaction(reaction); // Optimistic update
     setShowReactions(false);
-    const response = await setReactions({
-      type: reaction,
-      post_type: 'share',
-      post_id: item.id,
+    
+    requestAnimationFrame(async () => {
+      const response = await setReactions({
+        type: reaction,
+        post_type: 'share',
+        post_id: item.id,
+      });
+      if (response) {
+        updateShareReactions(item.id, response.reaction_summary);
+        // Update user reaction in search results as well
+        updateSearchResultUserReaction(item.id, 'share', reaction);
+      } else {
+        // Optional: revert on error
+        // setDisplayedReaction(previousReaction);
+      }
     });
-    if (response) {
-      updateShareReactions(item.id, response.reaction_summary);
-      // Update user reaction in search results as well
-      updateSearchResultUserReaction(item.id, 'share', reaction);
-    } else {
-      // Optional: revert on error
-      // setDisplayedReaction(previousReaction);
-    }
     console.log(`Reaction selected: ${reaction}`);
   };
 
@@ -255,27 +268,29 @@ const UnitShareCard = ({ item }) => {
     
     console.log('UnitCardShare - Favorite button pressed. Previous state:', previousFavorite, 'New optimistic state:', !displayedFavorite);
     
-    toggleFavorite({
-      type: 'share',
-      id: item.id,
-    }).then(response => {
-      console.log('UnitCardShare - Toggle favorite response:', response);
-      if (response && response.data) {
-        // Update with actual response from server
-        console.log('UnitCardShare - Server response is_favorited:', response.data.is_favorited, 'type:', typeof response.data.is_favorited);
-        const isFavorited = Boolean(response.data.is_favorited);
-        setDisplayedFavorite(isFavorited);
-        // Update favorite state in search results as well
-        updateSearchResultUserFavorite(item.id, 'share', isFavorited);
-      } else {
-        // Revert optimistic update on failure
-        console.log('UnitCardShare - No response data, reverting to:', previousFavorite);
+    requestAnimationFrame(() => {
+      toggleFavorite({
+        type: 'share',
+        id: item.id,
+      }).then(response => {
+        console.log('UnitCardShare - Toggle favorite response:', response);
+        if (response && response.data) {
+          // Update with actual response from server
+          console.log('UnitCardShare - Server response is_favorited:', response.data.is_favorited, 'type:', typeof response.data.is_favorited);
+          const isFavorited = Boolean(response.data.is_favorited);
+          setDisplayedFavorite(isFavorited);
+          // Update favorite state in search results as well
+          updateSearchResultUserFavorite(item.id, 'share', isFavorited);
+        } else {
+          // Revert optimistic update on failure
+          console.log('UnitCardShare - No response data, reverting to:', previousFavorite);
+          setDisplayedFavorite(previousFavorite);
+        }
+      }).catch(() => {
+        // Revert optimistic update on error
+        console.log('UnitCardShare - Error occurred, reverting to:', previousFavorite);
         setDisplayedFavorite(previousFavorite);
-      }
-    }).catch(() => {
-      // Revert optimistic update on error
-      console.log('UnitCardShare - Error occurred, reverting to:', previousFavorite);
-      setDisplayedFavorite(previousFavorite);
+      });
     });
   };
 

@@ -13,7 +13,7 @@ import CustomLinear from './CustomLinear';
 import icons from '@/constants/icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as SecureStore from 'expo-secure-store';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -98,14 +98,24 @@ const UnitApartmentCard = ({ item }) => {
     },
   ];
 
-  const user = JSON.parse(SecureStore.getItem('user'));
+  const user = useMemo(() => {
+    try {
+      const userData = SecureStore.getItem('user');
+      return userData ? JSON.parse(userData) : null;
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      return null;
+    }
+  }, []);
 
   const [showReactions, setShowReactions] = useState(false);
   const [displayedReaction, setDisplayedReaction] = useState(item?.current_user_reaction);
   const [displayedFavorite, setDisplayedFavorite] = useState(Boolean(item?.is_favorited));
 
   const handleApartmentPress = () => {
-    router.push(`/(apartments)/${item.id}`);
+    requestAnimationFrame(() => {
+      router.push(`/(apartments)/${item.id}`);
+    });
   };
 
   useEffect(() => {
@@ -165,22 +175,25 @@ const UnitApartmentCard = ({ item }) => {
     const previousReaction = displayedReaction;
     setDisplayedReaction(reaction); // Optimistic update
     setShowReactions(false);
-    setReactions({
-      type: reaction,
-      post_type: 'apartment',
-      post_id: item.id,
-    }).then(response => {
-      if (response) {
-        updateApartmentReactions(item.id, response.reaction_summary);
-        // Update user reaction in search results as well
-        updateSearchResultUserReaction(item.id, 'apartment', reaction);
-      } else {
-        // Revert optimistic update on failure
-        setDisplayedReaction(previousReaction);
-      }
-    }).catch(() => {
-        // Revert optimistic update on error
-        setDisplayedReaction(previousReaction);
+    
+    requestAnimationFrame(() => {
+      setReactions({
+        type: reaction,
+        post_type: 'apartment',
+        post_id: item.id,
+      }).then(response => {
+        if (response) {
+          updateApartmentReactions(item.id, response.reaction_summary);
+          // Update user reaction in search results as well
+          updateSearchResultUserReaction(item.id, 'apartment', reaction);
+        } else {
+          // Revert optimistic update on failure
+          setDisplayedReaction(previousReaction);
+        }
+      }).catch(() => {
+          // Revert optimistic update on error
+          setDisplayedReaction(previousReaction);
+      });
     });
     console.log(`Reaction selected: ${reaction}`);
   };
@@ -263,27 +276,29 @@ const UnitApartmentCard = ({ item }) => {
     
     console.log('UnitCardApartment - Favorite button pressed. Previous state:', previousFavorite, 'New optimistic state:', !displayedFavorite);
     
-    toggleFavorite({
-      type: 'apartment',
-      id: item.id,
-    }).then(response => {
-      console.log('UnitCardApartment - Toggle favorite response:', response);
-      if (response && response.data) {
-        // Update with actual response from server
-        console.log('UnitCardApartment - Server response is_favorited:', response.data.is_favorited, 'type:', typeof response.data.is_favorited);
-        const isFavorited = Boolean(response.data.is_favorited);
-        setDisplayedFavorite(isFavorited);
-        // Update favorite state in search results as well
-        updateSearchResultUserFavorite(item.id, 'apartment', isFavorited);
-      } else {
-        // Revert optimistic update on failure
-        console.log('UnitCardApartment - No response data, reverting to:', previousFavorite);
+    requestAnimationFrame(() => {
+      toggleFavorite({
+        type: 'apartment',
+        id: item.id,
+      }).then(response => {
+        console.log('UnitCardApartment - Toggle favorite response:', response);
+        if (response && response.data) {
+          // Update with actual response from server
+          console.log('UnitCardApartment - Server response is_favorited:', response.data.is_favorited, 'type:', typeof response.data.is_favorited);
+          const isFavorited = Boolean(response.data.is_favorited);
+          setDisplayedFavorite(isFavorited);
+          // Update favorite state in search results as well
+          updateSearchResultUserFavorite(item.id, 'apartment', isFavorited);
+        } else {
+          // Revert optimistic update on failure
+          console.log('UnitCardApartment - No response data, reverting to:', previousFavorite);
+          setDisplayedFavorite(previousFavorite);
+        }
+      }).catch(() => {
+        // Revert optimistic update on error
+        console.log('UnitCardApartment - Error occurred, reverting to:', previousFavorite);
         setDisplayedFavorite(previousFavorite);
-      }
-    }).catch(() => {
-      // Revert optimistic update on error
-      console.log('UnitCardApartment - Error occurred, reverting to:', previousFavorite);
-      setDisplayedFavorite(previousFavorite);
+      });
     });
   };
 

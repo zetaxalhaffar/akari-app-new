@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Linking, I18nManager } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomHeadWithBackButton from '../../components/CustomHeadWithBackButton';
@@ -8,6 +8,7 @@ import icons from '../../constants/icons';
 import CustomButton from '../../components/CustomButton';
 import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
 import { useOrdersStore } from '../../store/orders.store';
+import CustomAlert from '../../components/CustomAlert';
 
 const Contact = () => {
   const {
@@ -25,22 +26,34 @@ const Contact = () => {
 
   const { deleteOrder, deleteOrderLoading } = useOrdersStore();
 
+  const [contactMethod, setContactMethod] = useState(null);
+  const [alertInfo, setAlertInfo] = useState({
+    visible: false,
+    title: '',
+    message: '',
+  });
+
   const handleWhatsappPress = () => {
-    Linking.openURL(
-      `https://wa.me/${shareDetailsResponse?.user?.phone || apartmentDetailsResponse?.user?.phone}?text=${shareDetailsResponse?.question_message || apartmentDetailsResponse?.question_message}`
-    );
+    setContactMethod('whatsapp');
+    intentionBottomSheetModalRef.current.present();
   };
 
   const handlePhonePress = () => {
-    Linking.openURL(
-      `tel:${shareDetailsResponse?.user?.phone || apartmentDetailsResponse?.user?.phone}`
-    );
+    setContactMethod('phone');
+    intentionBottomSheetModalRef.current.present();
   };
 
-  const handleDatePress = async () => {
+  const intentionBottomSheetModalRef = useRef(null);
+
+  const onIntentionClose = () => {
+    intentionBottomSheetModalRef.current.dismiss();
+  };
+
+  const performDateAction = async () => {
     const typeOfContact =
       shareDetailsResponse?.transaction_type || apartmentDetailsResponse?.transaction_type;
     const typeOfPost = shareDetailsResponse?.post_type || apartmentDetailsResponse?.post_type;
+
     if (typeOfContact == 'sell') {
       if (typeOfPost == 'apartment') {
         const response = await createApartmentBuyRequest(
@@ -76,6 +89,67 @@ const Contact = () => {
     }
   };
 
+  const cleanPhoneNumber = (number) => {
+    if (!number) return '';
+    // Remove all non-digit characters except for the leading '+'
+    return number.replace(/[^+\d]/g, '');
+  };
+
+  const proceedWithAction = () => {
+    const phoneNumber = shareDetailsResponse?.user?.phone || apartmentDetailsResponse?.user?.phone;
+    const cleanedPhoneNumber = cleanPhoneNumber(phoneNumber);
+
+    if (contactMethod === 'phone') {
+      if (cleanedPhoneNumber) {
+        Linking.openURL(`tel:${cleanedPhoneNumber}`);
+      }
+    } else if (contactMethod === 'whatsapp') {
+      const question = shareDetailsResponse?.question_message || apartmentDetailsResponse?.question_message;
+      if (cleanedPhoneNumber) {
+        Linking.openURL(`https://wa.me/${cleanedPhoneNumber}?text=${question || ''}`);
+      }
+    } else if (contactMethod === 'date') {
+      performDateAction();
+    }
+    setContactMethod(null); // Reset
+  };
+
+  const handleIntentionSelection = (intention) => {
+    const typeOfContact =
+      shareDetailsResponse?.transaction_type || apartmentDetailsResponse?.transaction_type;
+    onIntentionClose();
+    if (intention === 'buy') {
+      if (typeOfContact === 'sell') {
+        proceedWithAction();
+      } else {
+        setTimeout(() => {
+          setAlertInfo({
+            visible: true,
+            title: 'خطأ',
+            message: 'لا يمكنك الشراء من هذا الإعلان لأنه طلب شراء.',
+          });
+        }, 500);
+      }
+    } else if (intention === 'sell') {
+      if (typeOfContact === 'buy') {
+        proceedWithAction();
+      } else {
+        setTimeout(() => {
+          setAlertInfo({
+            visible: true,
+            title: 'خطأ',
+            message: 'لا يمكنك البيع لهذا الإعلان لأنه بالفعل إعلان بيع.',
+          });
+        }, 500);
+      }
+    }
+  };
+
+  const handleDatePress = () => {
+    setContactMethod('date');
+    intentionBottomSheetModalRef.current.present();
+  };
+
   const disabled =
     createApartmentBuyRequestLoading ||
     createApartmentSellRequestLoading ||
@@ -108,6 +182,44 @@ const Contact = () => {
 
   return (
     <SafeAreaView className="flex-1">
+      <CustomAlert
+        visible={alertInfo.visible}
+        title={alertInfo.title}
+        message={alertInfo.message}
+        onConfirm={() => setAlertInfo({ ...alertInfo, visible: false })}
+      />
+      <CustomBottomModalSheet
+        backdropBehave="close"
+        enablePanDownToClose={true}
+        enableDynamicSizing={true}
+        bottomSheetModalRef={intentionBottomSheetModalRef}
+        handleSheetChanges={() => {}}
+        handleDismissModalPress={() => {}}>
+        <View className="items-center justify-center p-4">
+          <Text className="mt-4 font-psemibold text-xl">مالذي تريد ان تفعله؟</Text>
+          <View
+            className={`m-4 flex items-center justify-center gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
+            <CustomButton
+              hasGradient={false}
+              title={'أريد أن أشتري'}
+              containerStyles={'flex-grow'}
+              positionOfGradient={'leftToRight'}
+              textStyles={'text-black'}
+              buttonStyles={'h-[45px]'}
+              handleButtonPress={() => handleIntentionSelection('buy')}
+            />
+            <CustomButton
+              hasGradient={true}
+              title={'أريد أن أبيع'}
+              containerStyles={'flex-grow'}
+              positionOfGradient={'leftToRight'}
+              textStyles={'text-white'}
+              buttonStyles={'h-[45px]'}
+              handleButtonPress={() => handleIntentionSelection('sell')}
+            />
+          </View>
+        </View>
+      </CustomBottomModalSheet>
       <CustomBottomModalSheet
         backdropBehave="close"
         enablePanDownToClose={true}

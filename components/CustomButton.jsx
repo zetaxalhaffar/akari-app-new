@@ -22,13 +22,15 @@ const CustomButton = ({
   disabled,
   loading = false,
 }) => {
+  const gradientColors = colors || ['#A88B67', '#A88B67', '#C9B390'];
+
   return (
     <View className={`${containerStyles} rounded-lg`}>
       {hasGradient && (
         <TouchableOpacity className={buttonStyles} onPress={handleButtonPress} disabled={disabled}>
           <LinearGradient
             style={{ borderRadius: 6 }}
-            colors={colors}
+            colors={gradientColors}
             disabled={disabled || loading}
             className={`${buttonStyles} flex flex-row items-center justify-center gap-2 rounded-lg p-2 ${disabled ? 'opacity-50' : ''}`}
             start={gradientPositions[positionOfGradient].start}

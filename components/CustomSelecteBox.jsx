@@ -44,11 +44,10 @@ const CustomDropdown = ({
     }
   };
 
-  const hasValue = value && value !== '';
+  const hasValue = value !== null && value !== undefined && value !== '' && value !== 0;
 
   return (
     <>
-      {placeholder && <Text className="mb-2 font-pmedium text-gray-700">{placeholder}</Text>}
       {label && <Text className="mb-2 font-pmedium text-gray-700">{label}</Text>}
       <View
         className={`h-[48px] w-full justify-center rounded-lg border ${disabled ? 'border-gray-300 opacity-50' : 'border-toast-500'}`}>
@@ -59,8 +58,15 @@ const CustomDropdown = ({
             onPress={() => setVisible(true)}>
             <Text
               className={`px-2 font-pmedium text-base ${hasValue ? 'text-gray-700' : 'text-gray-400'} ${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'}`}>
-              {(arrayOfValues && arrayOfValues.find((item) => item.id === value)?.[keyName]) ||
-                `يرجى إختيار ${placeholder}`}
+              {(() => {
+                if (arrayOfValues && arrayOfValues.length > 0 && value && value !== 0) {
+                  const selectedItem = arrayOfValues.find((item) => item[valueKey] === value);
+                  if (selectedItem && selectedItem[keyName]) {
+                    return String(selectedItem[keyName]);
+                  }
+                }
+                return `يرجى إختيار ${placeholder || 'القيمة'}`;
+              })()}
             </Text>
           </TouchableOpacity>
           
@@ -93,7 +99,7 @@ const CustomDropdown = ({
                   <View className="bg-white pt-2">
                     <Text
                       className={`px-2 font-pmedium text-base text-gray-400 ${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'}`}>
-                      {placeholder}
+                      {String(placeholder || 'اختر القيمة')}
                     </Text>
                   </View>
                 )}
@@ -103,18 +109,18 @@ const CustomDropdown = ({
                   <TouchableOpacity
                     style={styles.item}
                     onPress={() => {
-                      setValue(item[valueKey]); // Or item[valueKey]
+                      setValue(item[valueKey]);
                       setVisible(false);
                     }}>
                     <Text
                       className={`font-pmedium text-base text-gray-600 ${I18nManager.isRTL ? 'ltr-text' : 'rtl-text'}`}>
-                      {item[keyName]}
+                      {String(item[keyName] || '')}
                     </Text>
                   </TouchableOpacity>
                 )}
                 ListEmptyComponent={() => (
                   <View className="my-4 flex-1 items-center justify-center">
-                    <Text className="font-pmedium text-base text-gray-900">{emptyMessage}</Text>
+                    <Text className="font-pmedium text-base text-gray-900">{String(emptyMessage || 'لا يوجد بيانات')}</Text>
                   </View>
                 )}
               />

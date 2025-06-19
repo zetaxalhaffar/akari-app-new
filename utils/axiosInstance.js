@@ -10,32 +10,26 @@ const getToken = async () => {
 };
 
 const createPullRequest = async (errorDetails, phone, errorType = 'HTTP_ERROR') => {
-  const branchName = `${errorType.toLowerCase()}-report-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}`;
+  const branchName = `${errorType.toLowerCase()}-report-${new Date().toISOString()}`;
 
   // Create a pull request
   const response = await fetch(
-    'https://api.github.com/repos/zetaxalhaffar/akari_app_errors/issues',
+    'https://api.github.com/repos/beshoo/bot_trading/issues',
     {
       method: 'POST',
       headers: {
         Accept: 'application/vnd.github+json',
-        Authorization: 'Bearer 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',
+        Authorization: 'Bearer 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',
         'X-GitHub-Api-Version': '2022-11-28',
       },
       body: JSON.stringify({
         title: `${errorType} Report on ${new Date().toLocaleString()}`,
         body: JSON.stringify({
-          errorType,
           error: errorDetails,
           phone: phone ?? '',
-          timestamp: new Date().toISOString(),
-          device: {
-            platform: Platform.OS,
-            version: Platform.Version,
-          },
         }),
-        head: branchName,
-        base: 'main',
+        head: branchName, // Use the branch that has the crash report or fix (optional)
+        base: 'main', // Or your default branch
       }),
     }
   );

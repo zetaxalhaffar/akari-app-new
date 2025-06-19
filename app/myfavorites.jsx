@@ -57,7 +57,7 @@ const FavoriteListItem = ({ parentId, type, item, onFavoriteDeleted }) => {
       <CustomBottomModalSheet
         backdropBehave="close"
         enablePanDownToClose={true}
-        snapPoints={['20%']}
+        snapPoints={['30%']}
         bottomSheetModalRef={bottomSheetModalRef}
         handleSheetChanges={() => {}}
         handleDismissModalPress={() => {}}>
@@ -242,6 +242,7 @@ const MyFavorites = () => {
                 />
               )}
               onEndReached={loadMoreData}
+              showsVerticalScrollIndicator={false}
               onEndReachedThreshold={0.1}
               ListEmptyComponent={() =>
                 favoritesListLoading ? (

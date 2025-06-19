@@ -86,6 +86,7 @@ const SearchResultsScreen = () => {
         <FlashList
           data={searchForUnitsResponse?.data}
           estimatedItemSize={350}
+          showsVerticalScrollIndicator={false}
           refreshing={searchForUnitsLoading}
           onRefresh={handleRefresh}
           renderItem={({ item }) => {
