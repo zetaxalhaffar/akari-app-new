@@ -13,24 +13,120 @@ import TypingIndicator from '@/components/TypingIndicator';
 import MessageBubble from '@/components/MessageBubble';
 import ChatInput from '@/components/ChatInput';
 import HomePageHeader from '@/components/HomePageHeader';
+import CustomAlert from '@/components/CustomAlert';
+import { getSecureStore, setSecureStore } from '@/composables/secure.store';
+import { useChatStore } from '@/store/chat.store';
+import { useAuthStore } from '@/store/auth.store';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showClearAlert, setShowClearAlert] = useState(false);
   const flatListRef = useRef();
 
-  // Sample initial message
+  // Import chat store functions
+  const { deleteThreads, deleteThreadsLoading } = useChatStore();
+  
+  // Get user data from secure storage (same as support screen)
+  const [userData, setUserData] = useState(null);
+  
   useEffect(() => {
-    setMessages([
-      {
-        id: '1',
-        text: 'مرحباً! كيف يمكنني مساعدتك اليوم؟',
-        isUser: false,
-        timestamp: new Date(),
-      },
-    ]);
+    const loadUserData = async () => {
+      try {
+        const user = await getSecureStore('user');
+        if (user) {
+          setUserData(JSON.parse(user));
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    };
+    loadUserData();
   }, []);
+
+  // Load messages from storage on component mount
+  useEffect(() => {
+    loadMessagesFromStorage();
+  }, []);
+
+  // Save messages to storage whenever messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      saveMessagesToStorage();
+    }
+  }, [messages]);
+
+  const loadMessagesFromStorage = async () => {
+    try {
+      const savedMessages = await getSecureStore('chat_messages');
+      if (savedMessages) {
+        const parsedMessages = JSON.parse(savedMessages);
+        // Convert timestamp strings back to Date objects
+        const messagesWithDates = parsedMessages.map(msg => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }));
+        setMessages(messagesWithDates);
+      } else {
+        // Set initial welcome message if no saved messages
+        setMessages([
+          {
+            id: '1',
+            text: 'مرحباً! كيف يمكنني مساعدتك اليوم؟',
+            isUser: false,
+            timestamp: new Date(),
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error('Error loading messages from storage:', error);
+      // Set initial welcome message on error
+      setMessages([
+        {
+          id: '1',
+          text: 'مرحباً! كيف يمكنني مساعدتك اليوم؟',
+          isUser: false,
+          timestamp: new Date(),
+        },
+      ]);
+    }
+  };
+
+  const saveMessagesToStorage = async () => {
+    try {
+      // Keep only the last 30 messages
+      const messagesToSave = messages.slice(-100).filter(msg => msg.type !== 'typing');
+      await setSecureStore('chat_messages', JSON.stringify(messagesToSave));
+    } catch (error) {
+      console.error('Error saving messages to storage:', error);
+    }
+  };
+
+  const clearChatHistory = async () => {
+    try {
+      // Hide the dialog immediately
+      setShowClearAlert(false);
+      
+      // Clear messages from server first
+      await deleteThreads();
+      
+      // Clear messages from storage
+      await setSecureStore('chat_messages', JSON.stringify([]));
+      
+      // Reset messages to initial welcome message
+      setMessages([
+        {
+          id: Date.now().toString(),
+          text: 'مرحباً! كيف يمكنني مساعدتك اليوم؟',
+          isUser: false,
+          timestamp: new Date(),
+        },
+      ]);
+    } catch (error) {
+      console.error('Error clearing chat history:', error);
+    }
+  };
 
   const sendMessage = async () => {
     if (inputText.trim().length === 0) return;
@@ -140,9 +236,22 @@ const Chat = () => {
         value={inputText}
         onChangeText={setInputText}
         onSend={sendMessage}
-        disabled={isLoading}
+        onClearHistory={() => setShowClearAlert(true)}
+        hasMessages={messages.length > 1} // More than just the welcome message
+        disabled={isLoading || deleteThreadsLoading}
         loading={isLoading}
+        clearLoading={deleteThreadsLoading}
         placeholder="اكتب رسالة..."
+        user={userData}
+      />
+
+      {/* Clear History Alert */}
+      <CustomAlert
+        visible={showClearAlert}
+        title="مسح السجل"
+        message="هل أنت متأكد من أنك تريد مسح جميع رسائل المحادثة؟ لا يمكن التراجع عن هذا الإجراء."
+        onConfirm={clearChatHistory}
+        onCancel={() => setShowClearAlert(false)}
       />
     </SafeAreaView>
   );

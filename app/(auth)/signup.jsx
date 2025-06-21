@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, Image, I18nManager, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, Image, I18nManager, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import CustomIcon from '../../components/CustomIcon';
@@ -12,6 +12,7 @@ import { Input } from '@/components/CustomInput';
 import { useEnumsStore } from '../../store/enums.store';
 import CustomSelecteBox from '@/components/CustomSelecteBox.jsx';
 import { notify } from 'react-native-notificated';
+import Checkbox from 'expo-checkbox';
 
 const LoginScreen = () => {
   // handle enum store
@@ -33,6 +34,7 @@ const LoginScreen = () => {
     job_title: 0,
   });
   const [selectedCountry, setSelectedCountry] = useState('SY');
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
 
   const handleInputValue = (value) => {
     setForm({ ...form, phone: value });
@@ -43,7 +45,24 @@ const LoginScreen = () => {
     setSelectedCountry(country);
   };
 
+  const handleOpenTerms = () => {
+    router.push({
+      pathname: '/(more_screens)/information',
+      params: { url: 'https://arrows-dev.versetech.net/terms.html' }
+    });
+  };
+
   const handleSignup = async () => {
+    if (!agreeToTerms) {
+      notify('error', { 
+        params: { 
+          title: 'موافقة مطلوبة', 
+          description: 'يجب الموافقة على شروط الاستخدام للمتابعة' 
+        } 
+      });
+      return;
+    }
+    
     const isDone = await signup(form);
     if (isDone.success) {
       notify('success', {
@@ -143,6 +162,19 @@ const LoginScreen = () => {
               label="المسمى الوظيفي"
             />
           </View>
+          
+          <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mb-4 items-center gap-3`}>
+            <Checkbox
+              value={agreeToTerms}
+              onValueChange={setAgreeToTerms}
+              color={agreeToTerms ? '#a47764' : '#B71C1C'}
+            />
+            <TouchableOpacity onPress={handleOpenTerms}>
+              <Text className={`${I18nManager.isRTL ? 'rtl-text' : 'ltr-text'} font-psemibold text-base text-toast-800`}>
+                أوافق على شروط الإستخدام 
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View className="justify-end self-stretch">
@@ -157,8 +189,8 @@ const LoginScreen = () => {
               buttonStyles={'!h-[45px]'}
               handleButtonPress={handleSignup}
               loading={signupLoading}
+              disabled={!agreeToTerms || !form.phone.length}
             />
-            {/* disabled={!form.phone.length} */}
           </View>
           <View className="my-4">
             <Text className="text-center font-psemibold text-base text-gray-500">

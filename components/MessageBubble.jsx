@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, I18nManager } from 'react-native';
+import { View, Text, I18nManager, TouchableOpacity } from 'react-native';
+import { parseMessageText, handleReferenceClick } from '@/utils/messageParser';
 
 const MessageBubble = ({ message, isUser, timestamp, isFirstMessage = false }) => {
   const formatTime = (timestamp) => {
@@ -39,6 +40,37 @@ const MessageBubble = ({ message, isUser, timestamp, isFirstMessage = false }) =
     });
   };
 
+  // Function to render parsed message with clickable links
+  const renderParsedMessage = (text) => {
+    if (!text) return null;
+    
+    const parsedParts = parseMessageText(text);
+    
+    return parsedParts.map((part, index) => {
+      if (part.type === 'link') {
+        return (
+          <Text
+            key={index}
+            className={`font-psemibold ${
+              isUser ? 'text-white' : 'text-blue-600'
+            }`}
+            onPress={() => handleReferenceClick(part.linkType, part.id)}
+            style={{ paddingVertical: 3, paddingHorizontal: 3 }}
+          >
+            {part.content}
+          </Text>
+        );
+      }
+      
+      // For regular text, also check for bold formatting
+      return (
+        <Text key={index}>
+          {renderFormattedText(part.content)}
+        </Text>
+      );
+    });
+  };
+
   return (
     <View
       className={`mx-3 mb-3 flex-row ${
@@ -70,7 +102,7 @@ const MessageBubble = ({ message, isUser, timestamp, isFirstMessage = false }) =
           }`}
           style={{ textAlign: I18nManager.isRTL ? 'left' : 'right' }}
         >
-          {renderFormattedText(message)}
+          {renderParsedMessage(message)}
         </Text>
         <View className={`mt-2 flex-row ${isUser ? 'justify-start' : 'justify-end'}`}>
           <Text

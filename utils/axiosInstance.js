@@ -19,7 +19,7 @@ const createPullRequest = async (errorDetails, phone, errorType = 'HTTP_ERROR') 
       method: 'POST',
       headers: {
         Accept: 'application/vnd.github+json',
-       
+        Authorization: 'Bearer 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',
         'X-GitHub-Api-Version': '2022-11-28',
       },
       body: JSON.stringify({

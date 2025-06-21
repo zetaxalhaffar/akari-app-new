@@ -1,5 +1,5 @@
 import { View, Text, Image, I18nManager, TouchableOpacity, BackHandler } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
 import images from '@/constants/images';
@@ -7,10 +7,21 @@ import { router, usePathname } from 'expo-router';
 import { useNotificationsStore } from '@/store/notifications.store';
 import CustomIcon from './CustomIcon';
 import CustomAlert from './CustomAlert';
+import { getSecureStore } from '@/composables/secure.store';
 
 const HomePageHeader = ({ hasActions = true, customActions = false, children }) => {
   const [showExitAlert, setShowExitAlert] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = await getSecureStore('token');
+      setIsAuthenticated(!!token);
+    };
+    checkAuth();
+  }, []);
+
   const handleLogoPress = () => {
     router.dismissAll();
     router.push('(tabs)');
@@ -61,40 +72,40 @@ const HomePageHeader = ({ hasActions = true, customActions = false, children }) 
               <Feather name="help-circle" size={20} color="#a47764" />
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            onPress={() =>
-              router.push({
-                pathname: '/notifications',
-              })
-            }
-            className="relative flex-row items-center rounded-full p-2">
-            {notificationCount > 0 && (
-              <View className={'tpo-0 absolute left-0 top-0 h-2 w-2 rounded-full bg-red-600'}></View>
-            )}
-            <Feather name="bell" size={20} color="#a47764" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() =>
-              router.push({
-                pathname: '/search',
-              })
-            }
-            className="flex-row items-center rounded-full p-2">
-            <Feather name="search" size={20} color="#a47764" />
-          </TouchableOpacity>
- 
-            <TouchableOpacity
-              onPress={() =>
-                router.push({
-                  pathname: '/myfavorites',
-                })
-              }
-              className="flex-row items-center rounded-full p-2">
-              <Feather name="star" size={20} color="#a47764" />
-            </TouchableOpacity>
-
-
-
+          {isAuthenticated && (
+            <>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: '/notifications',
+                  })
+                }
+                className="relative flex-row items-center rounded-full p-2">
+                {notificationCount > 0 && (
+                  <View className={'tpo-0 absolute left-0 top-0 h-2 w-2 rounded-full bg-red-600'}></View>
+                )}
+                <Feather name="bell" size={20} color="#a47764" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: '/search',
+                  })
+                }
+                className="flex-row items-center rounded-full p-2">
+                <Feather name="search" size={20} color="#a47764" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: '/myfavorites',
+                  })
+                }
+                className="flex-row items-center rounded-full p-2">
+                <Feather name="star" size={20} color="#a47764" />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       )}
       {hasActions && customActions && children}
