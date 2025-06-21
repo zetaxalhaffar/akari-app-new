@@ -1,25 +1,27 @@
+import { LinearGradient } from 'expo-linear-gradient';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
 import {
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  I18nManager,
-  ScrollView,
-  RefreshControl,
   ActivityIndicator,
   BackHandler,
+  Image,
+  RefreshControl,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import HomePageHeader from '@/components/HomePageHeader';
-import images from '~/constants/images';
-import { useRegionsStore } from '@/store/regions.store';
-import { useCallback, useEffect, useState } from 'react';
-import { router, useFocusEffect } from 'expo-router';
-import { useEnumsStore } from '../../store/enums.store';
-import icons from '@/constants/icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { createNotifications, notify } from 'react-native-notificated';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { useEnumsStore } from '../../store/enums.store';
+
+import HomePageHeader from '@/components/HomePageHeader';
+import { getSecureStore } from '@/composables/secure.store';
+import icons from '@/constants/icons';
+import { useRegionsStore } from '@/store/regions.store';
 import { useVersionsStore } from '@/store/versions.store';
+import images from '~/constants/images';
 
 const gradientPositions = {
   topToBottom: { start: { x: 0, y: 0 }, end: { x: 0, y: 1 } },
@@ -31,6 +33,8 @@ const colors = ['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c'];
 export default function Home() {
   const { useNotifications } = createNotifications();
 
+  // Get user data from secure storage (same as support screen)
+  const [userData, setUserData] = useState(null);
   const positionOfGradient = 'topToBottom';
   const positionOfGradient2 = 'bottomToTop';
   const { regionResponse, getRegions } = useRegionsStore();
@@ -44,6 +48,19 @@ export default function Home() {
     getRegionsList();
   }, []);
 
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const user = await getSecureStore('user');
+        if (user) {
+          setUserData(JSON.parse(user));
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    };
+    loadUserData();
+  }, []);
   const { remove } = useNotifications();
 
   const [backPressCount, setBackPressCount] = useState(0);
@@ -119,12 +136,11 @@ export default function Home() {
         <Text className="font-psemibold text-lg">لا تضيع فرصة الاستثمار</Text>
         <Text className="font-pregular text-base">كل الوحدات متاحة, اختر الوحدة التي تناسبك</Text>
       </View>
-      <TouchableOpacity
-        className="mx-4 mt-4"
-        onPress={handleChatPress}
-        activeOpacity={0.8}>
-        <Image source={images.akari_ai} className="h-24 w-full" resizeMode="contain" />
-      </TouchableOpacity>
+      {userData && userData?.chat && (
+        <TouchableOpacity className="mx-4 mt-4" onPress={handleChatPress} activeOpacity={0.8}>
+          <Image source={images.akari_ai} className="h-24 w-full" resizeMode="contain" />
+        </TouchableOpacity>
+      )}
       {statisticsSchemaLoading ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#a47764" />
@@ -177,14 +193,14 @@ export default function Home() {
                     <LinearGradient
                       style={{ borderRadius: 6 }}
                       colors={colors}
-                      className={`h-[130px] items-center justify-center rounded-lg p-2`}
+                      className="h-[130px] items-center justify-center rounded-lg p-2"
                       start={gradientPositions[positionOfGradient2].start}
                       end={gradientPositions[positionOfGradient2].end}>
                       <Image
                         source={icons.building_1}
                         resizeMode="cover"
                         className="h-12 w-12"
-                        tintColor={'#FFFFFF'}
+                        tintColor="#FFFFFF"
                       />
                       <Text className="font-psemibold text-sm text-white">{item?.name}</Text>
                       <Text className="mt-1 font-pmedium text-xs text-white">
@@ -208,14 +224,14 @@ export default function Home() {
                     <LinearGradient
                       style={{ borderRadius: 6 }}
                       colors={colors}
-                      className={`h-[130px] items-center justify-center rounded-lg p-2`}
+                      className="h-[130px] items-center justify-center rounded-lg p-2"
                       start={gradientPositions[positionOfGradient].start}
                       end={gradientPositions[positionOfGradient].end}>
                       <Image
                         source={icons.building_1}
                         resizeMode="cover"
                         className="h-12 w-12"
-                        tintColor={'#FFFFFF'}
+                        tintColor="#FFFFFF"
                       />
                       <Text className="text-center font-psemibold text-sm text-white">
                         {item?.name}
