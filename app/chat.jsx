@@ -1,22 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import axiosInstance from '@/utils/axiosInstance';
-import TypingIndicator from '@/components/TypingIndicator';
-import MessageBubble from '@/components/MessageBubble';
+
 import ChatInput from '@/components/ChatInput';
-import HomePageHeader from '@/components/HomePageHeader';
 import CustomAlert from '@/components/CustomAlert';
+import HomePageHeader from '@/components/HomePageHeader';
+import MessageBubble from '@/components/MessageBubble';
+import TypingIndicator from '@/components/TypingIndicator';
 import { getSecureStore, setSecureStore } from '@/composables/secure.store';
 import { useChatStore } from '@/store/chat.store';
-import { useAuthStore } from '@/store/auth.store';
+import axiosInstance from '@/utils/axiosInstance';
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -27,10 +20,10 @@ const Chat = () => {
 
   // Import chat store functions
   const { deleteThreads, deleteThreadsLoading } = useChatStore();
-  
+
   // Get user data from secure storage (same as support screen)
   const [userData, setUserData] = useState(null);
-  
+
   useEffect(() => {
     const loadUserData = async () => {
       try {
@@ -63,9 +56,9 @@ const Chat = () => {
       if (savedMessages) {
         const parsedMessages = JSON.parse(savedMessages);
         // Convert timestamp strings back to Date objects
-        const messagesWithDates = parsedMessages.map(msg => ({
+        const messagesWithDates = parsedMessages.map((msg) => ({
           ...msg,
-          timestamp: new Date(msg.timestamp)
+          timestamp: new Date(msg.timestamp),
         }));
         setMessages(messagesWithDates);
       } else {
@@ -96,7 +89,7 @@ const Chat = () => {
   const saveMessagesToStorage = async () => {
     try {
       // Keep only the last 30 messages
-      const messagesToSave = messages.slice(-100).filter(msg => msg.type !== 'typing');
+      const messagesToSave = messages.slice(-100).filter((msg) => msg.type !== 'typing');
       await setSecureStore('chat_messages', JSON.stringify(messagesToSave));
     } catch (error) {
       console.error('Error saving messages to storage:', error);
@@ -107,13 +100,13 @@ const Chat = () => {
     try {
       // Hide the dialog immediately
       setShowClearAlert(false);
-      
+
       // Clear messages from server first
       await deleteThreads();
-      
+
       // Clear messages from storage
       await setSecureStore('chat_messages', JSON.stringify([]));
-      
+
       // Reset messages to initial welcome message
       setMessages([
         {
@@ -150,7 +143,7 @@ const Chat = () => {
       timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage, typingPlaceholder]);
+    setMessages((prev) => [...prev, userMessage, typingPlaceholder]);
 
     try {
       // Make HTTP request to AI API
@@ -176,9 +169,7 @@ const Chat = () => {
         timestamp: new Date(),
       };
 
-      setMessages(prev =>
-        prev.map(msg => (msg.id === aiResponseId ? aiMessage : msg))
-      );
+      setMessages((prev) => prev.map((msg) => (msg.id === aiResponseId ? aiMessage : msg)));
     } catch (error) {
       console.error('Chat API Error:', error);
       // Add error message
@@ -188,9 +179,7 @@ const Chat = () => {
         isUser: false,
         timestamp: new Date(),
       };
-      setMessages(prev =>
-        prev.map(msg => (msg.id === aiResponseId ? errorMessage : msg))
-      );
+      setMessages((prev) => prev.map((msg) => (msg.id === aiResponseId ? errorMessage : msg)));
     } finally {
       setIsLoading(false);
     }
@@ -213,7 +202,7 @@ const Chat = () => {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       {/* Header */}
-      <View className="bg-white py-2 border-b border-gray-200">
+      <View className="border-b border-gray-200 bg-white py-2">
         <HomePageHeader />
       </View>
 
@@ -222,12 +211,10 @@ const Chat = () => {
         ref={flatListRef}
         data={messages}
         renderItem={renderMessage}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         className="flex-1"
         contentContainerStyle={{ paddingTop: 16 }}
-        onContentSizeChange={() =>
-          flatListRef.current?.scrollToEnd({ animated: true })
-        }
+        onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
         onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
       />
 
@@ -257,4 +244,4 @@ const Chat = () => {
   );
 };
 
-export default Chat; 
+export default Chat;

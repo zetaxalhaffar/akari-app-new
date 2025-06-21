@@ -1,29 +1,33 @@
-import '../global.css';
-import { Redirect, router, Stack, usePathname, useSegments } from 'expo-router';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { getSecureStore } from '@/composables/secure.store';
-import { useEffect, useRef, useState, createContext } from 'react';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import { I18nManager, Image, Linking, Text, View, PermissionsAndroid } from 'react-native';
-import { createNotifications, notify } from 'react-native-notificated';
-import { useAuthStore } from '@/store/auth.store';
-import { BottomSheetModalProvider, BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import NetInfo from '@react-native-community/netinfo';
-import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
-import images from '~/constants/images';
-import * as SecureStore from 'expo-secure-store';
-import CustomButton from '@/components/CustomButton.jsx';
-import * as Application from 'expo-application';
-import { useAdminStore } from '@/store/admin.store';
-/* ======================= handle notifications ======================= */
 import messaging from '@react-native-firebase/messaging';
+import * as Application from 'expo-application';
+import { useFonts } from 'expo-font';
+import { Redirect, router, Stack, usePathname, useSegments } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
+import * as SplashScreen from 'expo-splash-screen';
+import { createContext, useEffect, useRef, useState } from 'react';
+import { I18nManager, Image, Linking, PermissionsAndroid, Text, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import '../global.css';
+
+import { getSecureStore } from '@/composables/secure.store';
+import { createNotifications, notify } from 'react-native-notificated';
+
+import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
+import CustomButton from '@/components/CustomButton.jsx';
+import { useAdminStore } from '@/store/admin.store';
+import { useAuthStore } from '@/store/auth.store';
 import { useNotificationsStore } from '@/store/notifications.store';
 import { useVersionsStore } from '@/store/versions.store';
-/* ======================= handle notifications ======================= */
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { FAB, MD3LightTheme as DefaultTheme, PaperProvider } from 'react-native-paper';
 import { setupGlobalErrorHandlers } from '@/utils/axiosInstance';
+import images from '~/constants/images';
+/* ======================= handle notifications ======================= */
+
+/* ======================= handle notifications ======================= */
+import { MD3LightTheme as DefaultTheme, FAB, PaperProvider } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Create notification permission context
@@ -121,7 +125,7 @@ export default function RootLayout() {
     const initialize = async () => {
       // Setup global error handlers for crash reporting
       setupGlobalErrorHandlers();
-      
+
       SplashScreen.hideAsync();
       I18nManager.allowRTL(true);
       I18nManager.forceRTL(true);
@@ -285,8 +289,9 @@ export default function RootLayout() {
   const insets = useSafeAreaInsets(); // Get safe area insets
 
   // Calculate FAB visibility
-  const hasContactSegment = segments.some(segment => segment.includes('contact'));
-  const shouldShowFAB = isAuthenticated && pathname === '/' && !hasContactSegment && !isBottomSheetOpen;
+  const hasContactSegment = segments.some((segment) => segment.includes('contact'));
+  const shouldShowFAB =
+    isAuthenticated && pathname === '/' && !hasContactSegment && !isBottomSheetOpen;
 
   async function onFetchUpdateAsync() {
     console.log('onFetchUpdateAsync');
@@ -322,9 +327,7 @@ export default function RootLayout() {
       const status = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
       );
-      setHasNotificationPermission(
-        status === PermissionsAndroid.RESULTS.GRANTED
-      );
+      setHasNotificationPermission(status === PermissionsAndroid.RESULTS.GRANTED);
       return status;
     } catch (error) {
       console.log('Error requesting notification permission:', error);
@@ -362,7 +365,7 @@ export default function RootLayout() {
         console.log('Error checking notification permission:', error);
       }
     };
-    
+
     checkPermission();
   }, []);
 
@@ -374,197 +377,201 @@ export default function RootLayout() {
     <ErrorBoundary>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <PaperProvider theme={theme}>
-          <NotificationPermissionContext.Provider 
-            value={{ 
-              requestNotificationPermission, 
+          <NotificationPermissionContext.Provider
+            value={{
+              requestNotificationPermission,
               disableNotificationPermission,
-              hasPermission: hasNotificationPermission 
+              hasPermission: hasNotificationPermission,
             }}>
             <NotificationsProvider>
-            <BottomSheetModalProvider>
-              <CustomBottomModalSheet
-                bottomSheetModalRef={bottomSheetModalRef}
-                snapPoints={['55%', '60%']}
-                enableDynamicSizing={false}
-                handleSheetChanges={(index: number) => setIsBottomSheetOpen(index >= 0)}
-                handleDismissModalPress={() => setIsBottomSheetOpen(false)}>
-                <View className="items-center px-4 pt-6 pb-2">
-                  <Image
-                    className="h-[200px] w-[200px]"
-                    resizeMode="contain"
-                    source={images.connection_lost}
-                  />
-
-                  <Text className="mt-4 font-psemibold text-xl">
-                    حدث خطأ ما أثناء الاتصال بالانترنت
-                  </Text>
-                  <Text className="text-md mt-4 font-psemibold text-zinc-400">
-                    يرجى التحقق من اتصالك بالانترنت
-                  </Text>
-                  <CustomButton
-                    hasGradient={true}
-                    colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-                    title={'إعادة الاتصال'}
-                    containerStyles={'flex-grow'}
-                    positionOfGradient={'leftToRight'}
-                    textStyles={'text-white'}
-                    buttonStyles={'h-[45px] mt-4'}
-                    onPress={handleReconnect}
-                    handleButtonPress={handleReconnect}
-                    disabled={false}
-                    loading={false}
-                  />
-                </View>
-              </CustomBottomModalSheet>
-              <CustomBottomModalSheet
-                bottomSheetModalRef={updateVersionRef}
-                snapPoints={['55%', '70%']}
-                enableDynamicSizing={false}
-                handleSheetChanges={(index: number) => setIsBottomSheetOpen(index >= 0)}
-                handleDismissModalPress={() => setIsBottomSheetOpen(false)}>
-                <View className="items-center px-4 pt-6 pb-2">
-                  <Image
-                    className="h-[200px] w-[200px]"
-                    resizeMode="contain"
-                    source={images.update}
-                  />
-
-                  <Text className="mt-4 font-psemibold text-xl">يوجد تحديث جديد</Text>
-                  <Text className="text-md mt-4 font-psemibold text-zinc-400">
-                    يرجى التحديث لأحدث إصدار
-                  </Text>
-                  <View className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} gap-4 px-4 mt-6 w-full`}>
-                    <CustomButton
-                      hasGradient={true}
-                      colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-                      title={'تحديث الآن'}
-                      containerStyles={'flex-grow'}
-                      positionOfGradient={'leftToRight'}
-                      textStyles={'text-white'}
-                      buttonStyles={'h-[45px]'}
-                      onPress={() =>
-                        Linking.openURL(
-                          'https://play.google.com/store/apps/details?id=akari.versetech.net'
-                        )
-                      }
-                      handleButtonPress={() =>
-                        Linking.openURL(
-                          'https://play.google.com/store/apps/details?id=akari.versetech.net'
-                        )
-                      }
-                      disabled={false}
-                      loading={false}
+              <BottomSheetModalProvider>
+                <CustomBottomModalSheet
+                  bottomSheetModalRef={bottomSheetModalRef}
+                  snapPoints={['55%', '60%']}
+                  enableDynamicSizing={false}
+                  handleSheetChanges={(index: number) => setIsBottomSheetOpen(index >= 0)}
+                  handleDismissModalPress={() => setIsBottomSheetOpen(false)}>
+                  <View className="items-center px-4 pb-2 pt-6">
+                    <Image
+                      className="h-[200px] w-[200px]"
+                      resizeMode="contain"
+                      source={images.connection_lost}
                     />
+
+                    <Text className="mt-4 font-psemibold text-xl">
+                      حدث خطأ ما أثناء الاتصال بالانترنت
+                    </Text>
+                    <Text className="text-md mt-4 font-psemibold text-zinc-400">
+                      يرجى التحقق من اتصالك بالانترنت
+                    </Text>
                     <CustomButton
-                      hasGradient={true}
-                      colors={['#314158', '#62748E', '#90A1B9', '#90A1B9', '#90A1B9']}
-                      title={'تحديث لاحقا'}
-                      containerStyles={'flex-grow'}
-                      positionOfGradient={'leftToRight'}
-                      textStyles={'text-white'}
-                      buttonStyles={'h-[45px]'}
-                      onPress={() => {
-                        if (updateVersionRef.current) {
-                          updateVersionRef.current.dismiss();
-                        }
-                      }}
-                      handleButtonPress={() => {
-                        if (updateVersionRef.current) {
-                          updateVersionRef.current.dismiss();
-                        }
-                      }}
+                      hasGradient
+                      colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
+                      title="إعادة الاتصال"
+                      containerStyles="flex-grow"
+                      positionOfGradient="leftToRight"
+                      textStyles="text-white"
+                      buttonStyles="h-[45px] mt-4"
+                      onPress={handleReconnect}
+                      handleButtonPress={handleReconnect}
                       disabled={false}
                       loading={false}
                     />
                   </View>
-                </View>
-              </CustomBottomModalSheet>
+                </CustomBottomModalSheet>
+                <CustomBottomModalSheet
+                  bottomSheetModalRef={updateVersionRef}
+                  snapPoints={['55%', '70%']}
+                  enableDynamicSizing={false}
+                  handleSheetChanges={(index: number) => setIsBottomSheetOpen(index >= 0)}
+                  handleDismissModalPress={() => setIsBottomSheetOpen(false)}>
+                  <View className="items-center px-4 pb-2 pt-6">
+                    <Image
+                      className="h-[200px] w-[200px]"
+                      resizeMode="contain"
+                      source={images.update}
+                    />
 
-              <Stack initialRouteName={hasToken.current ? '(tabs)' : '(auth)'}>
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="(tabs)"
-                  options={{
-                    headerShown: false,
+                    <Text className="mt-4 font-psemibold text-xl">يوجد تحديث جديد</Text>
+                    <Text className="text-md mt-4 font-psemibold text-zinc-400">
+                      يرجى التحديث لأحدث إصدار
+                    </Text>
+                    <View
+                      className={`${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} mt-6 w-full gap-4 px-4`}>
+                      <CustomButton
+                        hasGradient
+                        colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
+                        title="تحديث الآن"
+                        containerStyles="flex-grow"
+                        positionOfGradient="leftToRight"
+                        textStyles="text-white"
+                        buttonStyles="h-[45px]"
+                        onPress={() =>
+                          Linking.openURL(
+                            'https://play.google.com/store/apps/details?id=akari.versetech.net'
+                          )
+                        }
+                        handleButtonPress={() =>
+                          Linking.openURL(
+                            'https://play.google.com/store/apps/details?id=akari.versetech.net'
+                          )
+                        }
+                        disabled={false}
+                        loading={false}
+                      />
+                      <CustomButton
+                        hasGradient
+                        colors={['#314158', '#62748E', '#90A1B9', '#90A1B9', '#90A1B9']}
+                        title="تحديث لاحقا"
+                        containerStyles="flex-grow"
+                        positionOfGradient="leftToRight"
+                        textStyles="text-white"
+                        buttonStyles="h-[45px]"
+                        onPress={() => {
+                          if (updateVersionRef.current) {
+                            updateVersionRef.current.dismiss();
+                          }
+                        }}
+                        handleButtonPress={() => {
+                          if (updateVersionRef.current) {
+                            updateVersionRef.current.dismiss();
+                          }
+                        }}
+                        disabled={false}
+                        loading={false}
+                      />
+                    </View>
+                  </View>
+                </CustomBottomModalSheet>
+
+                <Stack initialRouteName={hasToken.current ? '(tabs)' : '(auth)'}>
+                  <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
+                  <Stack.Screen name="notifications" options={{ headerShown: false }} />
+                  <Stack.Screen name="search" options={{ headerShown: false }} />
+                  <Stack.Screen name="myfavorites" options={{ headerShown: false }} />
+                  <Stack.Screen name="posts" options={{ headerShown: false }} />
+                  <Stack.Screen name="(regions)/[id]" options={{ headerShown: false }} />
+                  <Stack.Screen name="(shares)/[id]" options={{ headerShown: false }} />
+                  <Stack.Screen name="(apartments)/[id]" options={{ headerShown: false }} />
+                  <Stack.Screen name="(contact)/index" options={{ headerShown: false }} />
+                  <Stack.Screen name="(create)/shares" options={{ headerShown: false }} />
+                  <Stack.Screen name="(create)/apartments" options={{ headerShown: false }} />
+                  <Stack.Screen name="(edit)/share/[id]" options={{ headerShown: false }} />
+                  <Stack.Screen name="(edit)/apartment/[id]" options={{ headerShown: false }} />
+                  <Stack.Screen name="(more_screens)/support" options={{ headerShown: false }} />
+                  <Stack.Screen name="(more_screens)/profile" options={{ headerShown: false }} />
+                  <Stack.Screen
+                    name="(more_screens)/information"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen name="(admin)/users_list" options={{ headerShown: false }} />
+                  <Stack.Screen name="(admin)/bulk_messages" options={{ headerShown: false }} />
+                  <Stack.Screen name="chat" options={{ headerShown: false }} />
+                  <Stack.Screen name="SearchResults" options={{ headerShown: false }} />
+                </Stack>
+                {/* FAB Group */}
+                <FAB.Group
+                  open={fabOpen}
+                  visible={shouldShowFAB} // Use the calculated visibility
+                  icon={fabOpen ? 'close' : 'plus'}
+                  color="#FFF"
+                  label="أضف إعلانك الأن"
+                  theme={{
+                    fonts: {
+                      ...theme.fonts,
+                      labelLarge: {
+                        ...theme.fonts.labelLarge,
+                        fontSize: 14,
+                        textShadowColor: 'rgba(0, 0, 0, 0.59)',
+                        textShadowOffset: { width: 0, height: 2 },
+                        textShadowRadius: 15,
+                      },
+                    },
                   }}
+                  rippleColor="#000000A0"
+                  actions={[
+                    {
+                      icon: 'home-plus-outline', // Or choose another appropriate icon
+                      label: 'إضافة إعلان عن عقار',
+                      onPress: () => router.push('/(create)/apartments'),
+                      style: { backgroundColor: '#8E6756' }, // Using CustomAlert موافق button color
+                      labelTextColor: 'white', // Optional: Style the label
+                      color: 'white', // Optional: Style the icon color
+                    },
+                    {
+                      icon: 'trending-up', // Or choose another appropriate icon
+                      label: 'إضافة إعلان عن أسهم تنظيمية',
+                      onPress: () => router.push('/(create)/shares'),
+                      style: { backgroundColor: '#8E6756' }, // A88B67 Using CustomAlert موافق button color
+                      labelTextColor: 'white', // Optional: Style the label
+                      color: 'white', // Optional: Style the icon color
+                    },
+                  ]}
+                  onStateChange={onStateChange}
+                  fabStyle={{
+                    backgroundColor: '#8E6756', // Using CustomAlert موافق button color
+                    marginBottom: (insets.bottom || 0) + 90,
+                    marginRight: I18nManager.isRTL ? undefined : 16,
+                    marginLeft: I18nManager.isRTL ? 16 : undefined,
+
+                    borderWidth: 5,
+                    borderColor: '#a4776450', // Using same color with transparency
+                  }}
+                  backdropColor="#000000C0" // Kept transparent backdrop
+                  style={{}}
                 />
-                <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
-                <Stack.Screen name="notifications" options={{ headerShown: false }} />
-                <Stack.Screen name="search" options={{ headerShown: false }} />
-                <Stack.Screen name="myfavorites" options={{ headerShown: false }} />
-                <Stack.Screen name="posts" options={{ headerShown: false }} />
-                <Stack.Screen name="(regions)/[id]" options={{ headerShown: false }} />
-                <Stack.Screen name="(shares)/[id]" options={{ headerShown: false }} />
-                <Stack.Screen name="(apartments)/[id]" options={{ headerShown: false }} />
-                <Stack.Screen name="(contact)/index" options={{ headerShown: false }} />
-                <Stack.Screen name="(create)/shares" options={{ headerShown: false }} />
-                <Stack.Screen name="(create)/apartments" options={{ headerShown: false }} />
-                <Stack.Screen name="(edit)/share/[id]" options={{ headerShown: false }} />
-                <Stack.Screen name="(edit)/apartment/[id]" options={{ headerShown: false }} />
-                <Stack.Screen name="(more_screens)/support" options={{ headerShown: false }} />
-                <Stack.Screen name="(more_screens)/profile" options={{ headerShown: false }} />
-                <Stack.Screen name="(more_screens)/information" options={{ headerShown: false }} />
-                <Stack.Screen name="(admin)/users_list" options={{ headerShown: false }} />
-                <Stack.Screen name="(admin)/bulk_messages" options={{ headerShown: false }} />
-                <Stack.Screen name="chat" options={{ headerShown: false }} />
-                <Stack.Screen name="SearchResults" options={{ headerShown: false }} />
-              </Stack>
-              {/* FAB Group */}
-              <FAB.Group
-                open={fabOpen}
-                visible={shouldShowFAB} // Use the calculated visibility
-                icon={fabOpen ? 'close' : 'plus'}
-                color="#FFF"
-                label={'أضف إعلانك الأن'}
-                theme={{ 
-                  fonts: { 
-                    ...theme.fonts, 
-                    labelLarge: { 
-                      ...theme.fonts.labelLarge, 
-                      fontSize: 14,
-                      textShadowColor: 'rgba(0, 0, 0, 0.59)',
-                      textShadowOffset: { width: 0, height: 2 },
-                      textShadowRadius: 15,
-                    } 
-                  } 
-                }}
-                rippleColor={'#000000A0'}
-                actions={[
-                  {
-                    icon: 'home-plus-outline', // Or choose another appropriate icon
-                    label: 'إضافة إعلان عن عقار',
-                    onPress: () => router.push('/(create)/apartments'),
-                    style: { backgroundColor: '#8E6756' }, // Using CustomAlert موافق button color
-                    labelTextColor: 'white', // Optional: Style the label
-                    color: 'white', // Optional: Style the icon color
-                  },
-                  {
-                    icon: 'trending-up', // Or choose another appropriate icon
-                    label: 'إضافة إعلان عن أسهم تنظيمية', 
-                    onPress: () => router.push('/(create)/shares'),
-                    style: { backgroundColor: '#8E6756' }, // A88B67 Using CustomAlert موافق button color
-                    labelTextColor: 'white', // Optional: Style the label
-                    color: 'white', // Optional: Style the icon color
-                  },
-                ]}
-                onStateChange={onStateChange}
-                fabStyle={{
-                  backgroundColor: '#8E6756', // Using CustomAlert موافق button color
-                  marginBottom: (insets.bottom || 0) + 90,
-                  marginRight: I18nManager.isRTL ? undefined : 16,
-                  marginLeft: I18nManager.isRTL ? 16 : undefined,
-                  
-                  borderWidth: 5,
-                  borderColor: '#a4776450', // Using same color with transparency
-                }}
-                backdropColor="#000000C0" // Kept transparent backdrop
-                style={{}}
-              />
-            </BottomSheetModalProvider>
-          </NotificationsProvider>
-        </NotificationPermissionContext.Provider>
-      </PaperProvider>
-    </GestureHandlerRootView>
+              </BottomSheetModalProvider>
+            </NotificationsProvider>
+          </NotificationPermissionContext.Provider>
+        </PaperProvider>
+      </GestureHandlerRootView>
     </ErrorBoundary>
   );
 }
