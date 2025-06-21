@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, StyleSheet, Text, View } from 'react-native';
 import CustomButton from './CustomButton';
 
 const CustomAlert = ({ visible, title, message, onConfirm, onCancel }) => {

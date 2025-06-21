@@ -16,13 +16,29 @@ const Chat = () => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showClearAlert, setShowClearAlert] = useState(false);
+  const [showTypingIndicator, setShowTypingIndicator] = useState(false);
   const flatListRef = useRef();
+  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
 
   // Import chat store functions
   const { deleteThreads, deleteThreadsLoading } = useChatStore();
 
   // Get user data from secure storage (same as support screen)
   const [userData, setUserData] = useState(null);
+
+  // Dedicated scroll function
+  const scrollToBottom = (animated = true) => {
+    setTimeout(() => {
+      flatListRef.current?.scrollToEnd({ animated });
+    }, 150);
+  };
+
+  // Auto-scroll when messages change
+  useEffect(() => {
+    if (shouldScrollToBottom && messages.length > 0) {
+      scrollToBottom();
+    }
+  }, [messages, shouldScrollToBottom]);
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -88,7 +104,7 @@ const Chat = () => {
 
   const saveMessagesToStorage = async () => {
     try {
-      // Keep only the last 30 messages
+      // Keep only the last 100 messages and filter out typing indicators
       const messagesToSave = messages.slice(-100).filter((msg) => msg.type !== 'typing');
       await setSecureStore('chat_messages', JSON.stringify(messagesToSave));
     } catch (error) {
@@ -121,34 +137,41 @@ const Chat = () => {
     }
   };
 
-  const sendMessage = async () => {
-    if (inputText.trim().length === 0) return;
+  // Handle message status changes
+  const handleMessageStatusChange = (messageId, newStatus) => {
+    if (newStatus === 'delivered') {
+      // Update the message status to delivered
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === messageId ? { ...msg, status: 'delivered' } : msg
+        )
+      );
+    } else if (newStatus === 'typing') {
+      // Show typing indicator after delivered status
+      setShowTypingIndicator(true);
+      
+      // Scroll to bottom when typing indicator appears
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+      
+      // Start the actual API call with some delay to make it feel more natural
+      const apiCallDelay = Math.random() * 1000 + 500; // 0.5-1.5 seconds
+      setTimeout(() => {
+        performApiCall(messageId);
+      }, apiCallDelay);
+    }
+  };
 
-    const userMessage = {
-      id: Date.now().toString(),
-      text: inputText.trim(),
-      isUser: true,
-      timestamp: new Date(),
-    };
-
-    const messageText = inputText.trim();
-    setInputText('');
-    setIsLoading(true);
-
-    const aiResponseId = `ai-response-${Date.now()}`;
-    const typingPlaceholder = {
-      id: aiResponseId,
-      type: 'typing',
-      isUser: false,
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, userMessage, typingPlaceholder]);
-
+  const performApiCall = async (triggerMessageId) => {
     try {
+      // Get the user message that triggered this
+      const triggerMessage = messages.find(msg => msg.id === triggerMessageId);
+      if (!triggerMessage) return;
+
       // Make HTTP request to AI API
       const response = await axiosInstance.post('/chat', {
-        message: messageText,
+        message: triggerMessage.text,
       });
 
       // Since axios interceptor returns response.data directly,
@@ -157,7 +180,7 @@ const Chat = () => {
 
       // Add AI response to chat
       const aiMessage = {
-        id: aiResponseId,
+        id: `ai-response-${Date.now()}`,
         text:
           responseData?.response ||
           responseData?.message ||
@@ -169,20 +192,39 @@ const Chat = () => {
         timestamp: new Date(),
       };
 
-      setMessages((prev) => prev.map((msg) => (msg.id === aiResponseId ? aiMessage : msg)));
+      setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
       console.error('Chat API Error:', error);
       // Add error message
       const errorMessage = {
-        id: aiResponseId,
+        id: `error-${Date.now()}`,
         text: 'آسف، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
         isUser: false,
         timestamp: new Date(),
       };
-      setMessages((prev) => prev.map((msg) => (msg.id === aiResponseId ? errorMessage : msg)));
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
+      setShowTypingIndicator(false);
       setIsLoading(false);
     }
+  };
+
+  const sendMessage = async () => {
+    if (inputText.trim().length === 0) return;
+
+    const userMessage = {
+      id: Date.now().toString(),
+      text: inputText.trim(),
+      isUser: true,
+      timestamp: new Date(),
+      status: 'sent', // Initial status
+    };
+
+    setInputText('');
+    setMessages((prev) => [...prev, userMessage]);
+
+    // Note: The API call will be triggered by the message status change
+    // This creates a more realistic flow: send -> delivered -> typing -> response
   };
 
   const renderMessage = ({ item, index }) => {
@@ -195,6 +237,9 @@ const Chat = () => {
         isUser={item.isUser}
         timestamp={item.timestamp}
         isFirstMessage={index === 0 && !item.isUser}
+        messageStatus={item.status}
+        messageId={item.id}
+        onStatusChange={handleMessageStatusChange}
       />
     );
   };
@@ -213,10 +258,25 @@ const Chat = () => {
         renderItem={renderMessage}
         keyExtractor={(item) => item.id}
         className="flex-1"
-        contentContainerStyle={{ paddingTop: 16 }}
-        onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
-        onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
+        contentContainerStyle={{ paddingTop: 16, paddingBottom: 16 }}
+        maintainVisibleContentPosition={{
+          minIndexForVisible: 0,
+          autoscrollToTopThreshold: 10,
+        }}
+        onContentSizeChange={() => {
+          if (shouldScrollToBottom) {
+            scrollToBottom();
+          }
+        }}
+        onLayout={() => {
+          if (shouldScrollToBottom) {
+            scrollToBottom(false);
+          }
+        }}
       />
+
+      {/* Typing Indicator */}
+      {showTypingIndicator && <TypingIndicator />}
 
       {/* Input Area */}
       <ChatInput
@@ -225,20 +285,22 @@ const Chat = () => {
         onSend={sendMessage}
         onClearHistory={() => setShowClearAlert(true)}
         hasMessages={messages.length > 1} // More than just the welcome message
-        disabled={isLoading || deleteThreadsLoading}
+        disabled={isLoading || deleteThreadsLoading || showTypingIndicator}
         loading={isLoading}
         clearLoading={deleteThreadsLoading}
         placeholder="اكتب رسالة..."
         user={userData}
       />
 
-      {/* Clear History Alert */}
+      {/* Clear Chat Alert */}
       <CustomAlert
         visible={showClearAlert}
-        title="مسح السجل"
-        message="هل أنت متأكد من أنك تريد مسح جميع رسائل المحادثة؟ لا يمكن التراجع عن هذا الإجراء."
+        title="حذف المحادثة"
+        message="هل أنت متأكد من أنك تريد حذف جميع الرسائل؟"
         onConfirm={clearChatHistory}
         onCancel={() => setShowClearAlert(false)}
+        confirmText="حذف"
+        cancelText="إلغاء"
       />
     </SafeAreaView>
   );
