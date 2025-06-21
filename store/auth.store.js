@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import axiosInstance from '../utils/axiosInstance';
 
 export const useAuthStore = create((set) => ({
@@ -62,7 +63,7 @@ export const useAuthStore = create((set) => ({
   getAuthData: async () => {
     try {
       set({ authDataSchema: { loading: true } });
-      const response = await axiosInstance.get('/user/auth_data');
+      const response = await axiosInstance.get('/auth/auth_data');
       set({ authDataSchema: { response } });
       return response;
     } catch (error) {

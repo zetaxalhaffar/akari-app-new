@@ -17,8 +17,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEnumsStore } from '../../store/enums.store';
 
 import HomePageHeader from '@/components/HomePageHeader';
-import { getSecureStore } from '@/composables/secure.store';
 import icons from '@/constants/icons';
+import { useAuthStore } from '@/store/auth.store';
 import { useRegionsStore } from '@/store/regions.store';
 import { useVersionsStore } from '@/store/versions.store';
 import images from '~/constants/images';
@@ -40,6 +40,7 @@ export default function Home() {
   const { regionResponse, getRegions } = useRegionsStore();
   const { statisticsSchemaResponse, getStatistics, statisticsSchemaLoading } = useEnumsStore();
   const { showAlert } = useVersionsStore();
+  const { getAuthData } = useAuthStore();
   const getRegionsList = async () => {
     await getRegions();
     await getStatistics();
@@ -49,17 +50,11 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        const user = await getSecureStore('user');
-        if (user) {
-          setUserData(JSON.parse(user));
-        }
-      } catch (error) {
-        console.error('Error loading user data:', error);
-      }
+    const initialize = async () => {
+      const response = await getAuthData();
+      setUserData(response);
     };
-    loadUserData();
+    initialize();
   }, []);
   const { remove } = useNotifications();
 
