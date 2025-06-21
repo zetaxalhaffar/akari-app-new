@@ -42,20 +42,16 @@ export default function Home() {
   const { showAlert } = useVersionsStore();
   const { getAuthData } = useAuthStore();
   const getRegionsList = async () => {
+    setUserData(null);
     await getRegions();
     await getStatistics();
+    const response = await getAuthData();
+    setUserData(response);
   };
   useEffect(() => {
     getRegionsList();
   }, []);
 
-  useEffect(() => {
-    const initialize = async () => {
-      const response = await getAuthData();
-      setUserData(response);
-    };
-    initialize();
-  }, []);
   const { remove } = useNotifications();
 
   const [backPressCount, setBackPressCount] = useState(0);
