@@ -35,6 +35,7 @@ export default function Home() {
 
   // Get user data from secure storage (same as support screen)
   const [userData, setUserData] = useState(null);
+  const [userDataLoading, setUserDataLoading] = useState(true);
   const positionOfGradient = 'topToBottom';
   const positionOfGradient2 = 'bottomToTop';
   const { regionResponse, getRegions } = useRegionsStore();
@@ -43,10 +44,12 @@ export default function Home() {
   const { getAuthData } = useAuthStore();
   const getRegionsList = async () => {
     setUserData(null);
+    setUserDataLoading(true);
     await getRegions();
     await getStatistics();
     const response = await getAuthData();
     setUserData(response);
+    setUserDataLoading(false);
   };
   useEffect(() => {
     getRegionsList();
@@ -127,18 +130,18 @@ export default function Home() {
         <Text className="font-psemibold text-lg">لا تضيع فرصة الاستثمار</Text>
         <Text className="font-pregular text-base">كل الوحدات متاحة, اختر الوحدة التي تناسبك</Text>
       </View>
-      {userData && userData?.chat && (
-        <TouchableOpacity className="mx-4 mt-4" onPress={handleChatPress} activeOpacity={0.8}>
-          <Image source={images.akari_ai} className="h-24 w-full" resizeMode="contain" />
-        </TouchableOpacity>
-      )}
-      {statisticsSchemaLoading ? (
+      {statisticsSchemaLoading || userDataLoading ? (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="#a47764" />
         </View>
       ) : (
         <ScrollView
           refreshControl={<RefreshControl refreshing={false} onRefresh={getRegionsList} />}>
+          {userData && userData?.chat && (
+            <TouchableOpacity className="mx-4 mt-4" onPress={handleChatPress} activeOpacity={0.8}>
+              <Image source={images.akari_ai} className="h-24 w-full" resizeMode="contain" />
+            </TouchableOpacity>
+          )}
           <View className="mt-6 gap-3 px-3" style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {regionResponse &&
               regionResponse?.map((item) => (
