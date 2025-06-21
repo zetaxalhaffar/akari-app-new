@@ -48,12 +48,12 @@ const MessageBubble = ({
 
     switch (currentStatus) {
       case 'sent':
-        return <Text className="text-base font-black text-white/50">✓</Text>;
+        return <Text className="text-base font-black text-white/50">✔</Text>;
       case 'delivered':
       case 'read':
-        return <Text className="text-base font-black text-blue-300">✓✓</Text>;
+        return <Text className="text-base font-black text-blue-300">✔✔</Text>;
       default:
-        return <Text className="text-base font-black text-white/50">✓</Text>;
+        return <Text className="text-base font-black text-white/50">✔</Text>;
     }
   };
 
