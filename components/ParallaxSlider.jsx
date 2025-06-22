@@ -98,10 +98,10 @@ const ParallaxSlider = () => {
             </View>
             
             <View className="items-center justify-center pb-8">
-              <Text className={`word-wrap text-wrap pt-4 font-pmedium text-3xl`} style={{ textAlign: 'justify' }}>
+              <Text className={`word-wrap text-wrap pt-4 ${I18nManager.isRTL ? 'text-left' : 'text-right'} font-pmedium text-3xl`}>
                 {item.title}
               </Text>
-              <Text className={`text-md px-4 font-pmedium text-gray-500`} style={{ textAlign: 'justify' }}>
+              <Text className={`text-md px-4 ${I18nManager.isRTL ? 'text-left' : 'text-right'} font-pmedium text-gray-500`}>
                 {item.subtitle}
               </Text>
             </View>

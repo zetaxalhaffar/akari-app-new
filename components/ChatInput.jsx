@@ -101,7 +101,7 @@ const ChatInput = ({
                 />
                 <Image
                   source={require('@/assets/icons/microphone.png')}
-                  className="h-7 w-7 ps-4"
+                  className="h-7 w-7 ps-4 hidden"
                   tintColor={value.trim().length > 0 && !disabled ? '#a47764' : '#9CA3AF'}
                   resizeMode="contain"
                 />
