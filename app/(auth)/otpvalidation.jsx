@@ -1,21 +1,21 @@
+import CustomButton from '@/components/CustomButton.jsx';
+import Entypo from '@expo/vector-icons/Entypo';
+import { Link, router, useGlobalSearchParams } from 'expo-router';
+import * as SecureStore from 'expo-secure-store';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  Text,
   I18nManager,
+  Keyboard,
+  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard,
+  View,
 } from 'react-native';
+import { notify } from 'react-native-notificated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomIcon from '../../components/CustomIcon';
-import { Link, router, useGlobalSearchParams } from 'expo-router';
-import CustomButton from '@/components/CustomButton.jsx';
-import { useAuthStore } from '../../store/auth.store';
-import Entypo from '@expo/vector-icons/Entypo';
 import CustomOtpTextInput from '../../components/OtpTextInput ';
-import { notify } from 'react-native-notificated';
-import * as SecureStore from 'expo-secure-store';
+import { useAuthStore } from '../../store/auth.store';
 
 /* ======================= handle notifications ======================= */
 import messaging from '@react-native-firebase/messaging';
@@ -129,6 +129,11 @@ const OtpValidationScreen = () => {
           ...isDone,
         })
       );
+      
+      // Ensure RTL is properly configured before navigation
+      I18nManager.allowRTL(true);
+      I18nManager.forceRTL(true);
+      
       router.replace({
         pathname: '(tabs)',
       });

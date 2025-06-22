@@ -1,23 +1,21 @@
+import { Input } from '@/components/CustomInput';
+import { getSecureStoreNoAsync } from '@/composables/secure.store';
+import { useAuthStore } from '@/store/auth.store';
+import { Entypo } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import { useEffect } from 'react';
 import {
-  View,
-  Text,
+  ActivityIndicator,
   I18nManager,
-  TouchableOpacity,
   Image,
   ScrollView,
-  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import CustomBottomSheet from '@/components/CustomBottomSheet';
-import LogoutItem from '@/components/LogoutItem';
 import CustomIcon from '../../components/CustomIcon';
-import { Entypo } from '@expo/vector-icons';
-import { getSecureStoreNoAsync } from '@/composables/secure.store';
-import { Input } from '@/components/CustomInput';
-import { useAuthStore } from '@/store/auth.store';
-import { useEffect } from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
 import icons from '../../constants/icons';
 
 export const gradientPositions = {

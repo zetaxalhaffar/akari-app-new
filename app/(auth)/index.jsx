@@ -1,15 +1,20 @@
-import { View, Text, I18nManager } from 'react-native';
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '@/components/CustomButton.jsx';
-import ParallaxSlider from '../../components/ParallaxSlider';
 import { router } from 'expo-router';
+import React from 'react';
+import { I18nManager, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import ParallaxSlider from '../../components/ParallaxSlider';
 
 const BOTTOM_NAVIGATION_HEIGHT = 78;
 
 
 const AuthMainStack = () => {
   console.log(I18nManager.isRTL, "isRTL")
+  
+  // Ensure RTL is properly configured
+  I18nManager.allowRTL(true);
+  I18nManager.forceRTL(true);
+  
   return (
     <SafeAreaView className="flex-1">
       <View className={'relative flex-1'}>

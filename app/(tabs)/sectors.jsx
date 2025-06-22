@@ -1,19 +1,17 @@
-import { View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
-import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import HomePageHeader from '@/components/HomePageHeader';
-import { useRegionsStore } from '@/store/regions.store';
-import CustomTopTabs from '../../components/CustomTopTabs';
-import { useSectoresStore } from '../../store/sectores.store';
-import { FlashList } from '@shopify/flash-list';
-import icons from '@/constants/icons';
-import { ScrollView, Dimensions, I18nManager } from 'react-native';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
 import CustomButton from '@/components/CustomButton';
-import { router, useFocusEffect } from 'expo-router';
-import { BackHandler } from 'react-native';
+import HomePageHeader from '@/components/HomePageHeader';
+import icons from '@/constants/icons';
+import { useRegionsStore } from '@/store/regions.store';
 import { AntDesign } from '@expo/vector-icons';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { FlashList } from '@shopify/flash-list';
+import { router, useFocusEffect } from 'expo-router';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { BackHandler, Dimensions, I18nManager, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomTopTabs from '../../components/CustomTopTabs';
+import { useSectoresStore } from '../../store/sectores.store';
 
 const InfoRow = ({ label, value, unit = '' }) => {
   if (!value || value === 0 || value === '0' || String(value).trim().length === 0) return null;
@@ -492,25 +490,43 @@ const SectorsScreen = () => {
     return allData;
   }, [sectorsRecords, sectorTabId, selectedSectorCode]);
 
-  // Memoize available sector codes
-  const availableSectorCodes = useMemo(() => {
-    if (!sectorsRecords || !sectorsRecords[parseInt(sectorTabId)]) {
+  // Memoize all available sector codes across all tabs
+  const allAvailableSectorCodes = useMemo(() => {
+    if (!sectorsRecords) {
       return [];
     }
-    const allData = sectorsRecords[parseInt(sectorTabId)].code || [];
-    const codes = allData.map(item => item.code).filter(Boolean);
-    // Remove duplicates and sort
-    return [...new Set(codes)].sort((a, b) => a.localeCompare(b, 'ar', { numeric: true }));
-  }, [sectorsRecords, sectorTabId]);
+    const allCodes = sectorsRecords.flatMap(record => record.code?.map(item => item.code) || []);
+    const uniqueCodes = [...new Set(allCodes.filter(Boolean))];
+    return uniqueCodes.sort((a, b) => a.localeCompare(b, 'ar', { numeric: true }));
+  }, [sectorsRecords]);
 
   // Handle sector code filter change
   const handleSectorCodeChange = useCallback((code) => {
+    if (code) {
+      // Find which tab the selected sector belongs to
+      let targetTabId = null;
+      if (sectorsRecords) {
+        for (let i = 0; i < sectorsRecords.length; i++) {
+          const sectorExists = sectorsRecords[i].code?.some(sector => sector.code === code);
+          if (sectorExists) {
+            targetTabId = i.toString();
+            break;
+          }
+        }
+      }
+
+      // If a tab is found, switch to it
+      if (targetTabId !== null && targetTabId !== sectorTabId) {
+        setSectorTabId(targetTabId);
+      }
+    }
+    
     setSelectedSectorCode(code);
     // Scroll to top when filter changes
     setTimeout(() => {
       flashListRef.current?.scrollToOffset({ offset: 0, animated: true });
     }, 100);
-  }, []);
+  }, [sectorsRecords, sectorTabId]);
 
   // Optimize sector press handler
   const handleSectorPress = useCallback((item) => {
@@ -627,9 +643,9 @@ const SectorsScreen = () => {
                 itemTitle="name">
                 <View className="flex-1 px-4 pt-4">
                   {/* Sector Code Dropdown - Only show when we have data and not loading */}
-                  {!sectorsLoading && !localLoading && sectoreSection.length > 0 && availableSectorCodes.length > 0 && (
+                  {!sectorsLoading && !localLoading && sectoreSection.length > 0 && allAvailableSectorCodes.length > 0 && (
                     <SectorDropdown
-                      options={availableSectorCodes}
+                      options={allAvailableSectorCodes}
                       selectedValue={selectedSectorCode}
                       onSelect={handleSectorCodeChange}
                       placeholder="اختر مقسم معين"

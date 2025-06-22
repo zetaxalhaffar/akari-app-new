@@ -1,22 +1,21 @@
+import CustomButton from '@/components/CustomButton.jsx';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
+import { Link, router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  Image,
   I18nManager,
-  Button,
+  Image,
   Keyboard,
+  Text,
   TouchableWithoutFeedback,
+  View
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import EvilIcons from '@expo/vector-icons/EvilIcons';
-import CustomIcon from '../../components/CustomIcon';
-import { Link, router } from 'expo-router';
-import images from '../../constants/images';
 import PhoneInput from 'react-native-international-phone-number';
-import CustomButton from '@/components/CustomButton.jsx';
-import { useAuthStore } from '../../store/auth.store';
 import { notify } from 'react-native-notificated';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomIcon from '../../components/CustomIcon';
+import images from '../../constants/images';
+import { useAuthStore } from '../../store/auth.store';
 const LoginScreen = () => {
   const [form, setForm] = useState({
     phone: '',
@@ -49,6 +48,11 @@ const LoginScreen = () => {
           duration: 10000,
         },
       });
+      
+      // Ensure RTL is properly configured before navigation
+      I18nManager.allowRTL(true);
+      I18nManager.forceRTL(true);
+      
       router.replace({
         pathname: '(auth)/otpvalidation',
         params: { parent: 'login', phone: form.phone, country_code: selectedCountry.cca2 },

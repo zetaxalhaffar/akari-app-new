@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, Image, I18nManager, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import EvilIcons from '@expo/vector-icons/EvilIcons';
-import CustomIcon from '../../components/CustomIcon';
-import { Link, router } from 'expo-router';
-import images from '../../constants/images';
-import PhoneInput from 'react-native-international-phone-number';
 import CustomButton from '@/components/CustomButton.jsx';
-import { useAuthStore } from '../../store/auth.store';
 import { Input } from '@/components/CustomInput';
-import { useEnumsStore } from '../../store/enums.store';
 import CustomSelecteBox from '@/components/CustomSelecteBox.jsx';
-import { notify } from 'react-native-notificated';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
 import Checkbox from 'expo-checkbox';
+import { Link, router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { I18nManager, Image, Keyboard, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import PhoneInput from 'react-native-international-phone-number';
+import { notify } from 'react-native-notificated';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomIcon from '../../components/CustomIcon';
+import images from '../../constants/images';
+import { useAuthStore } from '../../store/auth.store';
+import { useEnumsStore } from '../../store/enums.store';
 
 const LoginScreen = () => {
   // handle enum store
