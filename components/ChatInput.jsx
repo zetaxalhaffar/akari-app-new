@@ -91,12 +91,21 @@ const ChatInput = ({
               //   size={36}
               //   color={value.trim().length > 0 && !disabled ? '#a47764' : '#9CA3AF'}
               // />
-              <Image
-                source={require('@/assets/icons/send.png')}
-                className="h-7 w-7 ps-4"
-                tintColor={value.trim().length > 0 && !disabled ? '#a47764' : '#9CA3AF'}
-                resizeMode="contain"
-              />
+              <View
+                className={`flex items-center gap-2 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}>
+                <Image
+                  source={require('@/assets/icons/send.png')}
+                  className="h-7 w-7 ps-4"
+                  tintColor={value.trim().length > 0 && !disabled ? '#a47764' : '#9CA3AF'}
+                  resizeMode="contain"
+                />
+                <Image
+                  source={require('@/assets/icons/microphone.png')}
+                  className="h-7 w-7 ps-4"
+                  tintColor={value.trim().length > 0 && !disabled ? '#a47764' : '#9CA3AF'}
+                  resizeMode="contain"
+                />
+              </View>
             )}
           </TouchableOpacity>
 
