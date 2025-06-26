@@ -9,7 +9,23 @@ import * as SplashScreen from 'expo-splash-screen';
 import { createContext, useEffect, useRef, useState } from 'react';
 import { I18nManager, Image, Linking, PermissionsAndroid, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
 import '../global.css';
+
+// Configure Reanimated logger to disable strict mode warnings
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false, // Disable strict mode to hide warnings from third-party libraries
+});
+
+// Temporarily suppress Firebase deprecation warnings
+const originalWarn = console.warn;
+console.warn = (...args) => {
+  if (typeof args[0] === 'string' && args[0].includes('React Native Firebase namespaced API')) {
+    return; // Suppress Firebase deprecation warnings
+  }
+  originalWarn.apply(console, args);
+};
 
 import { getSecureStore } from '@/composables/secure.store';
 import { createNotifications, notify } from 'react-native-notificated';
@@ -126,7 +142,6 @@ export default function RootLayout() {
       // Setup global error handlers for crash reporting
       setupGlobalErrorHandlers();
 
-      SplashScreen.hideAsync();
       I18nManager.allowRTL(true);
       I18nManager.forceRTL(true);
       const token = await getSecureStore('token');
@@ -136,8 +151,10 @@ export default function RootLayout() {
         await SecureStore.setItemAsync('user', JSON.stringify(response));
       }
     };
-    initialize();
-  }, []);
+    if (fontsLoaded) {
+      initialize();
+    }
+  }, [fontsLoaded]);
 
   // ======================= handle notifications =======================
 
@@ -369,8 +386,14 @@ export default function RootLayout() {
     checkPermission();
   }, []);
 
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <Redirect href="/(auth)/index" />;
+    return null;
   }
 
   return (

@@ -13,18 +13,6 @@ import UnitApartmentCard from '../../components/UnitCardApartment';
 import EmptyScreen from '@/components/EmptyScreen';
 import { Feather } from '@expo/vector-icons';
 
-// Top Tab Items
-const topTabItems = [
-  {
-    id: 'shares',
-    title: 'الأسهم التنظيمية',
-  },
-  {
-    id: 'apartments',
-    title: 'العقارات',
-  },
-];
-
 // Region With Id
 const RegionWithId = () => {
   // Get Region Id
@@ -51,9 +39,32 @@ const RegionWithId = () => {
     clearApartmentsRecords,
   } = useUnitsStore();
 
-  // Find current region name
+  // Find current region name and create dynamic tabs
   const currentRegion = regionResponse?.find(region => region.id.toString() === id?.toString());
   const regionName = currentRegion?.name || '';
+
+  // Create dynamic top tab items based on region flags
+  const topTabItems = React.useMemo(() => {
+    if (!currentRegion) return [];
+    
+    const tabs = [];
+    
+    if (currentRegion.has_share === 1) {
+      tabs.push({
+        id: 'shares',
+        title: 'الأسهم التنظيمية',
+      });
+    }
+    
+    if (currentRegion.has_apartment === 1) {
+      tabs.push({
+        id: 'apartments',
+        title: 'العقارات',
+      });
+    }
+    
+    return tabs;
+  }, [currentRegion]);
 
   // Get Shares Based On Region
   const filtersParams = useRef({
@@ -96,8 +107,11 @@ const RegionWithId = () => {
     }
   };
 
-  // Handle Tab Change
-  const [tabId, setTabId] = useState('shares');
+  // Handle Tab Change - Initialize with first available tab
+  const [tabId, setTabId] = useState(() => {
+    // Will be updated in useEffect when currentRegion is available
+    return 'shares';
+  });
   const [showSortModal, setShowSortModal] = useState(false);
   const [sortBy, setSortBy] = useState('');
   const [sortDirection, setSortDirection] = useState('');
@@ -130,6 +144,13 @@ const RegionWithId = () => {
   };
   
   const handleTabChange = (newTabId) => {
+    // Check if the tab is available
+    const isTabAvailable = topTabItems.some(tab => tab.id === newTabId);
+    if (!isTabAvailable) {
+      console.log('Tab not available:', newTabId);
+      return;
+    }
+    
     const isSameTab = tabId === newTabId;
     
     // Reset page and filters for both scenarios
@@ -146,10 +167,10 @@ const RegionWithId = () => {
     // Clear data and reload for both double-tap and tab switch
     if (isSameTab) {
       // Double-tap: Clear current tab data and reload
-      if (newTabId === 'shares') {
+      if (newTabId === 'shares' && currentRegion?.has_share === 1) {
         clearSharesRecords();
         getSharesBasedOnRegion(true);
-      } else {
+      } else if (newTabId === 'apartments' && currentRegion?.has_apartment === 1) {
         clearApartmentsRecords();
         getApartmentsBasedOnRegion(true);
       }
@@ -159,9 +180,9 @@ const RegionWithId = () => {
       clearApartmentsRecords();
       setTabId(newTabId);
       
-      if (newTabId === 'shares') {
+      if (newTabId === 'shares' && currentRegion?.has_share === 1) {
         getSharesBasedOnRegion(true);
-      } else {
+      } else if (newTabId === 'apartments' && currentRegion?.has_apartment === 1) {
         getApartmentsBasedOnRegion(true);
       }
     }
@@ -186,9 +207,9 @@ const RegionWithId = () => {
   // Handle Refresh
   const handleRefresh = () => {
     filtersParams.current.page = 1;
-    if (tabId == 'shares') {
+    if (tabId == 'shares' && currentRegion?.has_share === 1) {
       getSharesBasedOnRegion(true);
-    } else {
+    } else if (tabId == 'apartments' && currentRegion?.has_apartment === 1) {
       getApartmentsBasedOnRegion(true);
     }
   };
@@ -246,9 +267,9 @@ const RegionWithId = () => {
     filtersParams.current.transaction_type = option.transactionType;
     filtersParams.current.my_posts_first = option.myPostsFirst || '0';
     
-    if (tabId === 'shares') {
+    if (tabId === 'shares' && currentRegion?.has_share === 1) {
       getSharesBasedOnRegion(true);
-    } else {
+    } else if (tabId === 'apartments' && currentRegion?.has_apartment === 1) {
       getApartmentsBasedOnRegion(true);
     }
     
@@ -279,9 +300,9 @@ const RegionWithId = () => {
     hideBottomSheet();
     
     // Reload data without filters using normal APIs
-    if (tabId === 'shares') {
+    if (tabId === 'shares' && currentRegion?.has_share === 1) {
       getAllSharesForRegion(id, filtersParams.current, true);
-    } else {
+    } else if (tabId === 'apartments' && currentRegion?.has_apartment === 1) {
       getAllApartmentsForRegion(id, filtersParams.current, true);
     }
     
@@ -296,6 +317,14 @@ const RegionWithId = () => {
   const topTabAction = useRef({
     title: tabId == 'share' ? 'أضف إعلانك الأن' : 'أضف إعلانك الأن',
   });
+
+  // Set initial tab based on available options
+  useEffect(() => {
+    if (currentRegion && topTabItems.length > 0) {
+      const firstAvailableTab = topTabItems[0].id;
+      setTabId(firstAvailableTab);
+    }
+  }, [currentRegion, topTabItems]);
 
   // Get Shares and Apartments Based On Region UseEffect
   useEffect(() => {
@@ -327,9 +356,15 @@ const RegionWithId = () => {
     setTransactionType('');
     setMyPostsFirst('0');
     
-    // Always load fresh data for the new region
-    getSharesBasedOnRegion(true);
-    getApartmentsBasedOnRegion(true);
+    // Only call APIs if we have available tabs
+    if (currentRegion) {
+      if (currentRegion.has_share === 1) {
+        getSharesBasedOnRegion(true);
+      }
+      if (currentRegion.has_apartment === 1) {
+        getApartmentsBasedOnRegion(true);
+      }
+    }
   }, [id, regionResponse]); // Depend on both id and regionResponse
 
   return (
@@ -341,33 +376,41 @@ const RegionWithId = () => {
               onPress={() =>
                 router.push({
                   pathname: '/search',
+                  params: { 
+                    region_id: id,
+                    current_tab: tabId 
+                  }
                 })
               }
               className="flex-row items-center rounded-full p-2">
               <Feather name="search" size={20} color="#a47764" />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => showBottomSheet()}
-              className="flex-row items-center rounded-full p-2 ml-2">
-              <Feather name="filter" size={20} color="#a47764" />
-            </TouchableOpacity>
+                          {topTabItems.length > 0 && ((tabId === 'shares' && currentRegion?.has_share === 1) || (tabId === 'apartments' && currentRegion?.has_apartment === 1)) && (
+                <TouchableOpacity
+                  onPress={() => showBottomSheet()}
+                  className="flex-row items-center rounded-full p-2 ml-2">
+                  <Feather name="filter" size={20} color="#a47764" />
+                </TouchableOpacity>
+              )}
           </View>
-          <CustomButton
-            containerStyles={'mt-3'}
-            hasGradient={true}
-            colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
-            title={tabId == 'shares' ? 'أضف إعلانك الأن' : 'أضف إعلانك الأن'}
-            positionOfGradient={'leftToRight'}
-            textStyles={'text-white text-sm'}
-            handleButtonPress={() => {
-              router.push(`/(create)/${tabId}`);
-            }}
-          />
+          {topTabItems.length > 0 && ((tabId === 'shares' && currentRegion?.has_share === 1) || (tabId === 'apartments' && currentRegion?.has_apartment === 1)) && (
+            <CustomButton
+              containerStyles={'mt-3'}
+              hasGradient={true}
+              colors={['#633e3d', '#774b46', '#8d5e52', '#a47764', '#bda28c']}
+              title={tabId == 'shares' ? 'أضف إعلانك الأن' : 'أضف إعلانك الأن'}
+              positionOfGradient={'leftToRight'}
+              textStyles={'text-white text-sm'}
+              handleButtonPress={() => {
+                router.push(`/(create)/${tabId}`);
+              }}
+            />
+          )}
         </View>
       </HomePageHeader>
       <View className="flex-1">
-        {/* Region Name Display */}
-        {regionName && (
+        {/* Region Name Display - Only show when there are available tabs */}
+        {regionName && topTabItems.length > 0 && (
           <View className="px-4 pb-2 bg-white border-b border-gray-200">
             <Text className={`${I18nManager.isRTL ? 'text-center' : 'text-center'} text-base font-psemibold text-gray-800`}>
               {regionName}
@@ -375,35 +418,50 @@ const RegionWithId = () => {
           </View>
         )}
         
-        <CustomTopTabs topTabItems={topTabItems} onTabChange={handleTabChange}>
-          <View className="flex-1 px-4 pt-4">
-            <FlashList
-              ref={flashListRef}
-              data={tabId == 'shares' ? sharesRecords : apartmentsRecords}
-              estimatedItemSize={350}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 40 }}
-              refreshing={tabId == 'shares' ? sharesLoading : apartmentsLoading}
-              onRefresh={handleRefresh}
-              renderItem={({ item }) =>
-                tabId == 'shares' ? (
-                  <UnitShareCard item={item} />
-                ) : (
-                  <UnitApartmentCard item={item} />
-                )
-              }
-              onEndReached={handleEndReached}
-              onEndReachedThreshold={0.5}
-              ListEmptyComponent={() =>
-                sharesLoading || apartmentsLoading ? (
-                  <Text />
-                ) : (
-                  <EmptyScreen title="لا يوجد عروض للبيع أو للشراء" />
-                )
-              }
-            />
+        {topTabItems.length === 0 ? (
+          <View className="flex-1 items-center justify-center px-4">
+            <EmptyScreen title="لا تتوفر خدمات في هذه المنطقة حالياً" />
           </View>
-        </CustomTopTabs>
+        ) : (
+          // Show tabs interface with available tabs
+          <CustomTopTabs topTabItems={topTabItems} onTabChange={handleTabChange}>
+            <View className="flex-1 px-4 pt-4">
+              {/* Only show content if current tab is available */}
+              {((tabId === 'shares' && currentRegion?.has_share === 1) || 
+                (tabId === 'apartments' && currentRegion?.has_apartment === 1)) ? (
+                <FlashList
+                  ref={flashListRef}
+                  data={tabId == 'shares' ? sharesRecords : apartmentsRecords}
+                  estimatedItemSize={350}
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ paddingBottom: 40 }}
+                  refreshing={tabId == 'shares' ? sharesLoading : apartmentsLoading}
+                  onRefresh={handleRefresh}
+                  renderItem={({ item }) =>
+                    tabId == 'shares' ? (
+                      <UnitShareCard item={item} />
+                    ) : (
+                      <UnitApartmentCard item={item} />
+                    )
+                  }
+                  onEndReached={handleEndReached}
+                  onEndReachedThreshold={0.5}
+                  ListEmptyComponent={() =>
+                    sharesLoading || apartmentsLoading ? (
+                      <Text />
+                    ) : (
+                      <EmptyScreen title="لا يوجد عروض للبيع أو للشراء" />
+                    )
+                  }
+                />
+              ) : (
+                <View className="flex-1 items-center justify-center">
+                  <EmptyScreen title="هذه الخدمة غير متوفرة في هذه المنطقة" />
+                </View>
+              )}
+            </View>
+          </CustomTopTabs>
+        )}
       </View>
       
       {/* Sort Bottom Sheet */}

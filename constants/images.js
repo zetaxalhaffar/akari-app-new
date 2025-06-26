@@ -10,6 +10,7 @@ import connection_lost from '../assets/images/connection_lost.png';
 import no_data from '../assets/images/no_data.png';
 import update from '../assets/images/update.png';
 import akari_ai from '../assets/images/akari_ai.png';
+import stat from '../assets/images/stat.png';
 export default {
   only_word,
   top,
@@ -23,4 +24,5 @@ export default {
   no_data,
   update,
   akari_ai,
+  stat,
 };

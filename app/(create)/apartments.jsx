@@ -8,6 +8,7 @@ import CustomSelecteBox from '@/components/CustomSelecteBox.jsx';
 import { router } from 'expo-router';
 import { useEnumsStore } from '../../store/enums.store';
 import CustomButton from '@/components/CustomButton.jsx';
+import CustomAlert from '@/components/CustomAlert.jsx';
 import { useUnitsStore } from '../../store/units.store';
 
 const CreateApartmentScreen = () => {
@@ -54,6 +55,83 @@ const CreateApartmentScreen = () => {
   const [apartmentStatus, setApartmentStatus] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [fieldsToShow, setFieldsToShow] = useState([]);
+
+  // Confirmation alert state
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+
+  // Helper function to format numbers with commas
+  const formatNumber = (number) => {
+    if (!number) return '';
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  // Helper functions to get display names
+  const getRegionName = () => {
+    const region = regions.find(r => r.id === form.region_id);
+    return region ? region.name : '';
+  };
+
+  const getSectorName = () => {
+    const sector = sectors.find(s => s.id === form.sector_id);
+    return sector ? sector.code : '';
+  };
+
+  const getSectorTypeName = () => {
+    const sectorType = sectorsTypes.find(s => s.id === sectoreType);
+    return sectorType ? sectorType.name : '';
+  };
+
+  const getDirectionName = () => {
+    const direction = directions.find(d => d.id === form.direction_id);
+    return direction ? direction.name : '';
+  };
+
+  const getApartmentTypeName = () => {
+    const apartmentType = apartmentTypes.find(a => a.id === form.apartment_type_id);
+    return apartmentType ? apartmentType.name : '';
+  };
+
+  const getApartmentStatusName = () => {
+    const status = apartmentStatus.find(s => s.id === form.apartment_status_id);
+    return status ? status.name : '';
+  };
+
+  const getPaymentMethodName = () => {
+    const paymentMethod = paymentMethods.find(p => p.id === form.payment_method_id);
+    return paymentMethod ? paymentMethod.name : '';
+  };
+
+  // Generate confirmation message
+  const getConfirmationMessage = () => {
+    const actionVerb = currentType === 'buy' ? 'تشتري' : 'تبيع';
+    const regionName = getRegionName();
+    const sectorTypeName = getSectorTypeName();
+    const sectorName = getSectorName();
+    const apartmentTypeName = getApartmentTypeName();
+    const paymentMethodName = getPaymentMethodName();
+
+    let message = `أنت تريد أن ${actionVerb} عقار من نوع ${apartmentTypeName} في المقسم ${sectorName} من نوع ${sectorTypeName} في منطقة ${regionName} بسعر ${formatNumber(form.price)} ليرة سورية`;
+    
+    if (form.payment_method_id) {
+      message += ` وطريقة الدفع ${paymentMethodName}`;
+    }
+    
+    message += `.`;
+
+    return message;
+  };
+
+  // Show confirmation before creating request
+  const showConfirmation = () => {
+    // Check required fields
+    if (!form.owner_name || !form.region_id || !form.sector_id || !form.equity || 
+        !form.price || !form.apartment_type_id || !form.area) {
+      // You could show an error alert here if needed
+      return;
+    }
+    setShowConfirmAlert(true);
+  };
+
   const getEnumsList = async () => {
     const regionsResponse = await getRegions();
     const apartmentTypesResponse = await getApartmentTypes();
@@ -158,6 +236,12 @@ const CreateApartmentScreen = () => {
     if (response?.success) {
       router.replace(`/(apartments)/${response.id}`);
     }
+  };
+
+  // Confirm and create the request
+  const confirmCreateRequest = async () => {
+    setShowConfirmAlert(false);
+    await handleCreateApartmentRequest();
   };
 
   return (
@@ -335,10 +419,17 @@ const CreateApartmentScreen = () => {
           positionOfGradient={'leftToRight'}
           textStyles={'text-white'}
           buttonStyles={'h-[45px]'}
-          handleButtonPress={handleCreateApartmentRequest}
+          handleButtonPress={showConfirmation}
           loading={createApartmentRequestLoading}
         />
       </View>
+             <CustomAlert
+         visible={showConfirmAlert}
+         title="تأكيد الإعلان"
+         message={getConfirmationMessage()}
+         onConfirm={confirmCreateRequest}
+         onCancel={() => setShowConfirmAlert(false)}
+       />
     </SafeAreaView>
   );
 };

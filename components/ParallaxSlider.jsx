@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Dimensions, Text, View, Image, I18nManager } from 'react-native';
-import { useSharedValue } from 'react-native-reanimated';
+import { useSharedValue, runOnJS } from 'react-native-reanimated';
 import Carousel, { Pagination } from 'react-native-reanimated-carousel';
 import images from '../constants/images';
 
@@ -39,10 +39,9 @@ const ParallaxSlider = () => {
   const onPressPagination = (index) => {
     ref.current?.scrollTo({
       /**
-       * Calculate the difference between the current index and the target index
-       * to ensure that the carousel scrolls to the nearest index
+       * Simply scroll to the target index directly
        */
-      count: index - progress.value,
+      index: index,
       animated: true,
     });
   };

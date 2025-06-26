@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { I18nManager, Image, ScrollView, Text, TouchableOpacity, View, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import icons from '@/constants/icons';
-import { deleteSecureStore } from '@/composables/secure.store';
+import { deleteSecureStore, getSecureStoreNoAsync } from '@/composables/secure.store';
 import CustomIcon from '../../components/CustomIcon';
 import { Entypo, Feather, FontAwesome } from '@expo/vector-icons';
 import LogoutItem from '@/components/LogoutItem';
@@ -120,6 +120,7 @@ const MoreScreen = () => {
   const bottomSheetModalRef = useRef(null);
   const { getAuthData } = useAuthStore();
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   
   const handleOpenURL = async (url) => {
     try {
@@ -136,8 +137,24 @@ const MoreScreen = () => {
   
   useEffect(() => {
     const initialize = async () => {
+      setLoading(true);
+      console.log('==================== MORE SCREEN INIT ====================');
+      
+      // Check what's in secure store
+      const userData = getSecureStoreNoAsync('user');
+      console.log('Secure store user data:', userData);
+      console.log('Secure store user keys:', Object.keys(userData || {}));
+      console.log('Secure store user name:', userData?.name);
+      
+      // Check API response
       const response = await getAuthData();
+      console.log('API response:', response);
+      console.log('API response keys:', Object.keys(response || {}));
+      console.log('API response name:', response?.name);
+      
       setUser(response);
+      setLoading(false);
+      console.log('=======================================================');
     };
     initialize();
   }, []);
@@ -163,10 +180,18 @@ const MoreScreen = () => {
                 tintColor={'#a47764'}
               />
             </View>
-            <View>
-              <Text className="font-psemibold text-lg">{user?.name}</Text>
-              <Text className="font-psemibold text-sm text-zinc-400">تفاصيل الحساب</Text>
-            </View>
+                          <View>
+                <View className="w-full items-end min-w-[100px]">
+                  {loading ? (
+                    <View className="h-1 w-full bg-toast-300 rounded-full animate-pulse"></View>
+                  ) : (
+                    <Text className={`font-psemibold text-lg ${I18nManager.isRTL ? 'text-right' : 'text-left'}`}>{user?.name}</Text>
+                  )}
+                </View>
+                                 {!loading && user?.phone && (
+                   <Text className={`font-psemibold text-sm text-zinc-400 ${I18nManager.isRTL ? 'text-right' : 'text-left'}`}>+{user?.phone}</Text>
+                 )}
+              </View>
           </View>
           <View pointerEvents="none">
             <CustomIcon containerStyles="border-[0]">

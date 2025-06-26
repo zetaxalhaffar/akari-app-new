@@ -8,6 +8,7 @@ import CustomSelecteBox from '@/components/CustomSelecteBox.jsx';
 import { router } from 'expo-router';
 import { useEnumsStore } from '../../store/enums.store';
 import CustomButton from '@/components/CustomButton.jsx';
+import CustomAlert from '@/components/CustomAlert.jsx';
 import { useUnitsStore } from '../../store/units.store';
 
 const CreateShareScreen = () => {
@@ -82,6 +83,54 @@ const CreateShareScreen = () => {
     []
   );
 
+  // Confirmation alert state
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+
+  // Helper function to format numbers with commas
+  const formatNumber = (number) => {
+    if (!number) return '';
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  // Helper functions to get display names
+  const getRegionName = () => {
+    const region = regions.find(r => r.id === form.region_id);
+    return region ? region.name : '';
+  };
+
+  const getSectorName = () => {
+    const sector = sectors.find(s => s.id === form.sector_id);
+    return sector ? sector.code : '';
+  };
+
+  const getSectorTypeName = () => {
+    const sectorType = sectorsTypes.find(s => s.id === sectoreType);
+    return sectorType ? sectorType.name : '';
+  };
+
+  // Generate confirmation message
+  const getConfirmationMessage = () => {
+    const action = currentType === 'buy' ? 'شراء' : 'بيع';
+    const actionVerb = currentType === 'buy' ? 'تشتري' : 'تبيع';
+    const regionName = getRegionName();
+    const sectorTypeName = getSectorTypeName();
+    const sectorName = getSectorName();
+    const quantity = form.quantity;
+    const price = form.price;
+    const ownerName = form.owner_name;
+
+    return `أنت تريد أن ${actionVerb} ${quantity} سهم في المقسم ${sectorName} من نوع ${sectorTypeName} في منطقة ${regionName} بسعر ${formatNumber(price)} ليرة سورية للسهم الواحد.`;
+  };
+
+  // Show confirmation before creating request
+  const showConfirmation = () => {
+    if (!form.owner_name || !form.region_id || !form.sector_id || !form.quantity || !form.price) {
+      // You could show an error alert here if needed
+      return;
+    }
+    setShowConfirmAlert(true);
+  };
+
   const handleCreateShareRequest = async () => {
     const transactionTypeValue = currentType === 'sell' ? 1 : 2;
     const response = await createShareRequest(currentType, { ...form, transaction_type: transactionTypeValue });
@@ -89,6 +138,12 @@ const CreateShareScreen = () => {
     if (response?.success) {
       router.replace(`/(shares)/${response.id}`);
     }
+  };
+
+  // Confirm and create the request
+  const confirmCreateRequest = async () => {
+    setShowConfirmAlert(false);
+    await handleCreateShareRequest();
   };
 
   return (
@@ -165,10 +220,17 @@ const CreateShareScreen = () => {
           positionOfGradient={'leftToRight'}
           textStyles={'text-white'}
           buttonStyles={'h-[45px]'}
-          handleButtonPress={handleCreateShareRequest}
+          handleButtonPress={showConfirmation}
           loading={createShareRequestLoading}
         />
       </View>
+             <CustomAlert
+         visible={showConfirmAlert}
+         title="تأكيد الإعلان"
+         message={getConfirmationMessage()}
+         onConfirm={confirmCreateRequest}
+         onCancel={() => setShowConfirmAlert(false)}
+       />
     </SafeAreaView>
   );
 };

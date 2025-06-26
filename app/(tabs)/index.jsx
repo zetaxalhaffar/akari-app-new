@@ -136,19 +136,20 @@ export default function Home() {
         </View>
       ) : (
         <ScrollView
+          contentContainerStyle={{ paddingBottom: 50 }}
           refreshControl={<RefreshControl refreshing={false} onRefresh={getRegionsList} />}>
           {userData && userData?.chat && (
             <TouchableOpacity className="mx-4 mt-4" onPress={handleChatPress} activeOpacity={0.8}>
               <Image source={images.akari_ai} className="h-24 w-full" resizeMode="contain" />
             </TouchableOpacity>
           )}
-          <View className="mt-6 gap-3 px-3" style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+          <View className="mt-6 gap-4 px-3" style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {regionResponse &&
               regionResponse?.map((item) => (
                 <TouchableOpacity
                   key={item?.id}
                   className="relative h-[200px] rounded-lg bg-toast-500"
-                  style={{ width: '48%' }}
+                  style={{ width: '47%' }}
                   onPress={() => handleRegionPress(item?.id)}
                   activeOpacity={0.8}>
                   <Image
@@ -164,12 +165,10 @@ export default function Home() {
                 </TouchableOpacity>
               ))}
           </View>
-          <View className="my-4 px-4 py-3  ">
-            <Text className="font-psemibold text-lg">إحصائيات عقاري</Text>
-            <Text className="font-pregular text-base">
-              تعرف على حركة السوق العقاري في دمشق لحظة بلحظة.
-            </Text>
-            <View className="mb-16 mt-4">
+          <View className="my-2 px-4 py-1">
+                        <Image source={images.stat} className="h-24 w-full mb-1" resizeMode="contain" />
+ 
+            <View className="mb-16 mt-2">
               <ScrollView
                 contentContainerStyle={{
                   gap: 16,
@@ -196,19 +195,36 @@ export default function Home() {
                         className="h-12 w-12"
                         tintColor="#FFFFFF"
                       />
-                      <Text className="font-psemibold text-sm text-white">{item?.name}</Text>
-                      <Text className="mt-1 font-pmedium text-xs text-white">
-                        أسهم / شراء: {item?.buy_shares_count}
+                      <Text className="font-psemibold text-sm text-white">
+                       أسهم {item?.name} 
                       </Text>
                       <Text className="mt-1 font-pmedium text-xs text-white">
-                        أسهم / بيع: {item?.sell_shares_count}
+                        عدد إعلانات الشراء: {item?.buy_shares_count}
                       </Text>
-                      {/* <Text className="mt-1 font-pmedium text-xs text-white">
-                        متوسط سعر السهم: {item?.average_share_price}
-                      </Text> */}
+                      <Text className="mt-1 font-pmedium text-xs text-white">
+                        عدد إعلانات البيع: {item?.sell_shares_count}
+                      </Text>
+
                     </LinearGradient>
                   </TouchableOpacity>
                 ))}
+                <LinearGradient
+                  style={{ borderRadius: 6 }}
+                  colors={colors}
+                  className="h-[130px] w-full items-center justify-center rounded-lg p-4"
+                  start={gradientPositions[positionOfGradient].start}
+                  end={gradientPositions[positionOfGradient].end}>
+                  <Image
+                    source={icons.updates}
+                    resizeMode="cover"
+                    className="h-12 w-12 mb-2"
+                    tintColor="#FFFFFF"
+                  />
+
+                  <Text className="font-pbold text-center text-white mb-1 text-2xl">
+                    عدد العقارات المتاحة حسب النوع
+                  </Text>
+                </LinearGradient>
                 {statisticsSchemaResponse?.apartment_statistics?.map((item, index) => (
                   <TouchableOpacity
                     key={index}

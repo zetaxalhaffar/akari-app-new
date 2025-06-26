@@ -40,14 +40,14 @@ import Animated, {
 import { useReactionStore } from '@/store/reaction.store';
 import { useFavoriteStore } from '@/store/favorite.store';
 
-const EmojiButton = ({ emoji, onPress, isSelected }) => {
+const EmojiButton = ({ emoji, onPress, isSelected = false }) => {
   const scale = useSharedValue(1);
-  const backgroundColor = useSharedValue(isSelected ? '#e5e7eb' : '#f3f4f6');
+  const backgroundColor = useSharedValue('#f3f4f6');
 
   useEffect(() => {
     scale.value = withSpring(isSelected ? 1.2 : 1);
     backgroundColor.value = withTiming(isSelected ? '#d1d5db' : '#f3f4f6', { duration: 150 });
-  }, [isSelected, scale, backgroundColor]);
+  }, [isSelected]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -214,6 +214,7 @@ const UnitDetails = ({
                   key={reaction.value}
                   emoji={reaction.icon}
                   onPress={() => onReactionSelect(reaction.value)}
+                  isSelected={displayedReaction === reaction.value}
                 />
               ))}
             </Animated.View>

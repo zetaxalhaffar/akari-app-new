@@ -37,6 +37,7 @@ class ErrorBoundary extends React.Component {
   };
 
   render() {
+    
     if (this.state.hasError) {
       // Custom fallback UI
       return (

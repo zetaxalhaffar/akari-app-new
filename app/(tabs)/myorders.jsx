@@ -16,11 +16,11 @@ import { getSecureStoreNoAsync } from '@/composables/secure.store';
 const topTabItems = [
   {
     id: 'shares',
-    title: 'إعلانات الأسهم',
+    title: 'مواعيد الأسهم',
   },
   {
     id: 'apartments',
-    title: 'إعلانات العقارات',
+    title: 'مواعيد العقارات',
   },
 ];
 
@@ -44,7 +44,7 @@ const OrderListItem = ({ parentId, type, item, onOrderDeleted, onDeletePress }) 
         
         <View className="rounded-lg bg-gray-200 mr-4">
           <Image 
-            source={{ uri: item?.sector?.cover?.img }} 
+            source={item?.sector?.cover?.img ? { uri: item.sector.cover.img } : require('@/assets/images/no_photo.jpg')} 
             className="size-20 rounded-lg"
           />
         </View>

@@ -112,7 +112,7 @@ const SectorImageCarousel = ({ photos, height = 300, onImagePress }) => {
               activeOpacity={0.9}
               style={{ width: width - 32, height }}>
               <Image
-                source={{ uri: photo }}
+                source={photo ? { uri: photo } : require('@/assets/images/no_photo.jpg')}
                 style={{ width: width - 32, height }}
                 resizeMode="cover"
               />

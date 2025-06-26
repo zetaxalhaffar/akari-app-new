@@ -122,7 +122,9 @@ axiosInstance.interceptors.request.use(
     }
 
 
-    console.log(config.params, 'config.params');
+    if (config.params) {
+      console.log(config.params, 'config.params');
+    }
     // Log the request URI and payload
     console.log('Request Payload:', config.data);
 

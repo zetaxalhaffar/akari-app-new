@@ -14,26 +14,10 @@ const MessageBubble = ({
 }) => {
   const [currentStatus, setCurrentStatus] = useState(messageStatus);
 
+  // Update status when props change (for store-managed status updates)
   useEffect(() => {
-    if (isUser && messageStatus === 'sent' && onStatusChange && messageId) {
-      // Generate random delay between 1-3 seconds for the second tick
-      const deliveredDelay = Math.random() * 2000 + 1000; // 1-3 seconds
-
-      const deliveredTimer = setTimeout(() => {
-        setCurrentStatus('delivered');
-        onStatusChange(messageId, 'delivered');
-
-        // After showing delivered status, trigger typing indicator
-        // Add small delay before showing typing indicator
-        const typingDelay = 500; // 0.5 seconds after delivered
-        setTimeout(() => {
-          onStatusChange(messageId, 'typing');
-        }, typingDelay);
-      }, deliveredDelay);
-
-      return () => clearTimeout(deliveredTimer);
-    }
-  }, [isUser, messageStatus, onStatusChange, messageId]);
+    setCurrentStatus(messageStatus);
+  }, [messageStatus]);
 
   const formatTime = (timestamp) => {
     return timestamp.toLocaleTimeString('ar-SA', {
@@ -48,12 +32,12 @@ const MessageBubble = ({
 
     switch (currentStatus) {
       case 'sent':
-        return <Text className="text-base font-black text-white/50">✔</Text>;
+        return <Text className="text-base font-black" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>✔</Text>;
       case 'delivered':
       case 'read':
-        return <Text className="text-base font-black text-blue-300">✔✔</Text>;
+        return <Text className="text-base font-black" style={{ color: '#93c5fd' }}>✔✔</Text>;
       default:
-        return <Text className="text-base font-black text-white/50">✔</Text>;
+        return <Text className="text-base font-black" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>✔</Text>;
     }
   };
 

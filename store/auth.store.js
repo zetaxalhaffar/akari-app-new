@@ -64,9 +64,18 @@ export const useAuthStore = create((set) => ({
     try {
       set({ authDataSchema: { loading: true } });
       const response = await axiosInstance.get('/user/auth_data');
+      console.log('==================== AUTH DATA RESPONSE ====================');
+      console.log('Full response:', response);
+      console.log('Response keys:', Object.keys(response || {}));
+      console.log('Response name:', response?.name);
+      console.log('Response user_id:', response?.user_id);
+      console.log('Response privilege:', response?.privilege);
+      console.log('Response chat:', response?.chat);
+      console.log('========================================================');
       set({ authDataSchema: { response } });
       return response;
     } catch (error) {
+      console.log('AUTH DATA ERROR:', error);
       return error;
     } finally {
       set({ authDataSchema: { loading: false } });

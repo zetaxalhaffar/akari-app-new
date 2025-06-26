@@ -35,34 +35,42 @@ const ImageSlider = ({ images, height, resizeMode = 'cover', newImages }) => {
   const getImages = () => {
     console.log('newImages', newImages);
     if (newImages?.photos && newImages?.photos?.length) {
-      const sliderData = newImages.photos.map((item, index) => {
-        return {
-          source: { uri: item.img },
-          thumb: item.img,
-          id: index,
-        };
-      });
-      const updatedImagesArray = newImages.photos.map((image) => {
-        return {
-          url: image.img ?? image, // Replace 'img' with 'url'
-        };
-      });
+      const sliderData = newImages.photos
+        .filter(item => item.img) // Filter out items without valid image URLs
+        .map((item, index) => {
+          return {
+            source: { uri: item.img },
+            thumb: item.img,
+            id: index,
+          };
+        });
+      const updatedImagesArray = newImages.photos
+        .filter(image => image.img) // Filter out images without valid URLs
+        .map((image) => {
+          return {
+            url: image.img ?? image, // Replace 'img' with 'url'
+          };
+        });
       setViewerImage(updatedImagesArray);
       setImageSlider(sliderData);
     } else {
       if (!newImages?.sector?.photos || !newImages?.sector?.photos?.length) return [];
-      const sliderData = newImages.sector.photos.map((item, index) => {
-        return {
-          source: { uri: item.img },
-          thumb: item.img,
-          id: index,
-        };
-      });
-      const updatedImagesArray = newImages.sector.photos.map((image) => {
-        return {
-          url: image.img ?? image, // Replace 'img' with 'url'
-        };
-      });
+      const sliderData = newImages.sector.photos
+        .filter(item => item.img) // Filter out items without valid image URLs
+        .map((item, index) => {
+          return {
+            source: { uri: item.img },
+            thumb: item.img,
+            id: index,
+          };
+        });
+      const updatedImagesArray = newImages.sector.photos
+        .filter(image => image.img) // Filter out images without valid URLs
+        .map((image) => {
+          return {
+            url: image.img ?? image, // Replace 'img' with 'url'
+          };
+        });
       setViewerImage(updatedImagesArray);
       setImageSlider(sliderData);
     }
