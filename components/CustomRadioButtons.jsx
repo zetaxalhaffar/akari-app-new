@@ -7,7 +7,13 @@ const CustomRadioButtons = ({
   selectedId,
   layout = 'row',
   disabled = false,
+  isRTL,
 }) => {
+  const styleOverride = {};
+  // Only apply the fix if our app wants RTL but the system hasn't caught up yet.
+  if (isRTL && !I18nManager.isRTL) {
+    styleOverride.flexDirection = 'row-reverse';
+  }
   return (
     <View>
       <RadioGroup
@@ -15,6 +21,7 @@ const CustomRadioButtons = ({
         onPress={handleChangeRadioButton}
         selectedId={selectedId}
         layout={layout}
+        containerStyle={styleOverride}
         labelStyle={{
           fontFamily: 'Cairo-Medium',
           fontSize: 14,
@@ -25,4 +32,3 @@ const CustomRadioButtons = ({
 };
 
 export default CustomRadioButtons;
-9;

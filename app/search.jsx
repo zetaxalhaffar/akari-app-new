@@ -74,6 +74,8 @@ const SearchScreen = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [pendingRegionChange, setPendingRegionChange] = useState(null);
 
+  const [isRTL, setIsRTL] = useState(true);
+
   const unitTypeRadioButtons = useMemo(() => {
     const allOptions = [
       { id: 'share', label: 'أسهم تنظيمية', value: 'share', size: 20, color: '#a47764' },
@@ -331,6 +333,7 @@ const SearchScreen = () => {
                 handleChangeRadioButton={handleUnitTypeChange}
                 selectedId={currentType}
                 disabled={form.id.length > 0}
+                isRTL={isRTL}
               />
             )}
           </View>
@@ -476,6 +479,7 @@ const SearchScreen = () => {
                     handleChangeRadioButton={(value) => setForm({ ...form, is_taras: value })}
                     selectedId={form.is_taras}
                     disabled={unitTypeRadioButtons.length === 0 || form.id.length > 0}
+                    isRTL={isRTL}
                   />
                 </View>
               )}
@@ -484,7 +488,7 @@ const SearchScreen = () => {
           <View>
             <Text className="font-pmedium text-gray-700">السعر</Text>
             <View
-              className={`my-4 justify-between gap-4 ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'}`}
+              className={`my-4 justify-between gap-4 ${isRTL ? 'rtl-view' : 'ltr-view'}`}
             >
               <View className="flex-1">
                 <CustomSelecteBox

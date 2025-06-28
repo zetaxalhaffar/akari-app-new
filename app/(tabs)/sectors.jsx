@@ -8,7 +8,7 @@ import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
 import { router, useFocusEffect } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { BackHandler, Dimensions, I18nManager, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { BackHandler, Dimensions, I18nManager, Image, ScrollView, Text, TextInput, TouchableOpacity, View, Platform, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomTopTabs from '../../components/CustomTopTabs';
 import { useSectoresStore } from '../../store/sectores.store';
@@ -151,6 +151,24 @@ const SectorDropdown = ({ options, selectedValue, onSelect, placeholder }) => {
   const [searchText, setSearchText] = useState('');
   const inputRef = useRef(null);
 
+  const setInputRef = useCallback((node) => {
+    if (node) {
+      inputRef.current = node;
+
+      // Workaround for Android to apply font family to placeholder
+      if (Platform.OS === 'android') {
+        node.setNativeProps({
+          style: StyleSheet.flatten([
+            {
+              fontFamily: 'Cairo-Medium',
+              fontWeight: '500',
+            },
+          ]),
+        });
+      }
+    }
+  }, []);
+
   // Filter options based on search text (case insensitive)
   const filteredOptions = options.filter(option =>
     option.toString().toLowerCase().includes(searchText.toLowerCase()) ||
@@ -184,13 +202,17 @@ const SectorDropdown = ({ options, selectedValue, onSelect, placeholder }) => {
     <View className="mb-4 pt-2">
       <View className="relative">
         <TextInput
-          ref={inputRef}
+          ref={setInputRef}
           value={searchText}
           onChangeText={setSearchText}
           onFocus={handleInputFocus}
           placeholder={placeholder}
           className={`rounded-lg border border-toast-300 bg-white py-3 pl-12 font-pmedium text-toast-900 text-right ${selectedValue ? 'pr-20' : 'pr-4'}`}
-          style={{ textAlign: 'right' }}
+          style={{ 
+            textAlign: 'right',
+            fontFamily: 'Cairo-Medium',
+            fontWeight: '500',
+          }}
           placeholderTextColor="#9CA3AF"
         />
         

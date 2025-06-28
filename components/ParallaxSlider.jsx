@@ -35,6 +35,9 @@ const ParallaxSlider = () => {
     vertical: false,
     width,
     height: height - 200,
+    autoPlay: true,
+    autoPlayInterval: 4000, // 4 seconds delay
+    autoPlayReverse: true, // Ensure left to right direction
   };
   const onPressPagination = (index) => {
     ref.current?.scrollTo({

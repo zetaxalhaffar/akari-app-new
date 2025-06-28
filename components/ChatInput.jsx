@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   ActivityIndicator,
   I18nManager,
@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Linking,
   Platform,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -29,6 +30,25 @@ const ChatInput = ({
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+  const inputRef = useRef(null);
+
+  const setInputRef = useCallback((node) => {
+    if (node) {
+      inputRef.current = node;
+
+      // Workaround for Android to apply font family to placeholder
+      if (Platform.OS === 'android') {
+        node.setNativeProps({
+          style: StyleSheet.flatten([
+            {
+              fontFamily: 'Cairo-Regular',
+              fontWeight: '400',
+            },
+          ]),
+        });
+      }
+    }
+  }, []);
 
   const showAlert = (title, message) => {
     setAlertTitle(title);
@@ -114,6 +134,7 @@ const ChatInput = ({
             className="max-h-32 flex-1 border border-gray-300 bg-gray-50 px-4 py-3"
             style={{ borderRadius: 5 }}>
             <TextInput
+              ref={setInputRef}
               value={value}
               onChangeText={onChangeText}
               placeholder={placeholder}
@@ -123,6 +144,8 @@ const ChatInput = ({
               style={{
                 textAlignVertical: 'center',
                 maxHeight: 100,
+                fontFamily: 'Cairo-Regular',
+                fontWeight: '400',
               }}
               placeholderTextColor="#9CA3AF"
               editable={!disabled && !loading}

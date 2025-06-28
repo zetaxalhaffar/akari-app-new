@@ -309,6 +309,7 @@ export default function RootLayout() {
   const hasContactSegment = segments.some((segment) => segment.includes('contact'));
   const shouldShowFAB =
     isAuthenticated && pathname === '/' && !hasContactSegment && !isBottomSheetOpen;
+  const [isRTL] = useState(I18nManager.isRTL);
 
   async function onFetchUpdateAsync() {
     console.log('onFetchUpdateAsync');
@@ -546,18 +547,20 @@ export default function RootLayout() {
                   icon={fabOpen ? 'close' : 'plus'}
                   color="#FFF"
                   label="أضف إعلانك الأن"
-                  theme={{
-                    fonts: {
-                      ...theme.fonts,
-                      labelLarge: {
-                        ...theme.fonts.labelLarge,
-                        fontSize: 14,
-                        textShadowColor: 'rgba(0, 0, 0, 0.59)',
-                        textShadowOffset: { width: 0, height: 2 },
-                        textShadowRadius: 15,
+                  theme={
+                    {
+                      fonts: {
+                        ...theme.fonts,
+                        labelLarge: {
+                          ...theme.fonts.labelLarge,
+                          fontSize: 14,
+                          textShadowColor: 'rgba(0, 0, 0, 0.59)',
+                          textShadowOffset: { width: 0, height: 2 },
+                          textShadowRadius: 15,
+                        },
                       },
-                    },
-                  }}
+                    } as any
+                  }
                   rippleColor="#000000A0"
                   actions={[
                     {
@@ -580,15 +583,23 @@ export default function RootLayout() {
                   onStateChange={onStateChange}
                   fabStyle={{
                     backgroundColor: '#8E6756', // Using CustomAlert موافق button color
-                    marginBottom: (insets.bottom || 0) + 90,
-                    marginRight: I18nManager.isRTL ? undefined : 16,
-                    marginLeft: I18nManager.isRTL ? 16 : undefined,
-
+                    marginBottom: !isRTL ? 0 : (insets.bottom || 0) + 90,
+                    marginRight: isRTL ? undefined : 16,
+                    marginLeft: isRTL ? 16 : undefined,
                     borderWidth: 5,
-                    borderColor: '#a4776450', // Using same color with transparency
+                    borderColor: '#a4776450',
                   }}
                   backdropColor="#000000C0" // Kept transparent backdrop
-                  style={{}}
+                  style={
+                    !isRTL
+                      ? {
+                          position: 'absolute',
+                          bottom: (insets.bottom || 0) + 90,
+                          left: 16,
+                          right: 'auto',
+                        }
+                      : {}
+                  }
                 />
               </BottomSheetModalProvider>
             </NotificationsProvider>

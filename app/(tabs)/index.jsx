@@ -143,15 +143,23 @@ export default function Home() {
               <Image source={images.akari_ai} className="h-24 w-full" resizeMode="contain" />
             </TouchableOpacity>
           )}
-          <View className="mt-6 gap-4 px-3" style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            {regionResponse &&
-              regionResponse?.map((item) => (
-                <TouchableOpacity
-                  key={item?.id}
-                  className="relative h-[200px] rounded-lg bg-toast-500"
-                  style={{ width: '47%' }}
-                  onPress={() => handleRegionPress(item?.id)}
-                  activeOpacity={0.8}>
+          <View className="mt-6 px-3">
+            <ScrollView
+              contentContainerStyle={{
+                gap: 8,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+              }}
+              showsHorizontalScrollIndicator={false}>
+              {regionResponse &&
+                regionResponse?.map((item) => (
+                  <TouchableOpacity
+                    key={item?.id}
+                    className="relative h-[200px] rounded-lg bg-toast-500"
+                    style={{ width: '48.5%' }}
+                    onPress={() => handleRegionPress(item?.id)}
+                    activeOpacity={0.8}>
                   <Image
                     source={images.city_1}
                     resizeMode="cover"
@@ -164,6 +172,7 @@ export default function Home() {
                   </View>
                 </TouchableOpacity>
               ))}
+            </ScrollView>
           </View>
           <View className="my-2 px-4 py-1">
                         <Image source={images.stat} className="h-24 w-full mb-1" resizeMode="contain" />
@@ -171,7 +180,7 @@ export default function Home() {
             <View className="mb-16 mt-2">
               <ScrollView
                 contentContainerStyle={{
-                  gap: 16,
+                  gap: 8,
                   flexDirection: 'row',
                   flexWrap: 'wrap',
                   justifyContent: 'space-between',
@@ -180,7 +189,7 @@ export default function Home() {
                 {statisticsSchemaResponse?.share_statistics?.map((item, index) => (
                   <TouchableOpacity
                     key={index}
-                    style={{ width: '47%' }}
+                    style={{ width: '48.5%' }}
                     onPress={() => handleShareStatisticsPress(item?.id)}
                     activeOpacity={0.8}>
                     <LinearGradient
@@ -228,7 +237,7 @@ export default function Home() {
                 {statisticsSchemaResponse?.apartment_statistics?.map((item, index) => (
                   <TouchableOpacity
                     key={index}
-                    style={{ width: '47%' }}
+                    style={{ width: '48.5%' }}
                     onPress={() => handleApartmentStatisticsPress(item?.id)}
                     activeOpacity={0.8}>
                     <LinearGradient
