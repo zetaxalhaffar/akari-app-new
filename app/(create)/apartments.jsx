@@ -56,6 +56,11 @@ const CreateApartmentScreen = () => {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [fieldsToShow, setFieldsToShow] = useState([]);
 
+  // Filter regions to only show those that support apartments
+  const filteredRegions = useMemo(() => {
+    return regions.filter(region => region.has_apartment === 1);
+  }, [regions]);
+
   // Confirmation alert state
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
 
@@ -257,7 +262,7 @@ const CreateApartmentScreen = () => {
           <CustomSelecteBox
             value={form.region_id}
             setValue={handleChangeRegion}
-            arrayOfValues={regions}
+            arrayOfValues={filteredRegions}
             valueKey="id"
             placeholder=" المنطقة"
           />

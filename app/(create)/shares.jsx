@@ -29,6 +29,12 @@ const CreateShareScreen = () => {
   const [sectorsTypes, setSectorsTypes] = useState([]);
   const [mainSectors, setMainSectors] = useState([]);
   const [sectors, setSectors] = useState([]);
+  
+  // Filter regions to only show those that support shares
+  const filteredRegions = useMemo(() => {
+    return regions.filter(region => region.has_share === 1);
+  }, [regions]);
+  
   const getRegionsList = async () => {
     const response = await getRegions();
     setRegions(response);
@@ -159,7 +165,7 @@ const CreateShareScreen = () => {
           <CustomSelecteBox
             value={form.region_id}
             setValue={handleChangeRegion}
-            arrayOfValues={regions}
+            arrayOfValues={filteredRegions}
             valueKey="id"
             placeholder=" المنطقة"
           />

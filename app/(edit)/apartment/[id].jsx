@@ -59,6 +59,11 @@ const EditApartmentScreen = () => {
   const [apartmentStatus, setApartmentStatus] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [fieldsToShow, setFieldsToShow] = useState([]);
+
+  // Filter regions to only show those that support apartments
+  const filteredRegions = useMemo(() => {
+    return regions.filter(region => region.has_apartment === 1);
+  }, [regions]);
   const getEnumsList = async () => {
     try {
       const [regionsResponse, apartmentTypesResponse, directionsResponse, apartmentStatusResponse, paymentMethodsResponse] =
@@ -237,7 +242,7 @@ const EditApartmentScreen = () => {
               <CustomSelecteBox
                 value={form.region_id}
                 setValue={handleChangeRegion}
-                arrayOfValues={regions}
+                arrayOfValues={filteredRegions}
                 valueKey="id"
                 placeholder=" المنطقة"
               />
