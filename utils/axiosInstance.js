@@ -10,32 +10,39 @@ const getToken = async () => {
 };
 
 const createPullRequest = async (errorDetails, phone, errorType = 'HTTP_ERROR') => {
-  const branchName = `${errorType.toLowerCase()}-report-${new Date().toISOString()}`;
-
-  // Create a pull request
-  const response = await fetch(
-    'https://api.github.com/repos/beshoo/bot_trading/issues',
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: 'Bearer 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',
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-      body: JSON.stringify({
-        title: `${errorType} Report on ${new Date().toLocaleString()}`,
+  try {
+    // Get the user token for authorization
+    const token = await getToken();
+    
+    // Get the base URL from environment variables
+    const baseURL = mode === 'development' ? process.env.EXPO_PUBLIC_DEV_URI : process.env.EXPO_PUBLIC_PROD_URI;
+    // Create an issue report
+    const response = await fetch(
+      `${baseURL}/issue-report`,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
-          error: errorDetails,
-          phone: phone ?? '',
+          title: `${errorType} Report on ${new Date().toLocaleString()}`,
+          body: JSON.stringify({
+            error: errorDetails,
+            phone: phone ?? '',
+            timestamp: new Date().toISOString(),
+            errorType: errorType,
+          }),
         }),
-        head: branchName, // Use the branch that has the crash report or fix (optional)
-        base: 'main', // Or your default branch
-      }),
-    }
-  );
+      }
+    );
 
-  const data = await response.json();
-  console.log('Error report sent to GitHub:', data);
+    const data = await response.json();
+    console.log('Error report sent to API:', data);
+  } catch (error) {
+    console.error('Failed to send error report:', error);
+  }
 };
 
 // Crash logging function

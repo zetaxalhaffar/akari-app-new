@@ -220,17 +220,16 @@ export default function Home() {
                 <LinearGradient
                   style={{ borderRadius: 6 }}
                   colors={colors}
-                  className="h-[130px] w-full items-center justify-center rounded-lg p-4"
+                  className="h-[100px] w-full items-center justify-center rounded-lg"
                   start={gradientPositions[positionOfGradient].start}
                   end={gradientPositions[positionOfGradient].end}>
                   <Image
                     source={icons.updates}
                     resizeMode="cover"
-                    className="h-12 w-12 mb-2"
+                    className="h-12 w-12"
                     tintColor="#FFFFFF"
                   />
-
-                  <Text className="font-pbold text-center text-white mb-1 text-2xl">
+                  <Text className="font-pbold text-center text-white text-xl mt-2">
                     عدد العقارات المتاحة حسب النوع
                   </Text>
                 </LinearGradient>

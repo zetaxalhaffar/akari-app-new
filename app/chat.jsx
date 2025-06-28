@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLocalSearchParams } from 'expo-router';
 
 import ChatInput from '@/components/ChatInput';
 import CustomAlert from '@/components/CustomAlert';
@@ -15,6 +16,9 @@ const Chat = () => {
   const [showClearAlert, setShowClearAlert] = useState(false);
   const flatListRef = useRef();
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
+  
+  // Get params from navigation
+  const params = useLocalSearchParams();
 
   // Import chat store functions and state
   const { 
@@ -76,6 +80,18 @@ const Chat = () => {
     };
     initializeChat();
   }, []);
+
+  // Auto-send message if provided via navigation params
+  useEffect(() => {
+    if (params.autoMessage && typeof params.autoMessage === 'string' && params.autoMessage.trim()) {
+      // Wait a bit for the chat to initialize
+      const timer = setTimeout(() => {
+        sendMessage(params.autoMessage.trim());
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [params.autoMessage, sendMessage]);
 
   const clearChatHistory = async () => {
     try {

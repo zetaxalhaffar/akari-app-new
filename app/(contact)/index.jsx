@@ -5,6 +5,7 @@ import CustomHeadWithBackButton from '../../components/CustomHeadWithBackButton'
 import { router } from 'expo-router';
 import { useUnitsStore } from '../../store/units.store';
 import icons from '../../constants/icons';
+import images from '../../constants/images';
 import CustomButton from '../../components/CustomButton';
 import CustomBottomModalSheet from '@/components/CustomBottomModalSheet';
 import { useOrdersStore } from '../../store/orders.store';
@@ -150,6 +151,17 @@ const Contact = () => {
     intentionBottomSheetModalRef.current.present();
   };
 
+  const handleAIChatPress = () => {
+    const question = shareDetailsResponse?.question_message || apartmentDetailsResponse?.question_message;
+    // Navigate to chat with the question message to be auto-sent
+    router.push({
+      pathname: '/chat',
+      params: {
+        autoMessage: question || 'مرحبا، أحتاج المساعدة بهذا الإعلان'
+      }
+    });
+  };
+
   const disabled =
     createApartmentBuyRequestLoading ||
     createApartmentSellRequestLoading ||
@@ -264,7 +276,7 @@ const Contact = () => {
           </View>
           <View>
             <Text className="font-psemibold text-lg">عن طريق الهاتف</Text>
-            <Text className="max-w-[250px] font-pregular text-sm">
+            <Text className="max-w-[350px] font-pregular text-base">
               يمكنك الاتصال المباشر بفريق عقاري للحصول على المساعدة الفورية.
             </Text>
           </View>
@@ -276,8 +288,20 @@ const Contact = () => {
           </View>
           <View>
             <Text className="font-psemibold text-lg">عن طريق الوتساب</Text>
-            <Text className="max-w-[250px] font-pregular text-sm">
+            <Text className="max-w-[350px] font-pregular text-base">
               تواصل معنا بسهولة إما عن طريق الدردشة النصية أو إجراء مكالمة صوتية.
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <View className="h-[1px] bg-gray-200" />
+        <TouchableOpacity onPress={handleAIChatPress} className="flex-row items-center gap-6">
+          <View className="flex-row items-center justify-center rounded-lg bg-gray-200 p-2 h-12 w-12">
+            <Text className="text-2xl font-bold text-gray-800">AI</Text>
+          </View>
+          <View>
+            <Text className="font-psemibold text-lg">عن طريق الدردشة مع الذكاء الصناعي</Text>
+            <Text className="max-w-[350px] font-pregular text-base">
+              احصل على إجابات فورية ومساعدة ذكية حول استفساراتك العقارية من خلال مساعدنا الذكي المتخصص.
             </Text>
           </View>
         </TouchableOpacity>
@@ -292,7 +316,7 @@ const Contact = () => {
             </View>
             <View>
               <Text className="font-psemibold text-lg">ترتيب موعد</Text>
-              <Text className="max-w-[250px] font-pregular text-sm">
+              <Text className="max-w-[350px] font-pregular text-base">
                 أرسل إعلانك إلينا وسيقوم فريق عقاري بالتواصل معك لتحديد الموعد المناسب وترتيب كافة
                 التفاصيل.
               </Text>

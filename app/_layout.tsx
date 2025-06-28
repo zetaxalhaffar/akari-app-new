@@ -585,7 +585,7 @@ export default function RootLayout() {
                     backgroundColor: '#8E6756', // Using CustomAlert موافق button color
                     marginBottom: !isRTL ? 0 : (insets.bottom || 0) + 90,
                     marginRight: isRTL ? undefined : 16,
-                    marginLeft: isRTL ? 16 : undefined,
+                    marginLeft: isRTL ? 0 : undefined,
                     borderWidth: 5,
                     borderColor: '#a4776450',
                   }}
@@ -595,13 +595,14 @@ export default function RootLayout() {
                       ? {
                           position: 'absolute',
                           bottom: (insets.bottom || 0) + 90,
-                          left: 16,
+                          left: 0,
                           right: 'auto',
                         }
                       : {}
                   }
                 />
               </BottomSheetModalProvider>
+
             </NotificationsProvider>
           </NotificationPermissionContext.Provider>
         </PaperProvider>

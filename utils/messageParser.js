@@ -70,8 +70,36 @@ export const parseMessageText = (text) => {
   // Sort matches by their position in the text
   allMatches.sort((a, b) => a.index - b.index);
 
+  // If there are matches, find the line that contains the first match and insert instruction
+  if (allMatches.length > 0) {
+    const firstMatch = allMatches[0];
+    
+    // Find the beginning of the line that contains the first match
+    const beforeFirstMatch = cleanedText.substring(0, firstMatch.index);
+    const lastNewlineIndex = beforeFirstMatch.lastIndexOf('\n');
+    const lineStartIndex = lastNewlineIndex === -1 ? 0 : lastNewlineIndex + 1;
+    
+    // Add text before the line containing the first match
+    if (lineStartIndex > 0) {
+      const textBeforeLine = cleanedText.substring(0, lineStartIndex);
+      if (textBeforeLine.trim()) {
+        parts.push({ type: 'text', content: textBeforeLine });
+      }
+    }
+    
+    // Add instruction text
+    const arrow = I18nManager.isRTL ? '⬅️' : '➡️';
+    parts.push({ 
+      type: 'text', 
+      content: `يمكنك الضغط على علامة ${arrow} للذهاب إلى تفاصيل العرض.\n\n` 
+    });
+    
+    // Update lastIndex to start from the line containing the first match
+    lastIndex = lineStartIndex;
+  }
+
   // Build parts array
-  allMatches.forEach((matchObj) => {
+  allMatches.forEach((matchObj, index) => {
     // Add text before the match
     if (matchObj.index > lastIndex) {
       const textBefore = cleanedText.substring(lastIndex, matchObj.index);
@@ -80,19 +108,12 @@ export const parseMessageText = (text) => {
       }
     }
 
-    // Check if "الرقم المرجعي" already exists in the surrounding text to avoid duplication
-    const textBefore = cleanedText.substring(Math.max(0, lastIndex), matchObj.index);
-    const textAfter = cleanedText.substring(matchObj.index + matchObj.length, Math.min(cleanedText.length, matchObj.index + matchObj.length + 50));
-    const hasDuplicateReference = textBefore.includes('الرقم المرجعي') || textAfter.includes('الرقم المرجعي');
-
-    // Add the link
+    // Add the link with arrow emoji
     parts.push({
       type: 'link',
       linkType: matchObj.type,
       id: matchObj.id,
-      content: hasDuplicateReference
-        ? `#${matchObj.id} ${I18nManager.isRTL ? '⬅️' : '➡️'}`
-        : `#${matchObj.id} ${I18nManager.isRTL ? '⬅️' : '➡️'}`
+      content: `#${matchObj.id} ${I18nManager.isRTL ? '⬅️' : '➡️'}`
     });
 
     lastIndex = matchObj.index + matchObj.length;

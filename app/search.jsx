@@ -126,10 +126,10 @@ const SearchScreen = () => {
       
       if (currentType === 'share' && !isShareAvailable && isApartmentAvailable) {
         shouldShowAlert = true;
-        message = 'الأسهم التنظيمية غير متوفرة في هذه المنطقة. سيتم التبديل إلى العقارات.';
+        message = `الأسهم التنظيمية غير متوفرة في منطقة ${selectedRegion.name}. سيتم التبديل إلى العقارات.`;
       } else if (currentType === 'apartment' && !isApartmentAvailable && isShareAvailable) {
         shouldShowAlert = true;
-        message = 'العقارات غير متوفرة في هذه المنطقة. سيتم التبديل إلى الأسهم التنظيمية.';
+        message = `العقارات غير متوفرة في منطقة ${selectedRegion.name}. سيتم التبديل إلى الأسهم التنظيمية.`;
       }
       
       if (shouldShowAlert) {
@@ -546,8 +546,8 @@ const SearchScreen = () => {
       {/* Service Unavailable Alert */}
       <CustomAlert
         visible={showServiceAlert}
-        title="تغيير نوع الخدمة"
-        message={alertMessage}
+          title="تغير المنطقة"
+          message={alertMessage}
         onConfirm={handleAlertConfirm}
         onCancel={handleAlertCancel}
       />
