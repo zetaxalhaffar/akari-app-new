@@ -181,15 +181,27 @@ const MoreScreen = () => {
               />
             </View>
                           <View>
-                <View className="w-full items-end min-w-[100px]">
+                <View>
                   {loading ? (
-                    <View className="h-1 w-full bg-toast-300 rounded-full animate-pulse"></View>
+                    <View className="h-1 w-20 bg-toast-300 rounded-full animate-pulse"></View>
                   ) : (
-                    <Text className={`font-psemibold text-lg ${I18nManager.isRTL ? 'text-right' : 'text-left'}`}>{user?.name}</Text>
+                    <Text className={`font-psemibold text-lg ${I18nManager.isRTL ? 'text-left' : 'text-right'}`}>{user?.name}</Text>
                   )}
                 </View>
                                  {!loading && user?.phone && (
-                   <Text className={`font-psemibold text-sm text-zinc-400 ${I18nManager.isRTL ? 'text-right' : 'text-left'}`}>+{user?.phone}</Text>
+                   <View className={`${I18nManager.isRTL ? 'flex-row self-end' : 'flex-row self-start'}`}>
+                     {I18nManager.isRTL ? (
+                       <>
+                         <Text className="font-psemibold text-sm text-zinc-400">{user?.phone}</Text>
+                         <Text className="font-psemibold text-sm text-zinc-400">+</Text>
+                       </>
+                     ) : (
+                       <>
+                         <Text className="font-psemibold text-sm text-zinc-400">+</Text>
+                         <Text className="font-psemibold text-sm text-zinc-400">{user?.phone}</Text>
+                       </>
+                     )}
+                   </View>
                  )}
               </View>
           </View>

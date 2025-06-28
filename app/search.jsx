@@ -314,7 +314,7 @@ const SearchScreen = () => {
         title="البحث عن وحدة"
         handleButtonPress={() => router.back()}
         rightText={''}
-        rightIcon={<Feather name="search" size={20} color="#a47764" />}
+        //rightIcon={<Feather name="search" size={20} color="#a47764" />}
         rightIconPress={() => router.push({ pathname: '/search' })}
       />
       <View className="flex-1 px-4">

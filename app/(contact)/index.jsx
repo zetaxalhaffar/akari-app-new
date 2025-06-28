@@ -96,18 +96,51 @@ const Contact = () => {
     return number.replace(/[^+\d]/g, '');
   };
 
-  const proceedWithAction = () => {
+  const proceedWithAction = async () => {
     const phoneNumber = shareDetailsResponse?.user?.phone || apartmentDetailsResponse?.user?.phone;
     const cleanedPhoneNumber = cleanPhoneNumber(phoneNumber);
 
     if (contactMethod === 'phone') {
       if (cleanedPhoneNumber) {
         Linking.openURL(`tel:${cleanedPhoneNumber}`);
+      } else {
+        setAlertInfo({
+          visible: true,
+          title: 'خطأ',
+          message: 'رقم الهاتف غير متوفر',
+        });
       }
     } else if (contactMethod === 'whatsapp') {
-      const question = shareDetailsResponse?.question_message || apartmentDetailsResponse?.question_message;
       if (cleanedPhoneNumber) {
-        Linking.openURL(`https://wa.me/${cleanedPhoneNumber}?text=${question || ''}`);
+        const ownerName = `${(shareDetailsResponse?.user?.name || apartmentDetailsResponse?.user?.name) || ''} ${(shareDetailsResponse?.user?.surname || apartmentDetailsResponse?.user?.surname) || ''}`.trim();
+        const question = shareDetailsResponse?.question_message || apartmentDetailsResponse?.question_message;
+        const defaultMessage = `مرحبا ${ownerName}, أود الاستفسار عن العقار المعروض`;
+        const whatsappUrl = `whatsapp://send?phone=${cleanedPhoneNumber}&text=${encodeURIComponent(question || defaultMessage)}`;
+        
+        try {
+          const supported = await Linking.canOpenURL(whatsappUrl);
+          if (supported) {
+            await Linking.openURL(whatsappUrl);
+          } else {
+            setAlertInfo({
+              visible: true,
+              title: 'خطأ',
+              message: 'تطبيق واتساب غير مثبت على هذا الجهاز',
+            });
+          }
+        } catch (error) {
+          setAlertInfo({
+            visible: true,
+            title: 'خطأ',
+            message: 'حدث خطأ أثناء فتح واتساب',
+          });
+        }
+      } else {
+        setAlertInfo({
+          visible: true,
+          title: 'خطأ',
+          message: 'رقم الهاتف غير متوفر',
+        });
       }
     } else if (contactMethod === 'date') {
       performDateAction();
