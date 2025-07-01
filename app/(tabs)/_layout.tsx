@@ -1,7 +1,10 @@
+import React from 'react';
 import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, View, Text, Image } from 'react-native';
 import icons from '@/constants/icons';
+
+const TAB_FONT_SIZE = 10; // Change this value to adjust all tab fonts at once
 
 export default function TabLayout() {
   return (
@@ -49,7 +52,7 @@ export default function TabLayout() {
                   className="h-6 w-6"
                   tintColor={color}
                 />
-                <Text className="font-psemibold" style={{ color, fontSize: 10, marginTop: 2 }}>
+                <Text className="font-psemibold" style={{ color, fontSize: TAB_FONT_SIZE, marginTop: 2 }} allowFontScaling={false}>
                   الرئيسية
                 </Text>
               </View>
@@ -73,7 +76,7 @@ export default function TabLayout() {
                   className="h-6 w-6"
                   tintColor={color}
                 />
-                <Text className="font-psemibold" style={{ color, fontSize: 10, marginTop: 2 }}>
+                <Text className="font-psemibold" style={{ color, fontSize: TAB_FONT_SIZE, marginTop: 2 }} allowFontScaling={false}>
                   المواعيد
                 </Text>
               </View>
@@ -97,7 +100,7 @@ export default function TabLayout() {
                   className="h-6 w-6"
                   tintColor={color}
                 />
-                <Text className="font-psemibold" style={{ color, fontSize: 10, marginTop: 2 }}>
+                <Text className="font-psemibold" style={{ color, fontSize: TAB_FONT_SIZE, marginTop: 2 }} allowFontScaling={false}>
                   إعلاناتي
                 </Text>
               </View>
@@ -120,7 +123,7 @@ export default function TabLayout() {
                   className="h-6 w-6"
                   tintColor={color}
                 />
-                <Text className="font-psemibold" style={{ color, fontSize: 10, marginTop: 2 }}>
+                <Text className="font-psemibold" style={{ color, fontSize: TAB_FONT_SIZE, marginTop: 2 }} allowFontScaling={false}>
                   المقاسم
                 </Text>
               </View>
@@ -145,7 +148,7 @@ export default function TabLayout() {
                   className="h-6 w-6"
                   tintColor={color}
                 />
-                <Text className="font-psemibold" style={{ color, fontSize: 10, marginTop: 2 }}>
+                <Text className="font-psemibold" style={{ color, fontSize: TAB_FONT_SIZE, marginTop: 2 }} allowFontScaling={false}>
                   المزيد
                 </Text>
               </View>

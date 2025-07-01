@@ -116,12 +116,12 @@ const OtpValidationScreen = () => {
     console.log('handleLogin ========================= 1======================', firebaseToken);
     const isDone = await loginWithOtp({ ...form.current, firebase: firebaseToken ?? '' });
     if (isDone.success) {
-      notify('success', {
+/*       notify('success', {
         params: {
-          title: 'تمت العملية بنجاح',
+          title: 'تمت العملية ',
           description: isDone.message,
         },
-      });
+      }); */
       SecureStore.setItemAsync('token', isDone.access_token);
       SecureStore.setItemAsync(
         'user',

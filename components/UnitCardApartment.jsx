@@ -313,7 +313,7 @@ const UnitApartmentCard = ({ item }) => {
         handleDismissModalPress={() => {}}>
         <View className="p-4">
           <Text className="mb-4 text-center font-psemibold text-lg">التفاعلات</Text>
-          <View className={`flex ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} gap-4`}>
+          <View className={`flex ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} gap-4 justify-center items-center`}>
             {availableReactions.map((reaction) => {
               const countKey = `${reaction.value}_count`;
               const count = item?.reaction_counts?.[countKey] || 0;
@@ -324,7 +324,7 @@ const UnitApartmentCard = ({ item }) => {
                 className={`flex ${I18nManager.isRTL ? 'rtl-view' : 'ltr-view'} items-center gap-2 rounded-lg bg-gray-100 p-2`}>
                 <Text className="text-2xl">{count}</Text>
                 <Text className="text-2xl">{reaction.icon}</Text>
-                <Text className="mt-1 font-pmedium text-sm text-gray-700">{reaction.title}</Text>
+               
               </View>
                 );
               }

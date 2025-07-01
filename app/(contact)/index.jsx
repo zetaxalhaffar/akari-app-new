@@ -185,6 +185,7 @@ const Contact = () => {
   };
 
   const handleAIChatPress = () => {
+    /*
     const question = shareDetailsResponse?.question_message || apartmentDetailsResponse?.question_message;
     // Navigate to chat with the question message to be auto-sent
     router.push({
@@ -193,6 +194,8 @@ const Contact = () => {
         autoMessage: question || 'مرحبا، أحتاج المساعدة بهذا الإعلان'
       }
     });
+    */
+    router.push('/chat');
   };
 
   const disabled =
@@ -309,7 +312,7 @@ const Contact = () => {
           </View>
           <View>
             <Text className="font-psemibold text-lg">عن طريق الهاتف</Text>
-            <Text className="max-w-[350px] font-pregular text-base">
+            <Text className="max-w-[300px] font-pregular text-base">
               يمكنك الاتصال المباشر بفريق عقاري للحصول على المساعدة الفورية.
             </Text>
           </View>
@@ -321,7 +324,7 @@ const Contact = () => {
           </View>
           <View>
             <Text className="font-psemibold text-lg">عن طريق الوتساب</Text>
-            <Text className="max-w-[350px] font-pregular text-base">
+            <Text className="max-w-[300px] font-pregular text-base">
               تواصل معنا بسهولة إما عن طريق الدردشة النصية أو إجراء مكالمة صوتية.
             </Text>
           </View>
@@ -333,7 +336,7 @@ const Contact = () => {
           </View>
           <View>
             <Text className="font-psemibold text-lg">عن طريق الدردشة مع الذكاء الصناعي</Text>
-            <Text className="max-w-[350px] font-pregular text-base">
+            <Text className="max-w-[300px] font-pregular text-base">
               احصل على إجابات فورية ومساعدة ذكية حول استفساراتك العقارية من خلال مساعدنا الذكي المتخصص.
             </Text>
           </View>
@@ -349,7 +352,7 @@ const Contact = () => {
             </View>
             <View>
               <Text className="font-psemibold text-lg">ترتيب موعد</Text>
-              <Text className="max-w-[350px] font-pregular text-base">
+              <Text className="max-w-[300px] font-pregular text-base">
                 أرسل إعلانك إلينا وسيقوم فريق عقاري بالتواصل معك لتحديد الموعد المناسب وترتيب كافة
                 التفاصيل.
               </Text>
